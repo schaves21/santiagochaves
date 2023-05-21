@@ -1,0 +1,46 @@
+<div>
+
+  <h2>Lista de Productos</h2>
+  <ul id="productList"></ul>
+  <hr />
+
+</div>
+
+<form class="row g-3" id="newProductForm">
+  <div class="col-md-6">
+    <input class="form-control" name="title" type="text" placeholder="Title" aria-label="default input example">
+  </div>
+  <div class="col-md-6">
+    <input class="form-control" name="description" type="text" placeholder="Description" aria-label="default input example">
+  </div>
+  <div class="col-md-6">
+    <input class="form-control" name="code" type="text" placeholder="Code" aria-label="default input example">
+  </div>
+  <div class="col-md-6">
+    <input class="form-control" name="price" type="number" placeholder="Price" aria-label="default input example">
+  </div>
+  <div class="col-md-6">
+    <input class="form-control" name="stock" type="number" placeholder="Stock" aria-label="default input example"> 
+  </div>
+  <div class="col-md-6">
+    <input class="form-control" name="category" type="text" placeholder="Category" aria-label="default input example"> 
+  </div>
+  <div class="col-md-6">
+    <input class="form-control" type="file" name="thumbnail" id="formFile"> 
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Add Product</button>
+  </div>
+</form>
+
+<form class="row g-3" id="deleteProductForm">
+  <div class="col-auto">
+    <input type="text" name="productId" class="form-control" id="productId" placeholder="Product Id">
+  </div>
+  <div class="col-auto">
+    <button type="submit" class="btn btn-primary mb-3">Delete Product</button>
+  </div>
+</form>   
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/main.js"></script>

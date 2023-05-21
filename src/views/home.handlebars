@@ -1,0 +1,29 @@
+<div>
+  <h2>{{title}}</h2>
+  <hr />
+</div>
+
+<div>    
+  {{#each products}}
+    <p>
+      id: 
+      {{this.id}}
+      Title:
+      {{this.title}}
+      Description:
+      {{this.description}}
+      Code:
+      {{this.code}}
+      Price:
+      {{this.price}}
+      Status:
+      {{this.status}}
+      Category:
+      {{this.category}}
+      Thumbnail:
+      {{this.thumbnail}}
+    </p>
+    <hr />
+  {{/each}}
+</div>
+

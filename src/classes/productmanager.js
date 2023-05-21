@@ -7,7 +7,7 @@ class productManager {
 
 	constructor() {
 
-		this.path = "./src/data/products.json";
+    this.path = "./src/data/products.json";
 
 	}
 
@@ -33,14 +33,19 @@ class productManager {
 	addProduct = async (product) => {
 
 		if (!product.title || !product.description || !product.code || !product.price || !product.status || !product.stock || !product.category) {
-			return "All fields are required, except for thumbnails";
+			
+      return "All fields are required, except for thumbnails";
+      
 		}
 
 		let readProduct = await this.readProducts();
+
 		const codeExist = readProduct.some((prod) => prod.code === product.code);
 		
 		if (codeExist) {
+
 			return `There is a product with the same code: ${product.code}`;
+
 		}
 
 		product.id = nanoid();	
@@ -62,13 +67,18 @@ class productManager {
 		let productById = await this.existProduct(id);
 
 		if(!productById){
+
 			return "Product not found";
+
 		}else{
+
 			return productById;
+
 		}
 
 	}
 
+	/*
 	updateProduct = async(id, putProduct) => {
 
 		let productById = await this.existProduct(id);
@@ -84,19 +94,55 @@ class productManager {
 		}
 
 	}
+	*/
+
+	updateProduct = async (id, putProduct) => {
+
+    let productById = await this.existProduct(id);
+
+    if (!productById) {
+
+      return "Product update not found";
+
+    } else {
+
+      let readProduct = await this.readProducts();
+
+      let findProductIndex = readProduct.findIndex((product) => product.id === id); // Encuentra el índice del producto existente en el array
+
+      if (findProductIndex !== -1) {
+
+        let updatedProduct = { ...readProduct[findProductIndex], ...putProduct }; // Combina el producto existente con los campos actualizados proporcionados
+        readProduct[findProductIndex] = updatedProduct; // Actualiza el producto en el array
+        await this.writeProduct(readProduct); 
+        return "Update product";
+
+      } else {
+        return "Product update not found";
+      }
+
+    }
+
+  }
 
 	deleteProduct = async(id) => {
 
 		let readProduct = await this.readProducts();
+
 		let findProduct = readProduct.some((prod) => prod.id === id);
 
 		if(findProduct){
+
 			let filterArrayProducts = readProduct.filter((prod) => prod.id != id);
 			await this.writeProduct(filterArrayProducts);
 			return "Product delete";
+
 		}else{
+
 			return "Product delete not exist";
+
 		}
+
 	};
 
 }
