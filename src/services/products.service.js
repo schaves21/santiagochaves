@@ -1,25 +1,7 @@
 import { productModel } from "../dao/models/products.model.js";
 
 class ProductService {
-  async getAll() {
-    const products = await productModel.find(
-      {},
-      {
-        _id: true,
-        title: true,
-        description: true,
-        code: true,
-        price: true,
-        status: true,
-        stock: true,
-        category: true,
-        thumbnail: true,
-      }
-    );
-    return products;
-  }
-
-  async create({
+  validate(
     title,
     description,
     code,
@@ -27,8 +9,78 @@ class ProductService {
     status,
     stock,
     category,
-    thumbnail,
-  }) {
+    thumbnail
+  ) {
+    if (
+      !title ||
+      !description ||
+      !code ||
+      !price ||
+      !status ||
+      !stock ||
+      !category ||
+      !thumbnail
+    ) {
+      console.log("Validation error: please complete all fields.");
+      throw new Error("Validation error: please complete all fields.");
+    }
+  }
+
+  async get(queryParams) {
+    const { limit = 10, page = 1, sort, query } = queryParams;
+    const filter = {};
+
+    if (query) {
+      filter.$or = [{ category: query }, { availability: query }];
+    }
+
+    const options = {
+      page: parseInt(page),
+      limit: parseInt(limit),
+      sort: sort === "desc" ? "-price" : "price",
+    };
+
+    const result = await productModel.paginate(filter, options);
+
+    const response = {
+      status: "success",
+      payload: result.docs,
+      totalPages: result.totalPages,
+      prevPage: result.hasPrevPage ? result.prevPage : null,
+      nextPage: result.hasNextPage ? result.nextPage : null,
+      page: result.page,
+      hasPrevPage: result.hasPrevPage,
+      hasNextPage: result.hasNextPage,
+      prevLink: result.hasPrevPage
+        ? `/api/products?limit=${limit}&page=${result.prevPage}`
+        : null,
+      nextLink: result.hasNextPage
+        ? `/api/products?limit=${limit}&page=${result.nextPage}`
+        : null,
+    };
+    return response;
+  }
+
+  async createOne(
+    title,
+    description,
+    code,
+    price,
+    status,
+    stock,
+    category,
+    thumbnail
+  ) {
+    this.validate(
+      title,
+      description,
+      code,
+      price,
+      status,
+      stock,
+      category,
+      thumbnail
+    );
     const productCreated = await productModel.create({
       title,
       description,
@@ -42,8 +94,8 @@ class ProductService {
     return productCreated;
   }
 
-  async updateOne({
-    _id,
+  async updateOne(
+    id,
     title,
     description,
     code,
@@ -51,29 +103,32 @@ class ProductService {
     status,
     stock,
     category,
-    thumbnail,
-  }) {
+    thumbnail
+  ) {
+    this.validate(
+      title,
+      description,
+      code,
+      price,
+      status,
+      stock,
+      category,
+      thumbnail
+    );
     const productUptaded = await productModel.updateOne(
-      {
-        _id: _id,
-      },
-      {
-        title,
-        description,
-        code,
-        price,
-        status,
-        stock,
-        category,
-        thumbnail,
-      }
+      { _id: id },
+      { title, description, code, price, status, stock, category, thumbnail }
     );
     return productUptaded;
   }
 
   async deleteOne(_id) {
-    const result = await productModel.deleteOne({ _id: _id });
-    return result;
+    const productDeleted = await productModel.deleteOne({ _id });
+    if (productDeleted.deletedCount === 1) {
+      return true;
+    } else {
+      throw new Error("Product not found");
+    }
   }
 }
 

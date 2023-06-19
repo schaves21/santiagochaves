@@ -1,29 +1,69 @@
-<div>
-  <h2>{{title}}</h2>
+<h1>All Products</h1>
+{{#each products}}
+  <p>
+    id: 
+    {{this._id}}
+  </p>
+  <p>
+    Title:
+    {{this.title}}
+  </p>
+  <p>
+    Description:
+    {{this.description}}
+  </p>
+  <p>
+    Code:
+    {{this.code}}
+  </p>
+  <p>
+    Price:
+    {{this.price}}
+  </p>
+  <p>
+    Status:
+    {{this.status}}
+  </p>
+  <p>
+    Category:
+    {{this.category}}
+  </p>
+  <p>
+    Thumbnail:
+    {{this.thumbnail}}
+  </p>
   <hr />
+{{/each}}
+
+Status:
+{{status}}
+totalPages:
+{{totalPages}}
+prevPage:
+{{prevPage}}
+nextPage:
+{{nextPage}}
+currentPage:
+{{currentPage}}
+hasPrevPage:
+{{hasPrevPage}}
+hasNextPage:
+{{hasNextPage}}
+prevLink:
+{{prevLink}}
+nextLink:
+{{nextLink}}
+
+<div class="pagination">
+  {{#if prevLink}}
+    <a href="{{prevLink}}">Previous</a>
+  {{/if}}
+
+  {{#if nextLink}}
+    <a href="{{nextLink}}">Next</a>
+  {{/if}}
 </div>
 
-<div>    
-  {{#each products}}
-    <p>
-      id: 
-      {{this.id}}
-      Title:
-      {{this.title}}
-      Description:
-      {{this.description}}
-      Code:
-      {{this.code}}
-      Price:
-      {{this.price}}
-      Status:
-      {{this.status}}
-      Category:
-      {{this.category}}
-      Thumbnail:
-      {{this.thumbnail}}
-    </p>
-    <hr />
-  {{/each}}
-</div>
+
+
 

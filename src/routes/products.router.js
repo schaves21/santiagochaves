@@ -7,24 +7,78 @@ export const productsRouter = express.Router();
 
 productsRouter.get("/", async (req, res) => {
   try {
-    const products = await productService.getAll();
+    const queryParams = req.query;
+    const response = await productService.get(queryParams);
+    return res.status(200).json(response);
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      status: "error",
+      msg: "Something went wrong :(",
+      data: {},
+    });
+  }
+});
+
+productsRouter.get("/:pid", async (req, res) => {
+  try {
+    const { pid } = req.params;
+    const product = await productService.get(pid);
     return res.status(200).json({
       status: "success",
-      msg: "Products list",
-      payload: products,
+      msg: "Product",
+      data: product,
     });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
       status: "error",
       msg: "Something went wrong :(",
-      payload: {},
+      data: {},
     });
   }
 });
 
 productsRouter.post("/", async (req, res) => {
   try {
+    const {
+      title,
+      description,
+      code,
+      price,
+      status,
+      stock,
+      category,
+      thumbnail,
+    } = req.body;
+    const productCreated = await productService.createOne(
+      title,
+      description,
+      code,
+      price,
+      status,
+      stock,
+      category,
+      thumbnail
+    );
+    return res.status(201).json({
+      status: "success",
+      msg: "Product created",
+      data: productCreated,
+    });
+  } catch (e) {
+    console.log(e);
+    return res.status(500).json({
+      status: "error",
+      msg: "Something went wrong :(",
+      data: {},
+    });
+  }
+});
+
+productsRouter.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
     const {
       title,
       description,
@@ -45,14 +99,16 @@ productsRouter.post("/", async (req, res) => {
       !category ||
       !thumbnail
     ) {
-      console.log("All fields are required");
+      console.log("Validation error: please complete all fields.");
       return res.status(400).json({
         status: "error",
-        msg: "All fields are required",
-        payload: {},
+        msg: "Validation error: please complete all fields.",
+        data: {},
       });
     }
-    const productCreated = await productService.create({
+
+    const productUpdated = await productService.updateOne(
+      id,
       title,
       description,
       code,
@@ -60,131 +116,38 @@ productsRouter.post("/", async (req, res) => {
       status,
       stock,
       category,
-      thumbnail,
-    });
-    return res.status(201).json({
+      thumbnail
+    );
+    return res.status(200).json({
       status: "success",
-      msg: "Product created",
-      payload: {
-        _id: productCreated._id,
-        title: productCreated.title,
-        description: productCreated.description,
-        code: productCreated.code,
-        price: productCreated.price,
-        status: productCreated.status,
-        stock: productCreated.stock,
-        category: productCreated.category,
-        thumbnail: productCreated.thumbnail,
-      },
+      msg: "Product updated",
+      data: productUpdated,
     });
   } catch (e) {
     console.log(e);
     return res.status(500).json({
       status: "error",
       msg: "Something went wrong :(",
-      payload: {},
+      data: {},
     });
   }
 });
 
-productsRouter.put("/:_id", async (req, res) => {
+productsRouter.delete("/:id", async (req, res) => {
   try {
-    const { _id } = req.params;
-    const {
-      title,
-      description,
-      code,
-      price,
-      status,
-      stock,
-      category,
-      thumbnail,
-    } = req.body;
-    if (
-      !title ||
-      !description ||
-      !code ||
-      !price ||
-      !status ||
-      !stock ||
-      !category ||
-      !thumbnail ||
-      !_id
-    ) {
-      console.log("All fields are required");
-      return res.status(400).json({
-        status: "error",
-        msg: "All fields are required",
-        payload: {},
-      });
-    }
-    try {
-      const productUptaded = await productService.updateOne({
-        _id,
-        title,
-        description,
-        code,
-        price,
-        status,
-        stock,
-        category,
-        thumbnail,
-      });
-      if (productUptaded.matchedCount > 0) {
-        return res.status(201).json({
-          status: "success",
-          msg: "Product uptaded",
-          payload: {},
-        });
-      } else {
-        return res.status(404).json({
-          status: "error",
-          msg: "Product not found",
-          payload: {},
-        });
-      }
-    } catch (e) {
-      return res.status(500).json({
-        status: "error",
-        msg: "DB server error while updating product",
-        payload: {},
-      });
-    }
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({
-      status: "error",
-      msg: "Something went wrong :(",
-      payload: {},
+    const { id } = req.params;
+    const productDeleted = await productService.deleteOne(id);
+    return res.status(200).json({
+      status: "success",
+      msg: "Product deleted",
+      data: {},
     });
-  }
-});
-
-productsRouter.delete("/:_id", async (req, res) => {
-  try {
-    const { _id } = req.params;
-
-    const result = await productService.deleteOne(_id);
-
-    if (result?.deletedCount > 0) {
-      return res.status(200).json({
-        status: "success",
-        msg: "Product deleted",
-        payload: {},
-      });
-    } else {
-      return res.status(404).json({
-        status: "error",
-        msg: "Product not found",
-        payload: {},
-      });
-    }
   } catch (e) {
     console.log(e);
     return res.status(500).json({
       status: "error",
       msg: "Something went wrong :(",
-      payload: {},
+      data: {},
     });
   }
 });

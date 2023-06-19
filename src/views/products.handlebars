@@ -1,0 +1,85 @@
+<h1>All Products</h1>
+{{#each products}}
+  <div>
+    <h2>{{this.title}}</h2>
+    <p>
+      Description:
+      {{this.description}}
+    </p>
+    <p>
+      Code:
+      {{this.code}}
+    </p>
+    <p>
+      Price: 
+      {{this.price}}
+    </p>
+    <p>
+      Status:
+      {{this.status}}
+    </p>
+    <p>
+      Stock:
+      {{this.stock}}
+    </p>
+    <p>
+      Category:
+      {{this.category}}
+    </p>
+    <p>
+      Thumbnail:
+      {{this.thumbnail}}
+    </p>
+    <p>Availability: 
+      {{this.availability}}
+    </p>
+    
+    <a href="/products/{{this._id}}">Add id {{this._id}}</a>
+    <button onclick="putIntoCart('{{this._id}}')">Add to Cart
+      {{this._id}}</button>
+    <br />
+
+    <a href="/products/{{this._id}}">Product Detail</a>
+
+    <!--
+    <form action="/api/carts" method="POST">
+      <input type="hidden" name="productId" value="{{_id}}" />
+      <button type="submit">Create Cart</button>
+    </form>
+    -->
+
+    <br />
+  </div>
+{{/each}}
+
+Status:
+{{status}}
+totalPages:
+{{totalPages}}
+prevPage:
+{{prevPage}}
+nextPage:
+{{nextPage}}
+currentPage:
+{{currentPage}}
+hasPrevPage:
+{{hasPrevPage}}
+hasNextPage:
+{{hasNextPage}}
+prevLink:
+{{prevLink}}
+nextLink:
+{{nextLink}}
+
+<div class="pagination">
+  {{#if prevLink}}
+    <a href="{{prevLink}}">Previous</a>
+  {{/if}}
+
+  {{#if nextLink}}
+    <a href="{{nextLink}}">Next</a>
+  {{/if}}
+</div>
+<script src="js/localstorage.js"></script>
+
+
