@@ -1,56 +1,64 @@
-<h1>All Products</h1>
-{{#each products}}
-  <div>
-    <h2>{{this.title}}</h2>
-    <p>
-      Description:
-      {{this.description}}
-    </p>
-    <p>
-      Code:
-      {{this.code}}
-    </p>
-    <p>
-      Price: 
-      {{this.price}}
-    </p>
-    <p>
-      Status:
-      {{this.status}}
-    </p>
-    <p>
-      Stock:
-      {{this.stock}}
-    </p>
-    <p>
-      Category:
-      {{this.category}}
-    </p>
-    <p>
-      Thumbnail:
-      {{this.thumbnail}}
-    </p>
-    <p>Availability: 
-      {{this.availability}}
-    </p>
-    
-    <a href="/products/{{this._id}}">Add id {{this._id}}</a>
-    <button onclick="putIntoCart('{{this._id}}')">Add to Cart
-      {{this._id}}</button>
-    <br />
+<div>
+  <h2>Welcome, {{email}}</h2>
+  {{#if isAdmin}}
+      <p>Role: Admin</p>
+  {{else}}
+    <p>Role: User</p>
+  {{/if}}
+</div>
+<div>
+  <a href='/logout'>Log out</a>
+</div>
 
-    <a href="/products/{{this._id}}">Product Detail</a>
+<div>
+  <h1>All Products</h1>
+  {{#each products}}
+    <div>
+      <h2>{{this.title}}</h2>
+      <p>
+        Description:
+        {{this.description}}
+      </p>
+      <p>
+        Code:
+        {{this.code}}
+      </p>
+      <p>
+        Price: 
+        {{this.price}}
+      </p>
+      <p>
+        Status:
+        {{this.status}}
+      </p>
+      <p>
+        Stock:
+        {{this.stock}}
+      </p>
+      <p>
+        Category:
+        {{this.category}}
+      </p>
+      <p>
+        Thumbnail:
+        {{this.thumbnail}}
+      </p>
+      <p>Availability: 
+        {{this.availability}}
+      </p>
+      
+      <a href="/products/{{this._id}}">Add id {{this._id}}</a>
+      <button onclick="putIntoCart('{{this._id}}')">Add to Cart
+        {{this._id}}</button>
+      <br />
 
-    <!--
-    <form action="/api/carts" method="POST">
-      <input type="hidden" name="productId" value="{{_id}}" />
-      <button type="submit">Create Cart</button>
-    </form>
-    -->
+      <a href="/products/{{this._id}}">Product Detail</a>
 
-    <br />
-  </div>
-{{/each}}
+      <br />
+    </div>
+  {{/each}}
+</div>
+
 
 Status:
 {{status}}

@@ -2,13 +2,16 @@ import { cartService } from "../services/carts.service.js";
 import express from "express";
 import { productModel } from "../dao/models/products.model.js";
 import { productService } from "../services/products.service.js";
+import { userService } from "../services/users.service.js";
+import { checkUser, checkAdmin } from "../middlewares/auth.js";
 
 export const viewsRouter = express.Router();
 
+/* CODIGO PARA FILESYSTEM
 //import productManager from "../dao/productmanager.js";
 //const products = new productManager();
 
-/*
+
 viewsRouter.get("/", async (req, res) => {
   let myProducts = await products.getProducts();
   const title = "Lista de Productos";
@@ -18,8 +21,10 @@ viewsRouter.get("/", async (req, res) => {
   });
 });
 
-*/
+* HASTA ACÁ FILESYSTEM/ 
 
+/* NO SE SI ES ASI PERO, COMENTO ESTA RUTA PARA RESOLVER EL DESAFIO "IMPLEMENTACION DE LOGIN" 
+QUE PIDE QUE LA RUTA "/" MUESTRE LA VISTA DEL LOGIN
 viewsRouter.get("/", async (req, res) => {
   try {
     const { limit = 10, page = 1, sort, query } = req.query;
@@ -66,10 +71,45 @@ viewsRouter.get("/", async (req, res) => {
       .json({ status: "error", message: "Error in server" });
   }
 });
+*/
+
+viewsRouter.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.render("error", { error: "could not close the session" });
+    }
+    return res.redirect("/login");
+  });
+});
+
+viewsRouter.get("/login", (req, res) => {
+  res.render("login");
+});
+
+viewsRouter.get("/register", (req, res) => {
+  res.render("register");
+});
+
+viewsRouter.get("/profile", checkUser, async (req, res) => {
+  const getUser = await userService.getOne(req.session.email);
+  const { firstName, lastName, email, age, isAdmin } = getUser;
+  res.render("profile", { firstName, lastName, email, age, isAdmin });
+});
+
+viewsRouter.get("/admin", checkAdmin, (req, res) => {
+  res.render("admin");
+});
+
+viewsRouter.get("/", (req, res) => {
+  res.render("home");
+});
 
 viewsRouter.get("/products", async (req, res) => {
   try {
-    //payload,
+    const dataUser = await userService.getOne(req.session.email);
+
+    const { email, isAdmin } = dataUser;
+
     const { limit = 10, page = 1, sort, query } = req.query;
     const queryParams = { limit, page, sort, query };
     const {
@@ -98,6 +138,8 @@ viewsRouter.get("/products", async (req, res) => {
     });
     return res.render("products", {
       status: "success",
+      email,
+      isAdmin,
       products: productsViews,
       totalPages,
       prevPage,
@@ -156,17 +198,3 @@ viewsRouter.get("/carts/:cid", async (req, res, next) => {
 viewsRouter.get("/realtimeproducts", async (req, res) => {
   res.render("realTimeProducts");
 });
-
-/*
-viewsRouter.get("/realtimeproducts", async (req, res) => {
-  try {
-    const products = await productService.get();
-    console.log(products);
-    return res.status(200).render("realtimeproducts", { products });
-  } catch (err) {
-    return res
-      .status(500)
-      .json({ status: "error", msg: "Error in server", products: {} });
-  }
-});
-*/
