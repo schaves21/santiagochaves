@@ -1,68 +1,54 @@
 import express from "express";
-import { userService } from "../services/users.service.js";
-import { createHash, isValidPassword } from "../config.js";
+import passport from "passport";
 
 export const authRouter = express.Router();
 
-authRouter.post("/register", async (req, res) => {
-  const { firstName, lastName, email, password, age } = req.body;
-  if (!firstName || !lastName || !email || !password || !age) {
-    return res.status(400).render("error", { error: "Missing data" });
-  }
-  try {
-    const isAdmin =
-      email === "adminCoder@coder.com" && password === "adminCod3r123";
-
-    if (isAdmin) {
-      req.session.isAdmin = true;
-    } else {
-      req.session.isAdmin = false;
+authRouter.post(
+  "/login",
+  passport.authenticate("login", {
+    failureRedirect: "/api/sessions/faillogin",
+  }),
+  async (req, res) => {
+    if (!req.user) {
+      return res.json({ error: "invalid credentials" });
     }
-
-    await userService.create({
-      firstName,
-      lastName,
-      email,
-      password: createHash(password),
-      age,
-      isAdmin,
-    });
-    req.session.firstName = firstName;
-    req.session.lastName = lastName;
-    req.session.email = email;
-    req.session.age = age;
-
-    return res.redirect("/profile");
-  } catch (e) {
-    console.log(e);
-    return res
-      .status(400)
-      .render("error", { error: "Check your email and try again later" });
+    req.session.user = {
+      _id: req.user._id,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      email: req.user.email,
+      age: req.user.age,
+      isAdmin: req.user.isAdmin,
+    };
+    return res.redirect("/products");
   }
+);
+
+authRouter.get("/faillogin", async (req, res) => {
+  return res.json({ error: "fail to login" });
 });
 
-authRouter.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).render("error", { error: "Missing data" });
-  }
-  try {
-    const foundUser = await userService.getOne(email);
-    if (foundUser && isValidPassword(password, foundUser.password)) {
-      req.session.firstName = foundUser.firstName;
-      req.session.email = foundUser.email;
-      req.session.isAdmin = foundUser.isAdmin;
-      console.log(req.session.isAdmin);
-      return res.redirect("/products");
-    } else {
-      return res
-        .status(400)
-        .render("error", { error: "Incorrect email or password" });
+authRouter.post(
+  "/register",
+  passport.authenticate("register", {
+    failureRedirect: "/api/sessions/failregister",
+  }),
+  (req, res) => {
+    if (!req.user) {
+      return res.json({ error: "something went wrong" });
     }
-  } catch (e) {
-    console.log(e);
-    return res
-      .status(500)
-      .render("error", { error: "Unexpected server error" });
+    req.session.user = {
+      _id: req.user._id,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      email: req.user.email,
+      age: req.user.age,
+      isAdmin: req.user.isAdmin,
+    };
+    return res.redirect("/profile");
   }
+);
+
+authRouter.get("/failregister", async (req, res) => {
+  return res.json({ error: "fail to register" });
 });

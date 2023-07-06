@@ -2,7 +2,6 @@ import { cartService } from "../services/carts.service.js";
 import express from "express";
 import { productModel } from "../dao/models/products.model.js";
 import { productService } from "../services/products.service.js";
-import { userService } from "../services/users.service.js";
 import { checkUser, checkAdmin } from "../middlewares/auth.js";
 
 export const viewsRouter = express.Router();
@@ -73,6 +72,10 @@ viewsRouter.get("/", async (req, res) => {
 });
 */
 
+viewsRouter.get("/", (req, res) => {
+  res.render("home");
+});
+
 viewsRouter.get("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -90,25 +93,20 @@ viewsRouter.get("/register", (req, res) => {
   res.render("register");
 });
 
-viewsRouter.get("/profile", checkUser, async (req, res) => {
-  const getUser = await userService.getOne(req.session.email);
-  const { firstName, lastName, email, age, isAdmin } = getUser;
-  res.render("profile", { firstName, lastName, email, age, isAdmin });
+viewsRouter.get("/profile", checkUser, (req, res) => {
+  const user = req.session.user;
+  res.render("profile", { user: user });
 });
 
-viewsRouter.get("/admin", checkAdmin, (req, res) => {
-  res.render("admin");
-});
-
-viewsRouter.get("/", (req, res) => {
-  res.render("home");
+viewsRouter.get("/admin", checkUser, checkAdmin, (req, res) => {
+  res.send("admin");
 });
 
 viewsRouter.get("/products", async (req, res) => {
   try {
-    const dataUser = await userService.getOne(req.session.email);
+    const user = req.session.user;
 
-    const { email, isAdmin } = dataUser;
+    console.log(user);
 
     const { limit = 10, page = 1, sort, query } = req.query;
     const queryParams = { limit, page, sort, query };
@@ -138,8 +136,7 @@ viewsRouter.get("/products", async (req, res) => {
     });
     return res.render("products", {
       status: "success",
-      email,
-      isAdmin,
+      user: user,
       products: productsViews,
       totalPages,
       prevPage,

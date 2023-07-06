@@ -1,0 +1,1 @@
+export const GITHUB_SECRET = "0104aecc1204e82fe470a6a5eca58c2337cf9352";
