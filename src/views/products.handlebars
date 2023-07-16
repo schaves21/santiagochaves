@@ -1,93 +1,99 @@
-<div>
-  <h2>Welcome, {{user.email}}</h2>
-  {{#if user.isAdmin}}
-      <p>Role: Admin</p>
-  {{else}}
-    <p>Role: User</p>
-  {{/if}}
-</div>
-<div>
-  <a href='/logout'>Log out</a>
-</div>
+<main>
+	{{#if user.firstName}}
+		<div class="flex-row text-end mt-3 ms-3" style="width: 99%;">
+			<div class="d-flex justify-content-end align-items-center">
+				<h5>Hola, {{user.firstName}}. Tu rol es {{user.rol}}</h5>
+				<a
+					href="/logout"
+					class="btn btn-danger btn-sm btnLogin ms-2 me-5 mb-1"
+				>
+					<i class="bi bi-box-arrow-left me-2"></i>Logout
+				</a>
+			</div>
+		</div>
+	{{/if}}
 
-<div>
-  <h1>All Products</h1>
-  {{#each products}}
-    <div>
-      <h2>{{this.title}}</h2>
-      <p>
-        Description:
-        {{this.description}}
-      </p>
-      <p>
-        Code:
-        {{this.code}}
-      </p>
-      <p>
-        Price: 
-        {{this.price}}
-      </p>
-      <p>
-        Status:
-        {{this.status}}
-      </p>
-      <p>
-        Stock:
-        {{this.stock}}
-      </p>
-      <p>
-        Category:
-        {{this.category}}
-      </p>
-      <p>
-        Thumbnail:
-        {{this.thumbnail}}
-      </p>
-      <p>Availability: 
-        {{this.availability}}
-      </p>
-      
-      <a href="/products/{{this._id}}">Add id {{this._id}}</a>
-      <button onclick="putIntoCart('{{this._id}}')">Add to Cart
-        {{this._id}}</button>
-      <br />
+  <div>
+    <h1>All Products</h1>
+    {{#each products}}
+      <div>
+        <h2>{{this.title}}</h2>
+        <p>
+          Description:
+          {{this.description}}
+        </p>
+        <p>
+          Code:
+          {{this.code}}
+        </p>
+        <p>
+          Price: 
+          {{this.price}}
+        </p>
+        <p>
+          Status:
+          {{this.status}}
+        </p>
+        <p>
+          Stock:
+          {{this.stock}}
+        </p>
+        <p>
+          Category:
+          {{this.category}}
+        </p>
+        <p>
+          Thumbnail:
+          {{this.thumbnail}}
+        </p>
+        <p>Availability: 
+          {{this.availability}}
+        </p>
+        
+        <a href="/products/{{this._id}}">Add id {{this._id}}</a>
+        <button onclick="putIntoCart('{{this._id}}')">Add to Cart
+          {{this._id}}</button>
+        <br />
 
-      <a href="/products/{{this._id}}">Product Detail</a>
+        <a href="/products/{{this._id}}">Product Detail</a>
 
-      <br />
-    </div>
-  {{/each}}
-</div>
+        <br />
+      </div>
+    {{/each}}
+  </div>
 
 
-Status:
-{{status}}
-totalPages:
-{{totalPages}}
-prevPage:
-{{prevPage}}
-nextPage:
-{{nextPage}}
-currentPage:
-{{currentPage}}
-hasPrevPage:
-{{hasPrevPage}}
-hasNextPage:
-{{hasNextPage}}
-prevLink:
-{{prevLink}}
-nextLink:
-{{nextLink}}
+  Status:
+  {{status}}
+  totalPages:
+  {{totalPages}}
+  prevPage:
+  {{prevPage}}
+  nextPage:
+  {{nextPage}}
+  currentPage:
+  {{currentPage}}
+  hasPrevPage:
+  {{hasPrevPage}}
+  hasNextPage:
+  {{hasNextPage}}
+  prevLink:
+  {{prevLink}}
+  nextLink:
+  {{nextLink}}
 
-<div class="pagination">
-  {{#if prevLink}}
-    <a href="{{prevLink}}">Previous</a>
-  {{/if}}
+  <div class="pagination">
+    {{#if prevLink}}
+      <a href="{{prevLink}}">Previous</a>
+    {{/if}}
 
-  {{#if nextLink}}
-    <a href="{{nextLink}}">Next</a>
-  {{/if}}
-</div>
+    {{#if nextLink}}
+      <a href="{{nextLink}}">Next</a>
+    {{/if}}
+  </div>
+
+</main>
+
 <script src="js/localstorage.js"></script>
 
 

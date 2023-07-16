@@ -6,49 +6,48 @@ export const authRouter = express.Router();
 authRouter.post(
   "/login",
   passport.authenticate("login", {
-    failureRedirect: "/api/sessions/faillogin",
+    failureRedirect: "/",
   }),
   async (req, res) => {
     if (!req.user) {
       return res.json({ error: "invalid credentials" });
     }
     req.session.user = {
-      _id: req.user._id,
+      _id: req.user._id.toString(),
+      email: req.user.email,
       firstName: req.user.firstName,
       lastName: req.user.lastName,
-      email: req.user.email,
       age: req.user.age,
-      isAdmin: req.user.isAdmin,
+      rol: req.user.rol,
     };
     return res.redirect("/products");
   }
 );
 
-authRouter.get("/faillogin", async (req, res) => {
-  return res.json({ error: "fail to login" });
-});
-
 authRouter.post(
   "/register",
   passport.authenticate("register", {
-    failureRedirect: "/api/sessions/failregister",
+    failureRedirect: "/",
   }),
   (req, res) => {
     if (!req.user) {
       return res.json({ error: "something went wrong" });
     }
     req.session.user = {
-      _id: req.user._id,
-      firstName: req.user.firstName,
-      lastName: req.user.lastName,
+      _id: req.user._id.toString(),
       email: req.user.email,
-      age: req.user.age,
-      isAdmin: req.user.isAdmin,
+      firstName: req.user.firstName,
+      rol: req.user.rol,
     };
-    return res.redirect("/profile");
+    return res.redirect("/products");
   }
 );
 
-authRouter.get("/failregister", async (req, res) => {
-  return res.json({ error: "fail to register" });
+authRouter.get("/current", (req, res) => {
+  console.log(req.session);
+  return res.status(200).json({
+    status: "success",
+    msg: "User session data",
+    data: { user: req.session.user },
+  });
 });

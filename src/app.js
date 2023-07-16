@@ -36,17 +36,15 @@ app.set("view engine", "handlebars");
 
 app.use(
   session({
+    secret: "asd3ñc30kasod",
+    resave: false,
+    saveUninitialized: false,
     store: MongoStore.create({
       mongoUrl:
         "mongodb+srv://schaves:SNEm7PTJfvLHDy4g@ecommerce.i4y5xac.mongodb.net/ecommerce?retryWrites=true&w=majority",
-      ttl: 15 * 60,
+      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+      ttl: 99999,
     }),
-    secret: "asd3ñc30kasod",
-    resave: true,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: 15 * 60 * 1000,
-    },
   })
 );
 
@@ -74,7 +72,7 @@ app.get(
       lastName: req.user.lastName,
       email: req.user.email,
       age: req.user.age,
-      isAdmin: req.user.isAdmin,
+      rol: req.user.rol,
     };
     res.redirect("/products");
   }

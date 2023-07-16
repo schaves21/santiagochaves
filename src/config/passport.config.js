@@ -3,7 +3,8 @@ import passport from "passport";
 import GitHubStrategy from "passport-github2";
 import local from "passport-local";
 import { UserModel } from "../dao/models/users.model.js";
-import { createHash, isValidPassword } from "../config.js";
+import { userService } from "../services/users.service.js";
+import { isValidPassword } from "../config.js";
 import { GITHUB_SECRET } from "./env.js";
 const LocalStrategy = local.Strategy;
 
@@ -23,6 +24,7 @@ export function iniPassport() {
             console.log("Invalid Password");
             return done(null, false);
           }
+
           return done(null, user);
         } catch (err) {
           return done(err);
@@ -40,25 +42,29 @@ export function iniPassport() {
       },
       async (req, username, password, done) => {
         try {
-          const { firstName, lastName, email, age } = req.body;
-          let user = await UserModel.findOne({ email: username });
-          if (user) {
+          const { firstName, lastName, age } = req.body;
+
+          const userExist = await userService.findUserByEmail(username);
+
+          if (userExist) {
             console.log("User already exists");
             return done(null, false);
           }
 
-          const newUser = {
-            email,
-            password: createHash(password),
+          const userCreated = await userService.create({
             firstName,
             lastName,
+            email: username,
             age,
-            isAdmin: false,
-          };
-          let userCreated = await UserModel.create(newUser);
-          console.log(userCreated);
+            password,
+          });
           console.log("User Registration succesful");
-          return done(null, userCreated);
+          return done(null, {
+            _id: userCreated._id.toString(),
+            firstName: userCreated.firstName,
+            email: userCreated.email,
+            rol: userCreated.rol,
+          });
         } catch (e) {
           console.log("Error in register");
           console.log(e);
@@ -102,7 +108,8 @@ export function iniPassport() {
               lastName: "nolast",
               password: "nopass",
               age: 0,
-              isAdmin: false,
+              cart: "",
+              rol: "user",
             };
             let userCreated = await UserModel.create(newUser);
             console.log("User Registration succesful");

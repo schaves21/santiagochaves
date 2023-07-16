@@ -86,11 +86,23 @@ viewsRouter.get("/logout", (req, res) => {
 });
 
 viewsRouter.get("/login", (req, res) => {
-  res.render("login");
+  try {
+    const title = "Mega-Friday® - Login";
+    return res.status(200).render("login", { title });
+  } catch (err) {
+    console.log(err);
+    res.status(501).send({ status: "error", msg: "Server error", error: err });
+  }
 });
 
 viewsRouter.get("/register", (req, res) => {
-  res.render("register");
+  try {
+    const title = "Mega-Friday® - Register";
+    return res.status(200).render("register", { title });
+  } catch (err) {
+    console.log(err);
+    res.status(501).send({ status: "error", msg: "Server error", error: err });
+  }
 });
 
 viewsRouter.get("/profile", checkUser, (req, res) => {
@@ -102,7 +114,7 @@ viewsRouter.get("/admin", checkUser, checkAdmin, (req, res) => {
   res.send("admin");
 });
 
-viewsRouter.get("/products", async (req, res) => {
+viewsRouter.get("/products", checkUser, async (req, res) => {
   try {
     const user = req.session.user;
 

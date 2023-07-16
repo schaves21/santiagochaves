@@ -1,73 +1,27 @@
-<h1>Home</h1>
-<br/>
-<a href='/login'>Log in</a>
-<a href='/register'>Register</a>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col g-0">
+			<div class="bg-image"></div>
 
-<!--
-<h1>All Products</h1>
-{{#each products}}
-  <p>
-    id: 
-    {{this._id}}
-  </p>
-  <p>
-    Title:
-    {{this.title}}
-  </p>
-  <p>
-    Description:
-    {{this.description}}
-  </p>
-  <p>
-    Code:
-    {{this.code}}
-  </p>
-  <p>
-    Price:
-    {{this.price}}
-  </p>
-  <p>
-    Status:
-    {{this.status}}
-  </p>
-  <p>
-    Category:
-    {{this.category}}
-  </p>
-  <p>
-    Thumbnail:
-    {{this.thumbnail}}
-  </p>
-  <hr />
-{{/each}}
-
-Status:
-{{status}}
-totalPages:
-{{totalPages}}
-prevPage:
-{{prevPage}}
-nextPage:
-{{nextPage}}
-currentPage:
-{{currentPage}}
-hasPrevPage:
-{{hasPrevPage}}
-hasNextPage:
-{{hasNextPage}}
-prevLink:
-{{prevLink}}
-nextLink:
-{{nextLink}}
-
-<div class="pagination">
-  {{#if prevLink}}
-    <a href="{{prevLink}}">Previous</a>
-  {{/if}}
-
-  {{#if nextLink}}
-    <a href="{{nextLink}}">Next</a>
-  {{/if}}
+			<div class="contenedorTituloPrincipal">
+				<a href="/"><img
+						src="/images/logo.png"
+						alt="logo"
+						style="width: 200px;"
+					/></a>
+				<h2 class="tituloPrincipal mt-2">Mega-Friday</h2>
+				<div class="mt-3">
+					<a href="/login" class="btn btn-outline-light btnLogin">
+						<i class="bi bi-person-circle me-2"></i>Log in
+					</a>
+					<a
+						href="/register"
+						class="btn btn-light ms-2 me-3 btnRegister"
+					>
+						<i class="bi bi-person-video2 me-2"></i>Register
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
--->
-

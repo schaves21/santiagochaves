@@ -1,4 +1,5 @@
 import { UserModel } from "../dao/models/users.model.js";
+import { createHash } from "../config.js";
 
 class UserService {
   async getOne(email) {
@@ -6,29 +7,39 @@ class UserService {
     return users;
   }
 
-  async create({ firstName, lastName, email, password, age, isAdmin }) {
-    try {
-      const findUser = await UserModel.findOne({
-        $or: [{ firstName: firstName }, { email: email }],
-      });
-
-      if (findUser) {
-        return false;
-      } else {
-        const userCreated = await UserModel.create({
-          firstName,
-          lastName,
-          email,
-          password,
-          age,
-          isAdmin,
-        });
-        return userCreated;
+  async findUserByEmail(email) {
+    const user = await UserModel.findOne(
+      { email: email },
+      {
+        _id: true,
+        email: true,
+        username: true,
+        password: true,
+        rol: true,
       }
-    } catch (error) {
-      console.error("Error creating user:", error);
-      throw error;
+    );
+    return user || false;
+  }
+
+  async create({ firstName, lastName, email, age, password }) {
+    const findUser = await this.findUserByEmail(email);
+
+    if (findUser) {
+      throw "User already exists";
     }
+
+    //TODO: cuando se crea un usuario seria bueno ya crear un cart en la collection de carts y meter el id correcto aqui abajo.
+    const userCreated = await UserModel.create({
+      firstName,
+      lastName,
+      email,
+      age,
+      password: createHash(password),
+      cart: "",
+      rol: "user",
+    });
+
+    return userCreated;
   }
 
   async update({ id, firstName, lastName, email, password, age }) {
