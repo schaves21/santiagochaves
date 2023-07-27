@@ -1,4 +1,4 @@
-import { MsgModel } from "../dao/models/messages.model.js";
+import { MsgMongoose } from "../dao/models/mongoose/messages.mongoose.js";
 import { Server } from "socket.io";
 import productManager from "../dao/productmanager.js";
 
@@ -33,13 +33,13 @@ export const connectWebSockets = (httpServer) => {
 
     socket.on("msg_chat_front_to_back", async (msg) => {
       try {
-        await MsgModel.create(msg);
+        await MsgMongoose.create(msg);
       } catch (e) {
         console.log(e);
       }
 
       try {
-        const msgs = await MsgModel.find({});
+        const msgs = await MsgMongoose.find({});
         socket.emit("listado_de_msgs", msgs);
       } catch (e) {
         console.log(e);

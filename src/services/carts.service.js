@@ -1,45 +1,43 @@
-import { cartModel } from "../dao/models/carts.model.js";
-import { productModel } from "../dao/models/products.model.js";
+import { cartModel } from '../dao/models/carts.model.js';
 
 class CartService {
   async getAll() {
-    const cart = await cartModel.find({});
-    if (!cart) {
-      throw new Error("Cart not found");
+    try {
+      const cart = await cartModel.getAll({});
+      if (!cart) {
+        throw new Error('Cart not found');
+      }
+      return cart;
+    } catch (error) {
+      throw error;
     }
-    return cart;
   }
 
   async getCartById(cartId) {
-    const cart = await cartModel
-      .findById(cartId)
-      .populate("products.product")
-      .lean()
-      .exec();
-    if (!cart) {
-      throw new Error("Cart not found");
+    try {
+      const cart = await cartModel.getCartById(cartId);
+      if (!cart) {
+        throw new Error('Cart not found');
+      }
+      return cart;
+    } catch (error) {
+      throw error;
     }
-    return cart;
   }
 
-  async createOne() {
-    const cartCreated = await cartModel.create({});
-    return cartCreated;
+  async create() {
+    try {
+      const cartCreated = await cartModel.create();
+      return cartCreated;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async addProductCart(cartId, productId) {
     try {
-      const cart = await cartModel.findById(cartId);
-      const product = await productModel.findById(productId);
-      if (!cart) {
-        throw new Error("Cart not found");
-      }
-      if (!product) {
-        throw new Error("Product not found");
-      }
-      cart.products.push({ product: product._id, quantity: 1 });
-      await cart.save();
-      return cart;
+      const addProductCart = await cartModel.addProductCart(cartId, productId);
+      return addProductCart;
     } catch (error) {
       throw error;
     }
@@ -47,58 +45,37 @@ class CartService {
 
   async updateCart(cartId, products) {
     try {
-      const cart = await cartModel.findByIdAndUpdate(
-        cartId,
-        { products },
-        { new: true }
-      );
+      const cart = await cartModel.updateCart(cartId, products);
       return cart;
     } catch (error) {
-      throw new Error("Error updating cart in database");
+      throw error;
     }
   }
 
   async updateProductQuantity(cartId, productId, quantity) {
     try {
-      const cart = await cartModel.findById(cartId);
-      const productIndex = cart.products.findIndex(
-        (p) => p.product.toString() === productId
-      );
-      if (productIndex === -1) {
-        throw new Error("Product not found in cart");
-      }
-      cart.products[productIndex].quantity = quantity;
-      await cart.save();
+      const cart = await cartModel.updateProductQuantity(cartId, productId, quantity);
       return cart;
     } catch (error) {
-      throw new Error("Error updating product quantity in cart");
+      throw error;
     }
   }
 
   async removeProduct(cartId, productId) {
     try {
-      const cart = await cartModel.findById(cartId);
-      const productIndex = cart.products.findIndex(
-        (p) => p.product.toString() === productId
-      );
-      if (productIndex === -1) {
-        throw new Error("Product not found in cart");
-      }
-      cart.products.splice(productIndex, 1);
-      await cart.save();
+      const cart = await cartModel.removeProduct(cartId, productId);
       return cart;
     } catch (error) {
-      throw new Error("Error removing product from cart");
+      throw error;
     }
   }
 
   async clearCart(cartId) {
     try {
-      const cart = await cartModel.findById(cartId);
-      cart.products = [];
-      await cart.save();
+      const cart = await cartModel.clearCart(cartId);
+      return cart;
     } catch (error) {
-      throw new Error("Error clearing cart");
+      throw error;
     }
   }
 }

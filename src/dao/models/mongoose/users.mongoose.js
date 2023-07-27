@@ -6,8 +6,8 @@ const schema = new Schema({
   email: { type: String, required: true, max: 100, unique: true },
   age: { type: Number, required: false },
   password: { type: String, required: false, max: 100 },
-  cart: { type: String, required: false },
+  cartID: { type: String, required: true, unique: true },
   rol: { type: String, default: "user", required: true },
 });
 
-export const UserModel = model("users", schema);
+export const UserMongoose = model("users", schema);

@@ -1,13 +1,14 @@
 export function checkUser(req, res, next) {
+  console.log(req.session?.user?.email);
   if (req.session?.user?.email) {
     return next();
   }
-  return res.status(401).render("error", { error: "Authentication error" });
+  return res.status(401).render('error', { error: 'Authentication error' });
 }
 
 export function checkAdmin(req, res, next) {
-  if (req.session?.user?.email && req.session?.user?.rol == "admin") {
+  if (req.session?.user?.email && req.session?.user?.rol == 'admin') {
     return next();
   }
-  return res.status(401).render("error", { error: "Please login AS ADMIN!" });
+  return res.status(401).render('error', { error: 'Please login AS ADMIN!' });
 }

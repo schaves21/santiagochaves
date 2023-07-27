@@ -1,13 +1,13 @@
-import { nanoid } from "nanoid";
-import { promises as fs } from "fs";
+import { nanoid } from 'nanoid';
+import { promises as fs } from 'fs';
 
 class productManager {
   constructor() {
-    this.path = "./src/data/products.json";
+    this.path = './src/data/products.json';
   }
 
   readProducts = async () => {
-    let products = await fs.readFile(this.path, "utf-8");
+    let products = await fs.readFile(this.path, 'utf-8');
     return JSON.parse(products);
   };
 
@@ -20,16 +20,8 @@ class productManager {
   };
 
   addProduct = async (product) => {
-    if (
-      !product.title ||
-      !product.description ||
-      !product.code ||
-      !product.price ||
-      !product.status ||
-      !product.stock ||
-      !product.category
-    ) {
-      return "All fields are required, except for thumbnails";
+    if (!product.title || !product.description || !product.code || !product.price || !product.status || !product.stock || !product.category) {
+      return 'All fields are required, except for thumbnails';
     }
 
     let readProduct = await this.readProducts();
@@ -43,7 +35,7 @@ class productManager {
     product.id = nanoid();
     let arrayProducts = [...readProduct, product];
     await this.writeProduct(arrayProducts);
-    return "Product add";
+    return 'Product add';
   };
 
   existProduct = async (id) => {
@@ -55,7 +47,7 @@ class productManager {
     let productById = await this.existProduct(id);
 
     if (!productById) {
-      return "Product not found";
+      return 'Product not found';
     } else {
       return productById;
     }
@@ -65,13 +57,11 @@ class productManager {
     let productById = await this.existProduct(id);
 
     if (!productById) {
-      return "Product update not found";
+      return 'Product update not found';
     } else {
       let readProduct = await this.readProducts();
 
-      let findProductIndex = readProduct.findIndex(
-        (product) => product.id === id
-      );
+      let findProductIndex = readProduct.findIndex((product) => product.id === id);
       if (findProductIndex !== -1) {
         let updatedProduct = {
           ...readProduct[findProductIndex],
@@ -79,9 +69,9 @@ class productManager {
         };
         readProduct[findProductIndex] = updatedProduct;
         await this.writeProduct(readProduct);
-        return "Update product";
+        return 'Update product';
       } else {
-        return "Product update not found";
+        return 'Product update not found';
       }
     }
   };
@@ -94,9 +84,9 @@ class productManager {
     if (findProduct) {
       let filterArrayProducts = readProduct.filter((prod) => prod.id != id);
       await this.writeProduct(filterArrayProducts);
-      return "Product delete";
+      return 'Product delete';
     } else {
-      return "Product delete not exist";
+      return 'Product delete not exist';
     }
   };
 }
