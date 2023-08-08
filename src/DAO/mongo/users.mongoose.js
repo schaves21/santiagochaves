@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
 
 const schema = new Schema({
   firstName: { type: String, required: true, max: 100 },
@@ -7,7 +7,7 @@ const schema = new Schema({
   age: { type: Number, required: false },
   password: { type: String, required: false, max: 100 },
   cartID: { type: String, required: true, unique: true },
-  rol: { type: String, default: "user", required: true },
+  rol: { type: String, default: 'user', required: true },
 });
 
-export const UserMongoose = model("users", schema);
+export const UserMongoose = model('users', schema);

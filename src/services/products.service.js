@@ -1,12 +1,17 @@
-import { productModel } from '../dao/models/products.model.js';
+import getModel from '../DAO/factory.js';
+
+const models = await getModel();
+const productModel = models.products;
 
 class ProductService {
+  /*
   validate(title, description, code, price, status, stock, category, thumbnail) {
     if (!title || !description || !code || !price || !status || !stock || !category || !thumbnail) {
       console.log('Validation error: please complete all fields.');
       throw new Error('Validation error: please complete all fields.');
     }
   }
+  */
 
   async getAllProducts() {
     try {
@@ -29,6 +34,16 @@ class ProductService {
     }
   }
 
+  async readByIds(ids) {
+    try {
+      const products = await productModel.readByIds(ids);
+      return products;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /*
   async create(title, description, code, price, status, stock, category, thumbnail) {
     try {
       this.validate(title, description, code, price, status, stock, category, thumbnail);
@@ -51,12 +66,33 @@ class ProductService {
       throw error;
     }
   }
+  */
 
+  async create(product) {
+    try {
+      const productCreated = await productModel.create(product);
+      return productCreated;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /*
   async updateOne(id, title, description, code, price, status, stock, category, thumbnail) {
     try {
       this.validate(title, description, code, price, status, stock, category, thumbnail);
       const productUptaded = await productModel.updateOne(id, title, description, code, price, status, stock, category, thumbnail);
       return productUptaded;
+    } catch (error) {
+      throw error;
+    }
+  }
+  */
+
+  async updateOne(id, product) {
+    try {
+      const productUpdated = await productModel.updateOne(id, product);
+      return productUpdated;
     } catch (error) {
       throw error;
     }

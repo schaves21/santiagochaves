@@ -1,4 +1,5 @@
-import { authModel } from '../dao/models/auth.model.js';
+//import { authModel } from '../DAO/factory.js';
+import { authModel } from '../DAO/mongo/models/auth.model.js';
 
 class AuthService {
   async findById(id) {

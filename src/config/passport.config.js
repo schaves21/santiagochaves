@@ -3,6 +3,7 @@ import passport from 'passport';
 import GitHubStrategy from 'passport-github2';
 import local from 'passport-local';
 import { authService } from '../services/auth.service.js';
+import AuthDTO from '../controllers/DTO/auth.dto.js';
 import { cartService } from '../services/carts.service.js';
 import { createHash, isValidPassword } from '../config.js';
 const LocalStrategy = local.Strategy;
@@ -13,6 +14,7 @@ export function iniPassport() {
     new LocalStrategy({ usernameField: 'email' }, async (username, password, done) => {
       try {
         const user = await authService.findUserByEmail({ email: username });
+
         if (!user) {
           console.log('User Not Found with username (email) ' + username);
           return done(null, false);
@@ -50,15 +52,15 @@ export function iniPassport() {
           const newCart = await cartService.create();
           const cartID = newCart._id.toString();
 
-          const newUser = {
+          const newUser = new AuthDTO({
             firstName,
             lastName,
             email: username,
-            password: createHash(password),
             age,
+            password: createHash(password),
             cartID,
             rol: 'user',
-          };
+          });
 
           const userCreated = await authService.create(newUser);
 
@@ -100,7 +102,6 @@ export function iniPassport() {
           }
           profile.email = emailDetail.email;
 
-          //let user = await UserModel.findOne({ email: profile.email });
           let user = await authService.findUserByEmail({
             email: profile.email,
           });

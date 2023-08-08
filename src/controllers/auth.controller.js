@@ -1,8 +1,10 @@
+import AuthDTO from './DTO/auth.dto.js';
+
 class AuthController {
   async authLogin(req, res) {
     try {
       if (!req.user) {
-        return res.json({ error: 'invalid credentials' });
+        return res.json({ error: 'Invalid credentials' });
       }
 
       req.session.user = {
@@ -23,7 +25,7 @@ class AuthController {
   async authRegister(req, res) {
     try {
       if (!req.user) {
-        return res.json({ error: 'something went wrong' });
+        return res.json({ error: 'Something went wrong' });
       }
       req.session.user = {
         _id: req.user._id.toString(),
@@ -31,20 +33,32 @@ class AuthController {
         firstName: req.user.firstName,
         rol: req.user.rol,
       };
+
       return res.redirect('/products');
     } catch (error) {
       res.status(404).json({ message: error.message });
     }
   }
 
-  getCurrent = (req, res) => {
-    console.log(req.session);
-    return res.status(200).json({
-      status: 'success',
-      msg: 'User session data',
-      data: { user: req.session.user },
-    });
-  };
+  async getCurrent(req, res) {
+    try {
+      const { firstName, lastName, email, rol } = req.session.user;
+      const authDTO = new AuthDTO({ firstName, lastName, email, rol });
+      const authUser = {
+        firstName: authDTO.firstName,
+        lastName: authDTO.lastName,
+        email: authDTO.email,
+        role: authDTO.rol,
+      };
+      return res.status(200).json({
+        status: 'success',
+        msg: 'User session data',
+        data: { user: authUser },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }
 
 export const authController = new AuthController();

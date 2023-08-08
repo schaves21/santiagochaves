@@ -1,10 +1,11 @@
 import { nanoid } from 'nanoid';
 import { promises as fs } from 'fs';
-import productmanager from './productmanager.js';
+import { productsMemory } from './products.memory.js';
+//import productManager from './products.memory.js';
 
-const products = new productmanager();
+//const products = new productManager();
 
-class cart {
+class CartsMemory {
   constructor() {
     this.path = './src/data/carts.json';
   }
@@ -46,7 +47,7 @@ class cart {
 
     if (!cartById) return 'Cart not found';
 
-    let productById = await products.existProduct(productId);
+    let productById = await productsMemory.existProduct(productId);
 
     if (!productById) return 'Product not found';
 
@@ -69,4 +70,4 @@ class cart {
   };
 }
 
-export default cart;
+export const cartsMemory = new CartsMemory();

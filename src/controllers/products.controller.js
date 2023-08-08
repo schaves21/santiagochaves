@@ -1,4 +1,5 @@
 import { productService } from '../services/products.service.js';
+import ProductDTO from './DTO/products.dto.js';
 
 class ProductController {
   async getAllProducts(req, res) {
@@ -41,7 +42,10 @@ class ProductController {
   async create(req, res) {
     try {
       const { title, description, code, price, status, stock, category, thumbnail } = req.body;
-      const productCreated = await productService.create(title, description, code, price, status, stock, category, thumbnail);
+
+      let product = new ProductDTO({ title, description, code, price, status, stock, category, thumbnail });
+      const productCreated = await productService.create(product);
+
       return res.status(201).json({
         status: 'success',
         msg: 'Product created',
@@ -61,16 +65,10 @@ class ProductController {
     try {
       const { id } = req.params;
       const { title, description, code, price, status, stock, category, thumbnail } = req.body;
-      if (!title || !description || !code || !price || !status || !stock || !category || !thumbnail) {
-        console.log('Validation error: please complete all fields.');
-        return res.status(400).json({
-          status: 'error',
-          msg: 'Validation error: please complete all fields.',
-          data: {},
-        });
-      }
 
-      const productUpdated = await productService.updateOne(id, title, description, code, price, status, stock, category, thumbnail);
+      let product = new ProductDTO({ title, description, code, price, status, stock, category, thumbnail });
+      const productUpdated = await productService.updateOne(id, product);
+
       return res.status(200).json({
         status: 'success',
         msg: 'Product updated',

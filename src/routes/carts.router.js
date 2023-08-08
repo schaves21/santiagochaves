@@ -1,4 +1,5 @@
 import express from 'express';
+import { checkUser } from '../middlewares/auth.js';
 import { cartController } from '../controllers/carts.controller.js';
 
 export const cartsRouter = express.Router();
@@ -8,7 +9,8 @@ export const cartsRouter = express.Router();
 cartsRouter.get('/', cartController.getAll);
 cartsRouter.get('/:cid', cartController.getCartById);
 cartsRouter.post('/', cartController.create);
-cartsRouter.post('/:cid/product/:pid', cartController.addProductCart);
+//cartsRouter.post('/:cid/product/:pid', cartController.addProductCart);
+cartsRouter.post('/:cid/product/:pid', checkUser, cartController.addProductCart);
 cartsRouter.put('/:cid', cartController.updateCart);
 cartsRouter.put('/:cid/products/:pid', cartController.updateProductQuantity);
 cartsRouter.delete('/:cid/products/:pid', cartController.removeProduct);

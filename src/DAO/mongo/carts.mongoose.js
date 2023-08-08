@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
 
 const schema = new Schema({
   products: {
@@ -6,7 +6,7 @@ const schema = new Schema({
       {
         product: {
           type: Schema.Types.ObjectId,
-          ref: "products",
+          ref: 'products',
           required: true,
         },
         quantity: { type: Number, required: true, min: 1, default: 1 },
@@ -16,4 +16,4 @@ const schema = new Schema({
   },
 });
 
-export const cartMongoose = model("carts", schema);
+export const cartMongoose = model('carts', schema);

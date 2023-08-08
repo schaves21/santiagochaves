@@ -1,4 +1,7 @@
-import { viewModel } from '../dao/models/views.model.js';
+import getModel from '../DAO/factory.js';
+
+const models = await getModel();
+const viewModel = models.views;
 
 class ViewService {
   async getProducts(queryParams) {

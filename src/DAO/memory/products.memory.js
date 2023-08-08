@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import { promises as fs } from 'fs';
 
-class productManager {
+class ProductsMemory {
   constructor() {
     this.path = './src/data/products.json';
   }
@@ -91,4 +91,4 @@ class productManager {
   };
 }
 
-export default productManager;
+export const productsMemory = new ProductsMemory();

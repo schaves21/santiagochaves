@@ -1,15 +1,19 @@
 import express from 'express';
 import { productController } from '../controllers/products.controller.js';
+import { checkAdmin } from '../middlewares/auth.js';
 
 export const productsRouter = express.Router();
 
 // ------------- MongoDB -------------------------------
 
-productsRouter.get('/', productController.getAllProducts);
+productsRouter.get('/', checkAdmin, productController.getAllProducts);
 productsRouter.get('/:pid', productController.getProductById);
-productsRouter.post('/', productController.create);
-productsRouter.put('/:id', productController.updateOne);
-productsRouter.delete('/:id', productController.deleteOne);
+productsRouter.post('/', checkAdmin, productController.create);
+productsRouter.put('/:id', checkAdmin, productController.updateOne);
+productsRouter.delete('/:id', checkAdmin, productController.deleteOne);
+//productsRouter.post('/', productController.create);
+//productsRouter.put('/:id', productController.updateOne);
+//productsRouter.delete('/:id', productController.deleteOne);
 
 /* --------------- Filesystem ------------------------
 import productManager from "../dao/productmanager.js";

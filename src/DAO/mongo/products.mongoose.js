@@ -1,5 +1,5 @@
-import { Schema, model } from "mongoose";
-import mongoosePaginate from "mongoose-paginate-v2";
+import { Schema, model } from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const schema = new Schema({
   title: { type: String, required: true, max: 50, unique: true },
@@ -13,4 +13,4 @@ const schema = new Schema({
 });
 
 schema.plugin(mongoosePaginate);
-export const productMongoose = model("products", schema);
+export const productMongoose = model('products', schema);

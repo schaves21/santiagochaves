@@ -15,4 +15,5 @@ export default {
   githubKey: process.env.GITHUB_CLIENT_SECRET,
   adminName: process.env.ADMIN_NAME,
   adminPassword: process.env.ADMIN_PASSWORD,
+  persistence: process.env.PERSISTENCE,
 };

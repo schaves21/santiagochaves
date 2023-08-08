@@ -1,4 +1,4 @@
-import { UserMongoose } from './mongoose/users.mongoose.js';
+import { UserMongoose } from '../users.mongoose.js';
 
 class AuthModel {
   async findById(id) {

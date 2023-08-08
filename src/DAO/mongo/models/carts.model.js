@@ -1,5 +1,5 @@
-import { cartMongoose } from './mongoose/carts.mongoose.js';
-import { productMongoose } from './mongoose/products.mongoose.js';
+import { cartMongoose } from '../carts.mongoose.js';
+import { productMongoose } from '../products.mongoose.js';
 
 class CartModel {
   async getAll() {
@@ -21,6 +21,15 @@ class CartModel {
         throw new Error('Cart not found');
       }
       return cart;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async readById(_id) {
+    try {
+      const productById = await cartMongoose.findById(_id);
+      return productById;
     } catch (error) {
       throw error;
     }

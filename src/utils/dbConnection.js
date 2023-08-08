@@ -1,14 +1,25 @@
+import mongoose from 'mongoose';
 import env from '../config/enviroment.config.js';
-import { connect } from 'mongoose';
 
-export async function connectMongo() {
-  try {
-    await connect(env.mongoUrl, {
-      dbName: 'ecommerce',
+export default class MongoSingleton {
+  static instance;
+
+  constructor() {
+    mongoose.connect(env.mongoUrl, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
-    console.log('plug to mongo!');
-  } catch (e) {
-    console.log(e);
-    throw 'can not connect to the db';
+  }
+
+  static getInstance() {
+    if (this.instance) {
+      console.log('Already connected!');
+      return this.instance;
+    }
+
+    this.instance = new MongoSingleton();
+    console.log('Connected MongoDB!');
+
+    return this.instance;
   }
 }

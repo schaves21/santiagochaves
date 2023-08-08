@@ -1,4 +1,7 @@
-import { cartModel } from '../dao/models/carts.model.js';
+import getModel from '../DAO/factory.js';
+
+const models = await getModel();
+const cartModel = models.carts;
 
 class CartService {
   async getAll() {
@@ -8,6 +11,15 @@ class CartService {
         throw new Error('Cart not found');
       }
       return cart;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async readById(_id) {
+    try {
+      const productById = await cartModel.readById(_id);
+      return productById;
     } catch (error) {
       throw error;
     }

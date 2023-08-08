@@ -1,26 +1,35 @@
-import env from './config/enviroment.config.js';
-import path from 'path';
-import { __dirname } from './config.js';
+import MongoStore from 'connect-mongo';
 import express from 'express';
 import handlebars from 'express-handlebars';
 import session from 'express-session';
-import MongoStore from 'connect-mongo';
 import passport from 'passport';
+import env from './config/enviroment.config.js';
 import { iniPassport } from './config/passport.config.js';
-import { cartsRouter } from './routes/carts.router.js';
-import { chatsRouter } from './routes/chats.router.js';
-import { connectMongo } from './utils/dbConnection.js';
-import { connectWebSockets } from './utils/websockets.js';
-import { productsRouter } from './routes/products.router.js';
-import { viewsRouter } from './routes/views.router.js';
+import path from 'path';
+import { __dirname } from './config.js';
+import nodemailer from 'nodemailer';
+import twilio from 'twilio';
 import { authRouter } from './routes/auth.router.js';
+import { cartsRouter } from './routes/carts.router.js';
+import { productsRouter } from './routes/products.router.js';
+import { ticketRouter } from './routes/tickets.router.js';
+import { viewsRouter } from './routes/views.router.js';
+import { purchasesRouter } from './routes/purchases.router.js';
+import { chatsRouter } from './routes/chats.router.js';
+import { connectWebSockets } from './utils/websockets.js';
+//import MongoSingleton from './utils/dbConnection.js';
 
 //console.log(env);
+
+//MongoSingleton.getInstance();
+//connectMongo();
 
 const app = express();
 const PORT = env.port;
 
-connectMongo();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
 const httpServer = app.listen(PORT, () => {
   console.log(`App runing on ${__dirname} - server http://localhost:${PORT}`);
@@ -30,34 +39,77 @@ connectWebSockets(httpServer);
 
 app.use(
   session({
+    secret: 'asd3ñc30kasod',
+    resave: false,
+    saveUninitialized: false,
     store: MongoStore.create({
       mongoUrl: env.mongoUrl,
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-      ttl: 99999,
+      ttl: 3600,
     }),
-    secret: 'asd3ñc30kasod',
-    resave: true,
-    saveUninitialized: true,
   })
 );
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.engine('handlebars', handlebars.engine());
-app.set('views', __dirname + '/views');
-app.set('view engine', 'handlebars');
 
 // CONFIG DE PASSPORT
 iniPassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.engine('handlebars', handlebars.engine());
+app.set('views', __dirname + '/views');
+app.set('view engine', 'handlebars');
+
+const transport = nodemailer.createTransport({
+  service: 'gmail',
+  port: 587,
+  auth: {
+    user: process.env.GOOGLE_EMAIL,
+    pass: process.env.GOOGLE_PASS,
+  },
+});
+
+app.get('/mail', async (req, res) => {
+  const result = await transport.sendMail({
+    from: process.env.GOOGLE_EMAIL,
+    to: 'valeriacajes@gmail.com',
+    subject: 'Enviado con nodemailer',
+    html: `
+				<div>
+					<h1>Probando nodemailer</h1>
+					<img src="cid:logo" />
+				</div>
+			`,
+    attachments: [
+      {
+        filename: 'logo.png',
+        path: __dirname + '/public/images/logo.png',
+        cid: 'logo',
+      },
+    ],
+  });
+
+  console.log(result);
+  res.send('Email sent');
+});
+
+const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+app.get('/sms', async (req, res) => {
+  const result = await client.messages.create({
+    body: 'Enviando sms con Twilio',
+    from: process.env.TWILIO_PHONE_NUMBER,
+    to: '+59898988391',
+  });
+
+  console.log(result);
+
+  res.send('SMS sent');
+});
+
+app.use('/api/sessions', authRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
-app.use('/api/sessions', authRouter);
+app.use('/api/tickets', ticketRouter);
 
 app.get('/api/sessions/github', passport.authenticate('github', { scope: ['user:email'] }));
 app.get('/api/sessions/githubcallback', passport.authenticate('github', { failureRedirect: '/error' }), (req, res) => {
@@ -73,6 +125,7 @@ app.get('/api/sessions/githubcallback', passport.authenticate('github', { failur
 });
 
 app.use('/', viewsRouter);
+app.use('/purchases', purchasesRouter);
 app.use('/chat', chatsRouter);
 app.get('/error-auth', (req, res) => {
   return res.status(400).render('error');

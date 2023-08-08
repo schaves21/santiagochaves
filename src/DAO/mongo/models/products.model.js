@@ -1,4 +1,4 @@
-import { productMongoose } from './mongoose/products.mongoose.js';
+import { productMongoose } from '../products.mongoose.js';
 
 class ProductModel {
   async getAllProducts() {
@@ -25,9 +25,28 @@ class ProductModel {
     }
   }
 
+  async readById(_id) {
+    try {
+      const productById = await productMongoose.findOne({ _id });
+      return productById;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async readByIds(ids) {
+    try {
+      const products = await productMongoose.find({ _id: { $in: ids } });
+      return products;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getProductById(productId) {
     try {
       const product = await productMongoose.findById(productId);
+
       if (!product) {
         throw new Error('Product not found');
       }
@@ -37,18 +56,18 @@ class ProductModel {
     }
   }
 
-  async create(newUser) {
+  async create(product) {
     try {
-      const productCreated = await productMongoose.create(newUser);
+      const productCreated = await productMongoose.create(product);
       return productCreated;
     } catch (error) {
       throw error;
     }
   }
 
-  async updateOne(id, title, description, code, price, status, stock, category, thumbnail) {
+  async updateOne(_id, product) {
     try {
-      const productUptaded = await productMongoose.updateOne({ _id: id }, { title, description, code, price, status, stock, category, thumbnail });
+      const productUptaded = await productMongoose.findByIdAndUpdate(_id, product, { new: true });
       return productUptaded;
     } catch (error) {
       throw error;
