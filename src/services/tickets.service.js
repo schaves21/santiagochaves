@@ -1,65 +1,100 @@
-import { cartService } from './carts.service.js';
 import getModel from '../DAO/factory.js';
-import { UserMongoose } from '../DAO/mongo/users.mongoose.js';
+import { cartService } from './carts.service.js';
 
 const models = await getModel();
 const ticketModel = models.tickets;
 const productModel = models.products;
 
 class TicketService {
-  async getTicket(tid) {
+  async getAll() {
     try {
-      const ticket = await ticketModel.getTicket(tid);
+      const ticket = await ticketModel.getAll({});
+      if (!ticket) {
+        throw new Error('Ticket not found');
+      }
       return ticket;
     } catch (error) {
       throw error;
     }
   }
 
-  async getAll(cartId) {
+  async getTicketById(ticketId) {
     try {
-      const tickets = await ticketModel.getAll(cartId);
-      return tickets;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async create(purchase, products, user) {
-    try {
-      const stockCheckResult = await this.controlStock(products);
-      if (stockCheckResult) {
-        const cartid = await cartService.readById(purchase.cartId);
-        purchase.products = cartid.products;
-        const newTicket = await ticketModel.create(purchase);
-
-        await UserMongoose.findOneAndUpdate({ _id: user._id }, { $push: { purchase_made: newTicket.code } });
-
-        await cartService.clearCart(purchase.cartId);
-
-        return newTicket;
-      } else {
-        console.log('The product could not be created due to lack of stock');
+      const ticket = await ticketModel.getTicketById(ticketId);
+      if (!ticket) {
+        throw new Error('Ticket not found');
       }
+      return ticket;
     } catch (error) {
       throw error;
     }
   }
 
-  async controlStock(products) {
+  async VerifyStockPurchase(cart) {
     try {
-      for (const productData of products) {
-        const productId = productData.product.toString();
-        const product = await productModel.readById(productId);
-        if (product.stock >= productData.quantity) {
-          product.stock = product.stock - 1;
-          await product.save();
-          console.log('Stock discounted correctly. The current Stock is: ', product.stock);
+      const productsProcessed = [];
+      const productsNotProcessed = [];
+
+      for (const cartProduct of cart.products) {
+        const product = await productModel.getProductById(cartProduct.product._id);
+
+        if (product.stock >= cartProduct.quantity) {
+          product.stock -= cartProduct.quantity;
+          productsProcessed.push({ productId: cartProduct.product._id, quantity: cartProduct.quantity, status: product.status });
         } else {
-          console.log(`There is not enough stock for the product ${productId}`);
-          return false;
+          product.status = false;
+          productsNotProcessed.push({ productId: cartProduct.product._id, quantity: cartProduct.quantity, status: product.status });
         }
-        return true;
+        await product.save();
+      }
+      const productsPurchase = [...productsProcessed, ...productsNotProcessed];
+      return productsPurchase;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async calculateTotalAmount(cart) {
+    try {
+      let amount = 0;
+
+      for (const cartProduct of cart.products) {
+        const productResult = await productModel.getProductById(cartProduct.product._id);
+        if (productResult.stock === 0) {
+          amount = amount - productResult.price;
+        }
+        amount += productResult.price * cartProduct.quantity;
+      }
+      return amount;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createTicket(code, amount, purchaser, productsTicket) {
+    try {
+      const ticket = {
+        code: code,
+        purchase_datetime: Date.now(),
+        amount: amount,
+        purchaser: purchaser,
+        products: productsTicket,
+      };
+
+      const newTicket = await ticketModel.createTicket(ticket);
+      return newTicket;
+    } catch (error) {
+      throw new Error('Error creating ticket: ' + error.message);
+    }
+  }
+
+  async removeProcessedProducts(cid) {
+    try {
+      const cart = await cartService.getCartById(cid);
+      cart.products = cart.products.filter((cartProduct) => cartProduct.product.status === true);
+      for (const cartProduct of cart.products) {
+        const pid = cartProduct.product._id.toString();
+        const removeProductToCart = await cartService.removeProduct(cid, pid);
       }
     } catch (error) {
       throw error;

@@ -11,7 +11,6 @@ class ProductController {
         payload: product,
       });
     } catch (e) {
-      console.log(e);
       return res.status(500).json({
         status: 'error',
         msg: 'Something went wrong',
@@ -30,7 +29,6 @@ class ProductController {
         data: product,
       });
     } catch (e) {
-      console.log(e);
       return res.status(500).json({
         status: 'error',
         msg: 'Something went wrong :(',
@@ -52,7 +50,6 @@ class ProductController {
         data: productCreated,
       });
     } catch (e) {
-      console.log(e);
       return res.status(500).json({
         status: 'error',
         msg: 'Something went wrong :(',
@@ -75,7 +72,6 @@ class ProductController {
         data: productUpdated,
       });
     } catch (e) {
-      console.log(e);
       return res.status(500).json({
         status: 'error',
         msg: 'Something went wrong :(',
@@ -94,7 +90,6 @@ class ProductController {
         data: productDeleted,
       });
     } catch (e) {
-      console.log(e);
       return res.status(500).json({
         status: 'error',
         msg: 'Something went wrong :(',

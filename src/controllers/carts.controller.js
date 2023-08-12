@@ -25,7 +25,6 @@ class CartController {
       const newCart = await cartService.create();
       res.status(201).json(newCart);
     } catch (error) {
-      console.log(error);
       res.status(500).json({ message: 'Internal Server Error' });
     }
   }

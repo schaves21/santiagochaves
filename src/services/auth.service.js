@@ -1,5 +1,5 @@
 //import { authModel } from '../DAO/factory.js';
-import { authModel } from '../DAO/mongo/models/auth.model.js';
+import { authModel } from '../DAO/mongo/auth.model.js';
 
 class AuthService {
   async findById(id) {
@@ -18,6 +18,15 @@ class AuthService {
     try {
       const user = await authModel.findUserByEmail({ email });
       return user || false;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getUserById(cartID) {
+    try {
+      const user = await authModel.getUserById(cartID);
+      return user;
     } catch (error) {
       throw error;
     }

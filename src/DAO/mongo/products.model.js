@@ -1,4 +1,4 @@
-import { productMongoose } from '../products.mongoose.js';
+import { productMongoose } from '../mongo/schemas/products.mongoose.js';
 
 class ProductModel {
   async getAllProducts() {
@@ -25,27 +25,9 @@ class ProductModel {
     }
   }
 
-  async readById(_id) {
-    try {
-      const productById = await productMongoose.findOne({ _id });
-      return productById;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async readByIds(ids) {
-    try {
-      const products = await productMongoose.find({ _id: { $in: ids } });
-      return products;
-    } catch (error) {
-      throw error;
-    }
-  }
-
   async getProductById(productId) {
     try {
-      const product = await productMongoose.findById(productId);
+      const product = await productMongoose.findById({ _id: productId });
 
       if (!product) {
         throw new Error('Product not found');

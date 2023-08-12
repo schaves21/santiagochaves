@@ -1,5 +1,5 @@
-import { cartMongoose } from '../carts.mongoose.js';
-import { productMongoose } from '../products.mongoose.js';
+import { cartMongoose } from '../mongo/schemas/carts.mongoose.js';
+import { productMongoose } from '../mongo/schemas/products.mongoose.js';
 
 class ViewModel {
   async paginate(filter, options) {

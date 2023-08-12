@@ -14,12 +14,9 @@ import { cartsRouter } from './routes/carts.router.js';
 import { productsRouter } from './routes/products.router.js';
 import { ticketRouter } from './routes/tickets.router.js';
 import { viewsRouter } from './routes/views.router.js';
-import { purchasesRouter } from './routes/purchases.router.js';
 import { chatsRouter } from './routes/chats.router.js';
 import { connectWebSockets } from './utils/websockets.js';
 //import MongoSingleton from './utils/dbConnection.js';
-
-//console.log(env);
 
 //MongoSingleton.getInstance();
 //connectMongo();
@@ -125,7 +122,6 @@ app.get('/api/sessions/githubcallback', passport.authenticate('github', { failur
 });
 
 app.use('/', viewsRouter);
-app.use('/purchases', purchasesRouter);
 app.use('/chat', chatsRouter);
 app.get('/error-auth', (req, res) => {
   return res.status(400).render('error');

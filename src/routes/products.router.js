@@ -6,14 +6,18 @@ export const productsRouter = express.Router();
 
 // ------------- MongoDB -------------------------------
 
-productsRouter.get('/', checkAdmin, productController.getAllProducts);
-productsRouter.get('/:pid', productController.getProductById);
-productsRouter.post('/', checkAdmin, productController.create);
-productsRouter.put('/:id', checkAdmin, productController.updateOne);
-productsRouter.delete('/:id', checkAdmin, productController.deleteOne);
+// **** para postman / thunder client quitar el middleware checkUser ***
+//productsRouter.get('/', productController.getAllProducts);
+//productsRouter.get('/:pid', productController.getProductById);
 //productsRouter.post('/', productController.create);
 //productsRouter.put('/:id', productController.updateOne);
 //productsRouter.delete('/:id', productController.deleteOne);
+
+productsRouter.get('/', checkAdmin, productController.getAllProducts);
+productsRouter.get('/:pid', checkAdmin, productController.getProductById);
+productsRouter.post('/', checkAdmin, productController.create);
+productsRouter.put('/:id', checkAdmin, productController.updateOne);
+productsRouter.delete('/:id', checkAdmin, productController.deleteOne);
 
 /* --------------- Filesystem ------------------------
 import productManager from "../dao/productmanager.js";

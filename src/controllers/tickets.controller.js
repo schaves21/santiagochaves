@@ -1,59 +1,59 @@
-import TicketDTO from './DTO/tickets.dto.js';
 import { ticketService } from '../services/tickets.service.js';
 import { cartService } from '../services/carts.service.js';
+import { authService } from '../services/auth.service.js';
+import { nanoid } from 'nanoid';
 
 class TicketController {
-  async getTicket(req, res) {
+  async getAll(req, res) {
     try {
-      const { tid } = req.params;
-      const ticket = await ticketService.getTicket(tid);
-      const cartid = ticket.cartId;
-      const products = await cartService.readById(cartid);
-      return res.status(201).json({
-        status: 'success',
-        msg: 'Ticket Details',
-        payload: {
-          id: ticket._id,
-          code: ticket.code,
-          dateTime: ticket.purchase_datetime,
-          user: ticket.purchaser,
-          cartId: ticket.cartId,
-          products: products.products,
-          totalPurchase: ticket.amount,
-        },
-      });
-    } catch (e) {
-      console.log(e);
-      res.status(500).json({ error: 'Server error' });
+      const ticket = await ticketService.getAll();
+      res.status(200).json(ticket);
+    } catch (error) {
+      res.status(404).json({ message: error.message });
     }
   }
 
-  async create(req, res) {
+  async getTicketById(req, res) {
     try {
-      const user = req.session.user;
-      const { usuario, cart_id, total } = req.body.cartData;
-      const purchase = new TicketDTO({
-        usuario,
-        cart_id,
-        total,
-      });
+      const ticketId = req.params.tid;
+      const ticket = await ticketService.getTicketById(ticketId);
+      res.status(200).json(ticket);
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+    }
+  }
 
-      console.log(user);
-      console.log(purchase);
+  async createTicket(req, res) {
+    try {
+      const { cid } = req.params;
+      const cart = await cartService.getCartById(cid);
 
-      const cartData = await cartService.readById(cart_id);
-      console.log(cartData.products);
-      const newTicket = await ticketService.create(purchase, cartData.products, user);
-      return res.status(201).json({
+      const user = await authService.getUserById(cid);
+
+      const purchaserEmail = user.email;
+
+      const productsPurchase = await ticketService.VerifyStockPurchase(cart);
+
+      const productsTicket = productsPurchase.filter((product) => product.status === true);
+      const productsNotProcessed = productsPurchase.filter((product) => product.status === false);
+
+      const amount = await ticketService.calculateTotalAmount(cart);
+
+      const code = nanoid();
+
+      const ticket = await ticketService.createTicket(code, amount, purchaserEmail, productsTicket);
+
+      await ticketService.removeProcessedProducts(cid);
+
+      return res.status(200).json({
         status: 'success',
-        msg: 'Product Created',
-        payload: {
-          newTicket,
-        },
+        msg: 'Thanks for your purchase',
+        ticket: ticket._id,
+        productProcessed: productsTicket,
+        productsNotProcessed: productsNotProcessed,
       });
-    } catch (e) {
-      console.log(e);
-      res.status(500).json({ error: 'Error en el servidor' });
+    } catch (error) {
+      res.status(404).json({ message: error.message });
     }
   }
 }

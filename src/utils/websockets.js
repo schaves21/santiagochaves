@@ -1,5 +1,5 @@
-import { MsgMongoose } from '../DAO/mongo/messages.mongoose.js';
 import { Server } from 'socket.io';
+import { MsgMongoose } from '../DAO/mongo/schemas/messages.mongoose.js';
 import { productsMemory } from '../DAO/memory/products.memory.js';
 
 //import productManager from '../DAO/memory/products.memory.js';

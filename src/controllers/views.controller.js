@@ -10,7 +10,6 @@ class ViewController {
       const title = 'Mega-Friday® - Login';
       return res.status(200).render('login', { title });
     } catch (err) {
-      console.log(err);
       res.status(501).send({ status: 'error', msg: 'Server error', error: err });
     }
   }
@@ -29,14 +28,12 @@ class ViewController {
       const title = 'Mega-Friday® - Register';
       return res.status(200).render('register', { title });
     } catch (err) {
-      console.log(err);
       res.status(501).send({ status: 'error', msg: 'Server error', error: err });
     }
   }
 
   getProfile(req, res) {
     const user = req.session.user;
-    console.log(user);
     res.render('profile', { user: user });
   }
 
@@ -48,7 +45,6 @@ class ViewController {
     try {
       res.render('realtimeproducts');
     } catch (err) {
-      console.log(err);
       res.status(501).send({ status: 'error', msg: 'Server error', error: err });
     }
   }

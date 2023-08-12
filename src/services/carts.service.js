@@ -16,15 +16,6 @@ class CartService {
     }
   }
 
-  async readById(_id) {
-    try {
-      const productById = await cartModel.readById(_id);
-      return productById;
-    } catch (error) {
-      throw error;
-    }
-  }
-
   async getCartById(cartId) {
     try {
       const cart = await cartModel.getCartById(cartId);

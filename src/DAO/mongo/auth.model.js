@@ -1,4 +1,4 @@
-import { UserMongoose } from '../users.mongoose.js';
+import { UserMongoose } from '../mongo/schemas/users.mongoose.js';
 
 class AuthModel {
   async findById(id) {
@@ -28,6 +28,18 @@ class AuthModel {
         }
       );
       return user || false;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getUserById(cartID) {
+    try {
+      const user = await UserMongoose.findOne({ cartID: cartID });
+      if (!user) {
+        throw new Error('User not found');
+      }
+      return user;
     } catch (error) {
       throw error;
     }

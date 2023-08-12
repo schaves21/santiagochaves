@@ -34,15 +34,6 @@ class ProductService {
     }
   }
 
-  async readByIds(ids) {
-    try {
-      const products = await productModel.readByIds(ids);
-      return products;
-    } catch (error) {
-      throw error;
-    }
-  }
-
   /*
   async create(title, description, code, price, status, stock, category, thumbnail) {
     try {
