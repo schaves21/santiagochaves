@@ -6,6 +6,9 @@ import { authService } from '../services/auth.service.js';
 import AuthDTO from '../controllers/DTO/auth.dto.js';
 import { cartService } from '../services/carts.service.js';
 import { createHash, isValidPassword } from '../config.js';
+import { CustomError } from '../utils/errors/custom-error.js';
+import { EErrors } from '../utils/errors/dictionary-error.js';
+
 const LocalStrategy = local.Strategy;
 
 export function iniPassport() {
@@ -16,11 +19,12 @@ export function iniPassport() {
         const user = await authService.findUserByEmail({ email: username });
 
         if (!user) {
-          console.log('User Not Found with username (email) ' + username);
+          throw new CustomError(EErrors.INVALID_EMAIL_PASSWORD.code, EErrors.INVALID_EMAIL_PASSWORD.name, EErrors.INVALID_EMAIL_PASSWORD.cause, EErrors.INVALID_EMAIL_PASSWORD.message);
           return done(null, false);
         }
+
         if (!isValidPassword(password, user.password)) {
-          console.log('Invalid Password');
+          throw new CustomError(EErrors.INVALID_EMAIL_PASSWORD.code, EErrors.INVALID_EMAIL_PASSWORD.name, EErrors.INVALID_EMAIL_PASSWORD.cause, EErrors.INVALID_EMAIL_PASSWORD.message);
           return done(null, false);
         }
 
@@ -42,10 +46,14 @@ export function iniPassport() {
         try {
           const { firstName, lastName, age } = req.body;
 
-          const userExist = await authService.findUserByEmail(username);
+          if (!firstName || !lastName || !username) {
+            throw new CustomError(EErrors.INVALID_INPUT_ERROR.code, EErrors.INVALID_INPUT_ERROR.name, EErrors.INVALID_INPUT_ERROR.cause, EErrors.INVALID_INPUT_ERROR.message);
+          }
+
+          const userExist = await authService.findUserByEmail({ email: username });
 
           if (userExist) {
-            console.log('User already exists');
+            throw new CustomError(EErrors.USER_EXIST.code, EErrors.USER_EXIST.name, EErrors.USER_EXIST.cause, EErrors.USER_EXIST.message);
             return done(null, false);
           }
 
@@ -64,12 +72,8 @@ export function iniPassport() {
 
           const userCreated = await authService.create(newUser);
 
-          console.log('User Registration succesful');
-
           return done(null, userCreated);
         } catch (e) {
-          console.log('Error in register');
-          console.log(e);
           return done(e);
         }
       }

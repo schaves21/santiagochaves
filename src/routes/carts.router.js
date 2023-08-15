@@ -8,15 +8,19 @@ export const cartsRouter = express.Router();
 // ----------- MongoDB -------------------------------
 
 // **** para postman / thunder client quitar el middleware checkUser ***
-//cartsRouter.get('/', cartController.getAll);
-//cartsRouter.get('/:cid', cartController.getCartById);
-//cartsRouter.post('/:cid/product/:pid', cartController.addProductCart);
-//cartsRouter.put('/:cid', cartController.updateCart);
-//cartsRouter.put('/:cid/products/:pid', cartController.updateProductQuantity);
-//cartsRouter.delete('/:cid/products/:pid', cartController.removeProduct);
-//cartsRouter.delete('/:cid', cartController.clearCart);
+/*
+cartsRouter.get('/', cartController.getAllCarts);
+cartsRouter.get('/:cid', cartController.getCartById);
+cartsRouter.post('/', cartController.create);
+cartsRouter.post('/:cid/product/:pid', cartController.addProductCart);
+cartsRouter.put('/:cid', cartController.updateCart);
+cartsRouter.put('/:cid/products/:pid', cartController.updateProductQuantity);
+cartsRouter.delete('/:cid/products/:pid', cartController.removeProduct);
+cartsRouter.delete('/:cid', cartController.clearCart);
+cartsRouter.post('/:cid/purchase', ticketController.createTicket);
+*/
 
-cartsRouter.get('/', checkUser, cartController.getAll);
+cartsRouter.get('/', checkUser, cartController.getAllCarts);
 cartsRouter.get('/:cid', checkUser, cartController.getCartById);
 cartsRouter.post('/', checkUser, cartController.create);
 cartsRouter.post('/:cid/product/:pid', checkUser, checkCart, cartController.addProductCart);

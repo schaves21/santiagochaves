@@ -1,27 +1,19 @@
 import { productMongoose } from '../mongo/schemas/products.mongoose.js';
+import { CustomError } from '../../utils/errors/custom-error.js';
+import { EErrors } from '../../utils/errors/dictionary-error.js';
 
 class ProductModel {
   async getAllProducts() {
     try {
       const product = await productMongoose.find({});
       if (!product) {
-        throw new Error('Product not found');
+        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
       }
       return product;
     } catch (error) {
-      throw error;
-    }
-  }
-
-  async get() {
-    try {
-      const product = await productMongoose.find({});
-      if (!product) {
-        throw new Error('Product not found');
+      if (error instanceof CustomError) {
+        throw error;
       }
-      return product;
-    } catch (error) {
-      throw error;
     }
   }
 
@@ -30,29 +22,41 @@ class ProductModel {
       const product = await productMongoose.findById({ _id: productId });
 
       if (!product) {
-        throw new Error('Product not found');
+        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
       }
       return product;
     } catch (error) {
-      throw error;
+      if (error instanceof CustomError) {
+        throw error;
+      }
     }
   }
 
   async create(product) {
     try {
       const productCreated = await productMongoose.create(product);
+      if (!productCreated) {
+        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
+      }
       return productCreated;
     } catch (error) {
-      throw error;
+      if (error instanceof CustomError) {
+        throw error;
+      }
     }
   }
 
   async updateOne(_id, product) {
     try {
       const productUptaded = await productMongoose.findByIdAndUpdate(_id, product, { new: true });
+      if (!productUptaded) {
+        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
+      }
       return productUptaded;
     } catch (error) {
-      throw error;
+      if (error instanceof CustomError) {
+        throw error;
+      }
     }
   }
 
@@ -62,10 +66,12 @@ class ProductModel {
       if (productDeleted.deletedCount === 1) {
         return true;
       } else {
-        throw new Error('Product not found');
+        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
       }
     } catch (error) {
-      throw error;
+      if (error instanceof CustomError) {
+        throw error;
+      }
     }
   }
 }

@@ -1,55 +1,73 @@
 import { viewService } from '../services/views.service.js';
+import { CustomError } from '../utils/errors/custom-error.js';
+import { EErrors } from '../utils/errors/dictionary-error.js';
 
 class ViewController {
-  getHome(req, res) {
-    res.render('home');
+  getHome(req, res, next) {
+    try {
+      res.render('home');
+    } catch (err) {
+      next(err);
+    }
   }
 
-  getLogin(req, res) {
+  getLogin(req, res, next) {
     try {
       const title = 'Mega-Friday® - Login';
       return res.status(200).render('login', { title });
     } catch (err) {
-      res.status(501).send({ status: 'error', msg: 'Server error', error: err });
+      next(err);
     }
   }
 
-  getLogout(req, res) {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.render('error', { error: 'could not close the session' });
-      }
-      return res.redirect('/login');
-    });
+  getLogout(req, res, next) {
+    try {
+      req.session.destroy((err) => {
+        if (err) {
+          return res.render('error', { error: 'could not close the session' });
+        }
+        return res.redirect('/login');
+      });
+    } catch (err) {
+      next(err);
+    }
   }
 
-  getRegister(req, res) {
+  getRegister(req, res, next) {
     try {
       const title = 'Mega-Friday® - Register';
       return res.status(200).render('register', { title });
     } catch (err) {
-      res.status(501).send({ status: 'error', msg: 'Server error', error: err });
+      next(err);
     }
   }
 
-  getProfile(req, res) {
-    const user = req.session.user;
-    res.render('profile', { user: user });
+  getProfile(req, res, next) {
+    try {
+      const user = req.session.user;
+      res.render('profile', { user: user });
+    } catch (err) {
+      next(err);
+    }
   }
 
-  getAdmin(req, res) {
-    res.send('admin');
+  getAdmin(req, res, next) {
+    try {
+      res.send('admin');
+    } catch (err) {
+      next(err);
+    }
   }
 
-  async getRealTimeProducts(req, res) {
+  async getRealTimeProducts(req, res, next) {
     try {
       res.render('realtimeproducts');
     } catch (err) {
-      res.status(501).send({ status: 'error', msg: 'Server error', error: err });
+      next(err);
     }
   }
 
-  async getProducts(req, res) {
+  async getProducts(req, res, next) {
     try {
       const user = req.session.user;
 
@@ -63,6 +81,9 @@ class ViewController {
       const { limit = 10, page = 1, sort, query } = req.query;
       const queryParams = { limit, page, sort, query };
       const { payload: products, totalPages, prevPage, nextPage, page: currentPage, hasPrevPage, hasNextPage, prevLink, nextLink } = await viewService.getProducts(queryParams);
+      if (!products) {
+        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
+      }
       let productsViews = products.map((item) => {
         return {
           _id: item._id.toString(),
@@ -89,15 +110,20 @@ class ViewController {
         prevLink: prevLink?.substring(4) || '',
         nextLink: nextLink?.substring(4) || '',
       });
-    } catch (error) {
-      return res.status(500).json({ status: 'error', message: 'Error in server' });
+    } catch (err) {
+      next(err);
     }
   }
 
-  async viewProductById(req, res) {
+  async viewProductById(req, res, next) {
     try {
       const { pid } = req.params;
       const product = await viewService.viewProductById(pid);
+
+      if (!product) {
+        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
+      }
+
       const productsViews = {
         _id: product._id.toString(),
         title: product.title,
@@ -110,18 +136,21 @@ class ViewController {
         thumbnail: product.thumbnail,
       };
       res.render('product', { product: productsViews });
-    } catch (error) {
-      return res.status(500).json({ status: 'error', message: 'Error in server' });
+    } catch (err) {
+      next(err);
     }
   }
 
-  async viewCartById(req, res) {
+  async viewCartById(req, res, next) {
     try {
       const { cid } = req.params;
       const cart = await viewService.viewCartById(cid);
+      if (!cart) {
+        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
+      }
       res.render('cart', { cart });
-    } catch (error) {
-      res.status(404).json({ message: error.message });
+    } catch (err) {
+      next(err);
     }
   }
 }

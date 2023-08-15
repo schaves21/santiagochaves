@@ -25,6 +25,7 @@ class AuthModel {
           password: true,
           age: true,
           rol: true,
+          cartID: true,
         }
       );
       return user || false;

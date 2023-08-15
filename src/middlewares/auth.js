@@ -8,7 +8,7 @@ export function checkUser(req, res, next) {
 }
 
 export function checkAdmin(req, res, next) {
-  console.log(req.session?.user?.rol);
+  //console.log(req.session?.user?.rol);
   if (req.session?.user?.email && req.session?.user?.rol == 'admin') {
     return next();
   }

@@ -7,12 +7,16 @@ export const productsRouter = express.Router();
 // ------------- MongoDB -------------------------------
 
 // **** para postman / thunder client quitar el middleware checkUser ***
-//productsRouter.get('/', productController.getAllProducts);
-//productsRouter.get('/:pid', productController.getProductById);
-//productsRouter.post('/', productController.create);
-//productsRouter.put('/:id', productController.updateOne);
-//productsRouter.delete('/:id', productController.deleteOne);
+/*
+productsRouter.get('/mockingproducts', productController.mockingProducts);
+productsRouter.get('/', productController.getAllProducts);
+productsRouter.get('/:pid', productController.getProductById);
+productsRouter.post('/', productController.create);
+productsRouter.put('/:id', productController.updateOne);
+productsRouter.delete('/:id', productController.deleteOne);
+*/
 
+productsRouter.get('/mockingproducts', checkAdmin, productController.mockingProducts);
 productsRouter.get('/', checkAdmin, productController.getAllProducts);
 productsRouter.get('/:pid', checkAdmin, productController.getProductById);
 productsRouter.post('/', checkAdmin, productController.create);

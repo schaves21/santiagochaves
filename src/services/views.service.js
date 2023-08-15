@@ -1,4 +1,6 @@
 import getModel from '../DAO/factory.js';
+import { CustomError } from '../utils/errors/custom-error.js';
+import { EErrors } from '../utils/errors/dictionary-error.js';
 
 const models = await getModel();
 const viewModel = models.views;
@@ -21,6 +23,10 @@ class ViewService {
 
       const result = await viewModel.paginate(filter, options);
 
+      if (!result) {
+        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
+      }
+
       const response = {
         status: 'success',
         payload: result.docs,
@@ -35,7 +41,9 @@ class ViewService {
       };
       return response;
     } catch (error) {
-      throw error;
+      if (error instanceof CustomError) {
+        throw error;
+      }
     }
   }
 
@@ -43,11 +51,13 @@ class ViewService {
     try {
       const product = await viewModel.viewProductById(productId);
       if (!product) {
-        throw new Error('Product not found');
+        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
       }
       return product;
     } catch (error) {
-      throw error;
+      if (error instanceof CustomError) {
+        throw error;
+      }
     }
   }
 
@@ -55,11 +65,13 @@ class ViewService {
     try {
       const cart = await viewModel.viewCartById(cid);
       if (!cart) {
-        throw new Error('Cart not found');
+        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cart;
     } catch (error) {
-      throw error;
+      if (error instanceof CustomError) {
+        throw error;
+      }
     }
   }
 }

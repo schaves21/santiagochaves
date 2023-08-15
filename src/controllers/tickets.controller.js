@@ -1,25 +1,33 @@
 import { ticketService } from '../services/tickets.service.js';
 import { cartService } from '../services/carts.service.js';
 import { authService } from '../services/auth.service.js';
+import { CustomError } from '../utils/errors/custom-error.js';
+import { EErrors } from '../utils/errors/dictionary-error.js';
 import { nanoid } from 'nanoid';
 
 class TicketController {
-  async getAll(req, res) {
+  async getAllTickets(req, res, next) {
     try {
-      const ticket = await ticketService.getAll();
+      const ticket = await ticketService.getAllTickets();
+      if (!ticket) {
+        throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
+      }
       res.status(200).json(ticket);
-    } catch (error) {
-      res.status(404).json({ message: error.message });
+    } catch (err) {
+      next(err);
     }
   }
 
-  async getTicketById(req, res) {
+  async getTicketById(req, res, next) {
     try {
       const ticketId = req.params.tid;
       const ticket = await ticketService.getTicketById(ticketId);
+      if (!ticket) {
+        throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
+      }
       res.status(200).json(ticket);
-    } catch (error) {
-      res.status(404).json({ message: error.message });
+    } catch (err) {
+      next(err);
     }
   }
 
@@ -27,6 +35,10 @@ class TicketController {
     try {
       const { cid } = req.params;
       const cart = await cartService.getCartById(cid);
+
+      if (!cart) {
+        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
+      }
 
       const user = await authService.getUserById(cid);
 
@@ -43,6 +55,10 @@ class TicketController {
 
       const ticket = await ticketService.createTicket(code, amount, purchaserEmail, productsTicket);
 
+      if (!ticket) {
+        throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
+      }
+
       await ticketService.removeProcessedProducts(cid);
 
       return res.status(200).json({
@@ -52,8 +68,8 @@ class TicketController {
         productProcessed: productsTicket,
         productsNotProcessed: productsNotProcessed,
       });
-    } catch (error) {
-      res.status(404).json({ message: error.message });
+    } catch (err) {
+      next(err);
     }
   }
 }

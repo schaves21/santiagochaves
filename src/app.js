@@ -16,6 +16,9 @@ import { ticketRouter } from './routes/tickets.router.js';
 import { viewsRouter } from './routes/views.router.js';
 import { chatsRouter } from './routes/chats.router.js';
 import { connectWebSockets } from './utils/websockets.js';
+import { CustomError } from './utils/errors/custom-error.js';
+import { EErrors } from './utils/errors/dictionary-error.js';
+import { errorHandler } from './middlewares/error.js';
 //import MongoSingleton from './utils/dbConnection.js';
 
 //MongoSingleton.getInstance();
@@ -123,10 +126,17 @@ app.get('/api/sessions/githubcallback', passport.authenticate('github', { failur
 
 app.use('/', viewsRouter);
 app.use('/chat', chatsRouter);
+
 app.get('/error-auth', (req, res) => {
   return res.status(400).render('error');
 });
 
-app.get('*', (_, res) => {
-  return res.status(404).json({ status: 'error', msg: 'that route is not found', data: {} });
+app.get('*', (req, res, next) => {
+  try {
+    throw new CustomError(EErrors.ROUTING_ERROR.code, EErrors.ROUTING_ERROR.name, EErrors.ROUTING_ERROR.cause, EErrors.ROUTING_ERROR.message);
+  } catch (err) {
+    next(err);
+  }
 });
+
+app.use(errorHandler.handleMiddleware);
