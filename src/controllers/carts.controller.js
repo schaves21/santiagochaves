@@ -1,6 +1,7 @@
 import { cartService } from '../services/carts.service.js';
 import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
+import { logger } from '../utils/logger.js';
 
 class CartController {
   async getAllCarts(req, res, next) {
@@ -11,6 +12,7 @@ class CartController {
       }
       res.status(200).json(cart);
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }
@@ -18,6 +20,9 @@ class CartController {
   async getCartById(req, res, next) {
     try {
       const cartId = req.params.cid;
+
+      logger.debug(`Cart id received by parameter: ${cartId}`);
+
       const cart = await cartService.getCartById(cartId);
 
       if (!cart) {
@@ -26,6 +31,7 @@ class CartController {
 
       res.status(200).json(cart);
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }
@@ -38,6 +44,7 @@ class CartController {
       }
       res.status(201).json(newCart);
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }
@@ -46,11 +53,13 @@ class CartController {
     try {
       const { cid, pid } = req.params;
       const cart = await cartService.addProductCart(cid, pid);
+
       if (!cart) {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       res.status(200).json(cart);
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }
@@ -69,6 +78,7 @@ class CartController {
         cart,
       });
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }
@@ -83,6 +93,7 @@ class CartController {
       }
       res.status(200).json({ status: 'success', message: 'Product quantity updated', cart });
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }
@@ -100,6 +111,7 @@ class CartController {
         cart,
       });
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }
@@ -107,9 +119,11 @@ class CartController {
   async clearCart(req, res, next) {
     try {
       const { cid } = req.params;
+      logger.debug(`Cart id received by parameter: ${cid}`);
       await cartService.clearCart(cid);
       res.status(200).json({ status: 'success', message: 'Cart cleared successfully' });
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }

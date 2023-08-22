@@ -1,44 +1,45 @@
 import env from '../config/enviroment.config.js';
 import MongoSingleton from '../utils/dbConnection.js';
-import { productModel } from '../DAO/mongo/products.model.js';
-//import { usersModel } from "./mongo/models/users.model.js";
-import { cartModel } from '../DAO/mongo/carts.model.js';
-import { viewModel } from '../DAO/mongo/views.model.js';
-import { ticketModel } from '../DAO/mongo/tickets.model.js';
-import { productsMemory } from './memory/products.memory.js';
-//import { usersMemory } from "./memory/users.memory.js";
-import { cartsMemory } from './memory/carts.memory.js';
-import { ticketsMemory } from './memory/tickets.memory.js';
+import { logger } from '../utils/logger.js';
 
-async function getModel() {
-  let models;
+export let ProductModel;
+export let CartModel;
+export let TicketModel;
+export let ViewModel;
 
-  switch (env.persistence) {
-    case 'MONGO':
-      MongoSingleton.getInstance();
-      console.log('Persistence with MongoDB');
-      models = {
-        products: productModel,
-        carts: cartModel,
-        views: viewModel,
-        tickets: ticketModel,
-      };
-      break;
+switch (env.persistence) {
+  case 'MONGO':
+    MongoSingleton.getInstance();
+    logger.info('Persistence with MongoDB');
 
-    case 'MEMORY':
-      console.log('Persistence with Memory');
-      models = {
-        products: productsMemory,
-        carts: cartsMemory,
-        tickets: ticketsMemory,
-      };
-      break;
+    const { default: ProductsMongo } = await import('./mongo/products.model.js');
+    ProductModel = ProductsMongo;
 
-    default:
-      throw new Error(`The type of persistence "${env.persistence}" is not valid`);
-  }
+    const { default: CartsMongo } = await import('./mongo/carts.model.js');
+    CartModel = CartsMongo;
 
-  return models;
+    const { default: TicketsMongo } = await import('./mongo/tickets.model.js');
+    TicketModel = TicketsMongo;
+
+    const { default: ViewsMongo } = await import('./mongo/views.model.js');
+    ViewModel = ViewsMongo;
+
+    break;
+  case 'MEMORY':
+    logger.info('Persistence with Memory');
+    const { default: ProductsMemory } = await import('./memory/products.memory.js');
+    ProductModel = ProductsMemory;
+
+    const { default: CartsMemory } = await import('./memory/carts.memory.js');
+    CartModel = CartsMemory;
+
+    const { default: TicketsMemory } = await import('./memory/tickets.memory.js');
+    TicketModel = TicketsMemory;
+
+    const { default: ViewsMemory } = await import('./memory/views.memory.js');
+    ViewModel = ViewsMemory;
+
+    break;
+  default:
+    break;
 }
-
-export default getModel;

@@ -1,9 +1,9 @@
-import getModel from '../DAO/factory.js';
+import { CartModel } from '../DAO/factory.js';
 import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
+import { logger } from '../utils/logger.js';
 
-const models = await getModel();
-const cartModel = models.carts;
+const cartModel = new CartModel();
 
 class CartService {
   async getAllCarts() {
@@ -23,6 +23,7 @@ class CartService {
   async getCartById(cartId) {
     try {
       const cart = await cartModel.getCartById(cartId);
+      logger.debug(`Cart Id found in BD: ${cartId}`);
       if (!cart) {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
@@ -107,6 +108,7 @@ class CartService {
   async clearCart(cartId) {
     try {
       const cart = await cartModel.clearCart(cartId);
+      logger.debug(`Cart Id found in BD: ${cartId}`);
       if (!cart) {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }

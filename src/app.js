@@ -19,10 +19,8 @@ import { connectWebSockets } from './utils/websockets.js';
 import { CustomError } from './utils/errors/custom-error.js';
 import { EErrors } from './utils/errors/dictionary-error.js';
 import { errorHandler } from './middlewares/error.js';
-//import MongoSingleton from './utils/dbConnection.js';
-
-//MongoSingleton.getInstance();
-//connectMongo();
+import { loggerRouter } from './routes/logger.router.js';
+import { logger } from './utils/logger.js';
 
 const app = express();
 const PORT = env.port;
@@ -32,14 +30,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 const httpServer = app.listen(PORT, () => {
-  console.log(`App runing on ${__dirname} - server http://localhost:${PORT}`);
+  logger.info(`App runing on ${__dirname} - server http://localhost:${PORT}`);
 });
 
 connectWebSockets(httpServer);
 
 app.use(
   session({
-    secret: 'asd3ñc30kasod',
+    secret: env.sessionSecret,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
@@ -88,7 +86,7 @@ app.get('/mail', async (req, res) => {
     ],
   });
 
-  console.log(result);
+  logger.info(result);
   res.send('Email sent');
 });
 
@@ -101,7 +99,7 @@ app.get('/sms', async (req, res) => {
     to: '+59898988391',
   });
 
-  console.log(result);
+  logger.info(result);
 
   res.send('SMS sent');
 });
@@ -110,6 +108,7 @@ app.use('/api/sessions', authRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/tickets', ticketRouter);
+app.use('/api/loggerTest', loggerRouter);
 
 app.get('/api/sessions/github', passport.authenticate('github', { scope: ['user:email'] }));
 app.get('/api/sessions/githubcallback', passport.authenticate('github', { failureRedirect: '/error' }), (req, res) => {

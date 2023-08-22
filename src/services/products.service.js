@@ -1,9 +1,9 @@
-import getModel from '../DAO/factory.js';
+import { ProductModel } from '../DAO/factory.js';
 import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
+import { logger } from '../utils/logger.js';
 
-const models = await getModel();
-const productModel = models.products;
+const productModel = new ProductModel();
 
 class ProductService {
   async getAllProducts() {
@@ -23,6 +23,8 @@ class ProductService {
   async getProductById(productId) {
     try {
       const product = await productModel.getProductById(productId);
+
+      logger.debug(`Product found in BD: ${product}`);
 
       if (!product) {
         throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
@@ -66,6 +68,7 @@ class ProductService {
   async deleteOne(id) {
     try {
       const productDeleted = await productModel.deleteOne(id);
+      logger.debug(`Product found in BD: ${productDeleted}`);
       if (!productDeleted) {
         throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
       }

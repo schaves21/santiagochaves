@@ -8,6 +8,7 @@ import { cartService } from '../services/carts.service.js';
 import { createHash, isValidPassword } from '../config.js';
 import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
+import { logger } from '../utils/logger.js';
 
 const LocalStrategy = local.Strategy;
 
@@ -19,11 +20,13 @@ export function iniPassport() {
         const user = await authService.findUserByEmail({ email: username });
 
         if (!user) {
+          logger.error('Invalid Email');
           throw new CustomError(EErrors.INVALID_EMAIL_PASSWORD.code, EErrors.INVALID_EMAIL_PASSWORD.name, EErrors.INVALID_EMAIL_PASSWORD.cause, EErrors.INVALID_EMAIL_PASSWORD.message);
           return done(null, false);
         }
 
         if (!isValidPassword(password, user.password)) {
+          logger.error('Invalid Password');
           throw new CustomError(EErrors.INVALID_EMAIL_PASSWORD.code, EErrors.INVALID_EMAIL_PASSWORD.name, EErrors.INVALID_EMAIL_PASSWORD.cause, EErrors.INVALID_EMAIL_PASSWORD.message);
           return done(null, false);
         }
@@ -47,12 +50,14 @@ export function iniPassport() {
           const { firstName, lastName, age } = req.body;
 
           if (!firstName || !lastName || !username) {
+            logger.error('One or more properties were incomplete or not valid');
             throw new CustomError(EErrors.INVALID_INPUT_ERROR.code, EErrors.INVALID_INPUT_ERROR.name, EErrors.INVALID_INPUT_ERROR.cause, EErrors.INVALID_INPUT_ERROR.message);
           }
 
           const userExist = await authService.findUserByEmail({ email: username });
 
           if (userExist) {
+            logger.error('User already exists');
             throw new CustomError(EErrors.USER_EXIST.code, EErrors.USER_EXIST.name, EErrors.USER_EXIST.cause, EErrors.USER_EXIST.message);
             return done(null, false);
           }
@@ -89,7 +94,7 @@ export function iniPassport() {
         callbackURL: 'http://localhost:8080/api/sessions/githubcallback',
       },
       async (accesToken, _, profile, done) => {
-        console.log(profile);
+        logger.debug(profile);
         try {
           const res = await fetch('https://api.github.com/user/emails', {
             headers: {
@@ -123,15 +128,14 @@ export function iniPassport() {
               rol: 'user',
             };
             let userCreated = await authService.create(newUser);
-            console.log('User Registration succesful');
+            logger.info('User Registration succesful');
             return done(null, userCreated);
           } else {
-            console.log('User already exists');
+            logger.error('User already exists');
             return done(null, user);
           }
         } catch (e) {
-          console.log('Error en auth github');
-          console.log(e);
+          logger.error('Error in auth github');
           return done(e);
         }
       }

@@ -1,4 +1,4 @@
-export default class TicketModel {
+export default class ViewModel {
   constructor() {
     this.data = [];
   }

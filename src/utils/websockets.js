@@ -1,19 +1,18 @@
 import { Server } from 'socket.io';
 import { MsgMongoose } from '../DAO/mongo/schemas/messages.mongoose.js';
-import { productsMemory } from '../DAO/memory/products.memory.js';
+import ProductModel from '../DAO/memory/products.memory.js';
+import { logger } from '../utils/logger.js';
 
-//import productManager from '../DAO/memory/products.memory.js';
-//const myProducts = new productsMemory('./src/data/products.json');
+const productModel = new ProductModel();
 
 export const connectWebSockets = (httpServer) => {
   const io = new Server(httpServer);
 
   io.on('connection', (socket) => {
-    console.log(`New client connected: ${socket.id}`);
+    logger.info(`New client connected: ${socket.id}`);
 
     const emitProductList = async () => {
-      //const products = await myProducts.getProducts();
-      const products = await productsMemory.getProducts();
+      const products = await productModel.getProducts();
       socket.emit('allProducts', products);
     };
 
@@ -21,17 +20,15 @@ export const connectWebSockets = (httpServer) => {
 
     socket.on('addProduct', async (product) => {
       try {
-        //await myProducts.addProduct(product);
-        await productsMemory.addProduct(product);
+        await productModel.addProduct(product);
         emitProductList();
-      } catch (error) {
-        console.error('Error creating the product:', error);
+      } catch (e) {
+        logger.error(e);
       }
     });
 
     socket.on('deleteProduct', async (Id) => {
-      //await myProducts.deleteProduct(Id);
-      await productsMemory.deleteProduct(Id);
+      await productModel.deleteProduct(Id);
       emitProductList();
     });
 
@@ -39,19 +36,19 @@ export const connectWebSockets = (httpServer) => {
       try {
         await MsgMongoose.create(msg);
       } catch (e) {
-        console.log(e);
+        logger.error(e);
       }
 
       try {
         const msgs = await MsgMongoose.find({});
         socket.emit('listado_de_msgs', msgs);
       } catch (e) {
-        console.log(e);
+        logger.error(e);
       }
     });
 
     socket.on('disconnect', () => {
-      console.log('Client disconnected');
+      logger.info('Client disconnected');
     });
   });
 };

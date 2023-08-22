@@ -1,5 +1,5 @@
-//import { authModel } from '../DAO/factory.js';
 import { authModel } from '../DAO/mongo/auth.model.js';
+import { logger } from '../utils/logger.js';
 
 class AuthService {
   async findById(id) {
@@ -9,8 +9,8 @@ class AuthService {
         throw new Error('User not found');
       }
       return user;
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      logger.error(err.message);
     }
   }
 
@@ -18,8 +18,8 @@ class AuthService {
     try {
       const user = await authModel.findUserByEmail({ email });
       return user || false;
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      logger.error(err.message);
     }
   }
 
@@ -27,8 +27,8 @@ class AuthService {
     try {
       const user = await authModel.getUserById(cartID);
       return user;
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      logger.error(err.message);
     }
   }
 
@@ -36,8 +36,8 @@ class AuthService {
     try {
       const userCreated = await authModel.create(newUser);
       return userCreated;
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      logger.error(err.message);
     }
   }
 }

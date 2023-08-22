@@ -3,7 +3,8 @@ import { productMongoose } from '../mongo/schemas/products.mongoose.js';
 import { CustomError } from '../../utils/errors/custom-error.js';
 import { EErrors } from '../../utils/errors/dictionary-error.js';
 
-class ViewModel {
+export default class ViewModel {
+  constructor() {}
   async paginate(filter, options) {
     try {
       const product = await productMongoose.paginate(filter, options);
@@ -52,5 +53,3 @@ class ViewModel {
     }
   }
 }
-
-export const viewModel = new ViewModel();

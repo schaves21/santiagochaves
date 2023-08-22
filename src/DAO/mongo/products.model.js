@@ -2,7 +2,8 @@ import { productMongoose } from '../mongo/schemas/products.mongoose.js';
 import { CustomError } from '../../utils/errors/custom-error.js';
 import { EErrors } from '../../utils/errors/dictionary-error.js';
 
-class ProductModel {
+export default class ProductModel {
+  constructor() {}
   async getAllProducts() {
     try {
       const product = await productMongoose.find({});
@@ -75,5 +76,3 @@ class ProductModel {
     }
   }
 }
-
-export const productModel = new ProductModel();

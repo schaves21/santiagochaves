@@ -1,7 +1,18 @@
+/*
 import { nanoid } from 'nanoid';
 import { promises as fs } from 'fs';
 
-class ProductsMemory {
+export default class ProductModel {
+  constructor() {
+    this.data = [];
+  }
+}
+*/
+
+import { nanoid } from 'nanoid';
+import { promises as fs } from 'fs';
+
+export default class ProductModel {
   constructor() {
     this.path = './src/data/products.json';
   }
@@ -90,5 +101,3 @@ class ProductsMemory {
     }
   };
 }
-
-export const productsMemory = new ProductsMemory();

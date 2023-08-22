@@ -3,6 +3,7 @@ import { EErrors } from '../utils/errors/dictionary-error.js';
 import { productService } from '../services/products.service.js';
 import ProductDTO from './DTO/products.dto.js';
 import { generateProduct } from '../utils/facker.js';
+import { logger } from '../utils/logger.js';
 
 class ProductController {
   async getAllProducts(req, res, next) {
@@ -17,6 +18,7 @@ class ProductController {
         payload: product,
       });
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }
@@ -24,6 +26,9 @@ class ProductController {
   async getProductById(req, res, next) {
     try {
       const { pid } = req.params;
+
+      logger.debug(`Product id received by parameter: ${pid}`);
+
       const product = await productService.getProductById(pid);
 
       if (!product) {
@@ -36,6 +41,7 @@ class ProductController {
         data: product,
       });
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }
@@ -57,6 +63,7 @@ class ProductController {
         data: productCreated,
       });
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }
@@ -79,6 +86,7 @@ class ProductController {
         data: productUpdated,
       });
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }
@@ -86,6 +94,7 @@ class ProductController {
   async deleteOne(req, res, next) {
     try {
       const { id } = req.params;
+      logger.debug(`Product id received by parameter: ${id}`);
       const productDeleted = await productService.deleteOne(id);
       return res.status(200).json({
         status: 'success',
@@ -93,6 +102,7 @@ class ProductController {
         data: productDeleted,
       });
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }

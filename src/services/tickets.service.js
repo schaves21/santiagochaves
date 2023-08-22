@@ -1,11 +1,11 @@
-import getModel from '../DAO/factory.js';
+import { TicketModel, ProductModel } from '../DAO/factory.js';
 import { cartService } from './carts.service.js';
 import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
+import { logger } from '../utils/logger.js';
 
-const models = await getModel();
-const ticketModel = models.tickets;
-const productModel = models.products;
+const ticketModel = new TicketModel();
+const productModel = new ProductModel();
 
 class TicketService {
   async getAllTickets() {
@@ -25,6 +25,9 @@ class TicketService {
   async getTicketById(ticketId) {
     try {
       const ticket = await ticketModel.getTicketById(ticketId);
+
+      logger.debug(`Ticket found in BD: ${ticket}`);
+
       if (!ticket) {
         throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
       }

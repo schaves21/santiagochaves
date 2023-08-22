@@ -2,7 +2,8 @@ import { ticketMongoose } from '../mongo/schemas/tickets.mongoose.js';
 import { CustomError } from '../../utils/errors/custom-error.js';
 import { EErrors } from '../../utils/errors/dictionary-error.js';
 
-class TicketModel {
+export default class TicketModel {
+  constructor() {}
   async getAllTickets() {
     try {
       const ticket = await ticketMongoose.find({});
@@ -45,5 +46,3 @@ class TicketModel {
     }
   }
 }
-
-export const ticketModel = new TicketModel();

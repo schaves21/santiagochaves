@@ -12,8 +12,10 @@ dotenv.config({
 export default {
   port: process.env.PORT,
   mongoUrl: process.env.MONGO_URL,
+  sessionSecret: process.env.SESSION_SECRET,
   githubKey: process.env.GITHUB_CLIENT_SECRET,
   adminName: process.env.ADMIN_NAME,
   adminPassword: process.env.ADMIN_PASSWORD,
   persistence: process.env.PERSISTENCE,
+  winstonLogger: process.env.WINSTON_LOGGER,
 };

@@ -1,3 +1,5 @@
+import { logger } from '../../utils/logger.js';
+
 let cartId = localStorage.getItem('cart-id');
 const API_URL = 'http://localhost:8080/api';
 
@@ -18,11 +20,11 @@ function putIntoCart(_id) {
   fetch(url, options)
     .then((response) => response.json())
     .then((res) => {
-      console.log(res);
+      logger.debug(res);
       alert('Product added');
     })
     .catch((error) => {
-      console.error('Error:', error);
+      logger.error('Error:', error);
       alert(JSON.stringify(error));
     });
 }
@@ -44,11 +46,11 @@ if (!cartId) {
   fetch(url, options)
     .then((response) => response.json())
     .then((data) => {
-      console.log('Response:', data);
+      logger.debug('Response:', data);
       const cartId2 = localStorage.setItem('cart-id', data._id);
     })
     .catch((error) => {
-      console.error('Error:', error);
+      logger.error('Error:', error);
       alert(JSON.stringify(error));
     });
 }

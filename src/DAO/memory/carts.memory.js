@@ -1,11 +1,22 @@
+/*
 import { nanoid } from 'nanoid';
 import { promises as fs } from 'fs';
 import { productsMemory } from './products.memory.js';
-//import productManager from './products.memory.js';
 
-//const products = new productManager();
+export default class CartModel {
+  constructor() {
+    this.data = [];
+  }
+}
+*/
 
-class CartsMemory {
+import { nanoid } from 'nanoid';
+import { promises as fs } from 'fs';
+import ProductModel from './products.memory.js';
+
+const productModel = new ProductModel();
+
+export default class CartModel {
   constructor() {
     this.path = './src/data/carts.json';
   }
@@ -47,7 +58,7 @@ class CartsMemory {
 
     if (!cartById) return 'Cart not found';
 
-    let productById = await productsMemory.existProduct(productId);
+    let productById = await productModel.existProduct(productId);
 
     if (!productById) return 'Product not found';
 
@@ -69,5 +80,3 @@ class CartsMemory {
     return 'Product added to cart';
   };
 }
-
-export const cartsMemory = new CartsMemory();

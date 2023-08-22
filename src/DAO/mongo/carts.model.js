@@ -3,7 +3,8 @@ import { productMongoose } from '../mongo/schemas/products.mongoose.js';
 import { CustomError } from '../../utils/errors/custom-error.js';
 import { EErrors } from '../../utils/errors/dictionary-error.js';
 
-class CartModel {
+export default class CartModel {
+  constructor() {}
   async getAllCarts() {
     try {
       const cart = await cartMongoose.find({});
@@ -152,5 +153,3 @@ class CartModel {
     }
   }
 }
-
-export const cartModel = new CartModel();

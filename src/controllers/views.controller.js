@@ -1,6 +1,7 @@
 import { viewService } from '../services/views.service.js';
 import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
+import { logger } from '../utils/logger.js';
 
 class ViewController {
   getHome(req, res, next) {
@@ -97,6 +98,9 @@ class ViewController {
           thumbnail: item.thumbnail,
         };
       });
+
+      logger.debug('Rendering products view with user data:', user);
+
       return res.render('products', {
         status: 'success',
         user: user,
@@ -111,6 +115,7 @@ class ViewController {
         nextLink: nextLink?.substring(4) || '',
       });
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }
@@ -118,6 +123,9 @@ class ViewController {
   async viewProductById(req, res, next) {
     try {
       const { pid } = req.params;
+
+      logger.debug(`Product id received by parameter: ${pid}`);
+
       const product = await viewService.viewProductById(pid);
 
       if (!product) {
@@ -137,6 +145,7 @@ class ViewController {
       };
       res.render('product', { product: productsViews });
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }
@@ -144,12 +153,16 @@ class ViewController {
   async viewCartById(req, res, next) {
     try {
       const { cid } = req.params;
+
+      logger.debug(`Cart id received by parameter: ${cid}`);
+
       const cart = await viewService.viewCartById(cid);
       if (!cart) {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       res.render('cart', { cart });
     } catch (err) {
+      logger.error(err.message);
       next(err);
     }
   }

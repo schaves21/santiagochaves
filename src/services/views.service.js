@@ -1,9 +1,9 @@
-import getModel from '../DAO/factory.js';
+import { ViewModel } from '../DAO/factory.js';
 import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
+import { logger } from '../utils/logger.js';
 
-const models = await getModel();
-const viewModel = models.views;
+const viewModel = new ViewModel();
 
 class ViewService {
   async getProducts(queryParams) {
@@ -50,6 +50,9 @@ class ViewService {
   async viewProductById(productId) {
     try {
       const product = await viewModel.viewProductById(productId);
+
+      logger.debug(`Product found in BD: ${product}`);
+
       if (!product) {
         throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
       }
@@ -64,6 +67,9 @@ class ViewService {
   async viewCartById(cid) {
     try {
       const cart = await viewModel.viewCartById(cid);
+
+      logger.debug(`Cart found in BD: ${cart}`);
+
       if (!cart) {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
