@@ -18,4 +18,9 @@ export default {
   adminPassword: process.env.ADMIN_PASSWORD,
   persistence: process.env.PERSISTENCE,
   winstonLogger: process.env.WINSTON_LOGGER,
+  googleMail: process.env.GOOGLE_EMAIL,
+  googlePass: process.env.GOOGLE_PASS,
+  twilioAccountSID: process.env.TWILIO_ACCOUNT_SID,
+  twilioAuthToken: process.env.TWILIO_AUTH_TOKEN,
+  twilioPhoneNumber: process.env.TWILIO_PHONE_NUMBER,
 };
