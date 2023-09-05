@@ -15,9 +15,9 @@ class TicketService {
         throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
       }
       return ticket;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -32,9 +32,9 @@ class TicketService {
         throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
       }
       return ticket;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -58,8 +58,8 @@ class TicketService {
       }
       const productsPurchase = [...productsProcessed, ...productsNotProcessed];
       return productsPurchase;
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      throw err;
     }
   }
 
@@ -75,8 +75,8 @@ class TicketService {
         amount += productResult.price * cartProduct.quantity;
       }
       return amount;
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      throw err;
     }
   }
 
@@ -97,9 +97,9 @@ class TicketService {
       }
 
       return newTicket;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -112,8 +112,8 @@ class TicketService {
         const pid = cartProduct.product._id.toString();
         const removeProductToCart = await cartService.removeProduct(cid, pid);
       }
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      throw err;
     }
   }
 }

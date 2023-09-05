@@ -13,9 +13,9 @@ class ProductService {
         throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
       }
       return product;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -30,9 +30,9 @@ class ProductService {
         throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
       }
       return product;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -44,9 +44,9 @@ class ProductService {
         throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
       }
       return productCreated;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -58,9 +58,9 @@ class ProductService {
         throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
       }
       return productUpdated;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -73,9 +73,9 @@ class ProductService {
         throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
       }
       return productDeleted;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }

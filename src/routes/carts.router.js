@@ -28,7 +28,7 @@ cartsRouter.put('/:cid', checkUser, cartController.updateCart);
 cartsRouter.put('/:cid/products/:pid', checkUser, cartController.updateProductQuantity);
 cartsRouter.delete('/:cid/products/:pid', checkUser, cartController.removeProduct);
 cartsRouter.delete('/:cid', checkUser, cartController.clearCart);
-cartsRouter.post('/:cid/purchase', ticketController.createTicket);
+cartsRouter.post('/:cid/purchase', checkUser, ticketController.createTicket);
 
 /* ------------- FileSystem -----------------------------------
 

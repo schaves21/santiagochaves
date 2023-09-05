@@ -6,6 +6,21 @@ import { logger } from '../utils/logger.js';
 const viewModel = new ViewModel();
 
 class ViewService {
+  async getAllProducts() {
+    try {
+      const allProducts = await viewModel.getAllProducts();
+
+      if (!allProducts) {
+        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
+      }
+      return allProducts;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
+      }
+    }
+  }
+
   async getProducts(queryParams) {
     try {
       const { limit = 10, page = 1, sort, query } = queryParams;
@@ -40,9 +55,9 @@ class ViewService {
         nextLink: result.hasNextPage ? `/api/products?limit=${limit}&page=${result.nextPage}` : null,
       };
       return response;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -57,9 +72,9 @@ class ViewService {
         throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
       }
       return product;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -74,9 +89,25 @@ class ViewService {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
+      }
+    }
+  }
+  async viewPurchaseById(tid) {
+    try {
+      const ticket = await viewModel.viewPurchaseById(tid);
+
+      logger.debug(`Ticket found in BD: ${ticket}`);
+
+      if (!ticket) {
+        throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
+      }
+      return ticket;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }

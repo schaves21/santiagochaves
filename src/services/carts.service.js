@@ -13,9 +13,9 @@ class CartService {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -28,9 +28,9 @@ class CartService {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -42,9 +42,9 @@ class CartService {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cartCreated;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -56,9 +56,9 @@ class CartService {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return addProductCart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -70,9 +70,9 @@ class CartService {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -84,9 +84,9 @@ class CartService {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -98,9 +98,9 @@ class CartService {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -113,9 +113,9 @@ class CartService {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }

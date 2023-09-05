@@ -7,7 +7,7 @@ import { logger } from '../utils/logger.js';
 import { nanoid } from 'nanoid';
 
 class TicketController {
-  async getAllTickets(req, res, next) {
+  async getAllTickets(_, res, next) {
     try {
       const ticket = await ticketService.getAllTickets();
       if (!ticket) {

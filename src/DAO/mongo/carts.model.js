@@ -12,9 +12,9 @@ export default class CartModel {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -26,9 +26,9 @@ export default class CartModel {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -40,9 +40,9 @@ export default class CartModel {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -54,9 +54,9 @@ export default class CartModel {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cartCreated;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -76,9 +76,9 @@ export default class CartModel {
       cart.products.push({ product: product._id, quantity: 1 });
       await cart.save();
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -90,9 +90,9 @@ export default class CartModel {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -110,9 +110,9 @@ export default class CartModel {
       cart.products[productIndex].quantity = quantity;
       await cart.save();
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -130,9 +130,9 @@ export default class CartModel {
       cart.products.splice(productIndex, 1);
       await cart.save();
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }
@@ -146,9 +146,9 @@ export default class CartModel {
       cart.products = [];
       await cart.save();
       return cart;
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw error;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
       }
     }
   }

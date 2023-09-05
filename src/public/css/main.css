@@ -4,185 +4,59 @@
 	box-sizing: border-box;
 }
 
+
 body {
-	background-color: #d7d7d7;
+	background-color: #2b3035;
 }
 
-.title {
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	height: auto;
+.navbar-brand{
+  font-size: 1.5rem;
 }
 
-.card {
-	border-radius: 10px 100px / 120px;
-	box-shadow: 10px 10px 30px #000;
-	overflow: hidden;
-	margin-bottom: 50px;
+.buttonMenu{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-.card-body {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
+.form-floating {
+  margin-bottom: 15px; 
 }
 
-.card-title {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-	font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-	width: 200px;
+.form-check-input {
+  margin-right: 10px; 
 }
 
-.card-title h4 {
-	font-size: 1.4rem;
+.productListSocket{
+	color: white;
 }
 
-.card-description {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 200px;
-	height: 75px;
+.btn-addProductSocket{
+	margin-bottom: 15px; 
 }
 
-.card-description p {
-	font-size: 0.8rem;
+.profile{
+	color: white;	
 }
 
-.card-price {
-	margin: 0;
-	padding: 0;
-	height: 30px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	font-size: 1.5rem;
-	font-weight: bold;
-	font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-	margin-bottom: 10px;
+.allProducts{
+  color: white;
 }
 
-.card-price p {
-	margin: 0;
-	padding: 0;
+.error{
+  color: white;
 }
 
-.card-item-detail {
-	display: flex;
-	flex-direction: column;
-	margin-bottom: 10px;
+.chat{
+  color: white;
 }
 
-.card-item-detail p {
-	font-size: 0.8rem;
-	margin: 0;
-	padding: 0;
+.crudProducts{
+  color: white;
 }
 
-.card-id {
-	font-size: 0.8rem;
-	margin: 0;
-	padding: 0;
-	margin-bottom: 10px;
-}
 
-.btnContainer {
-	width: 100%;
-	display: flex;
-	justify-content: end;
-	align-items: end;
-}
 
-.btnContainer a {
-	width: auto;
-	font-size: 0.8rem;
-}
 
-.btnAdd {
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
 
-.btnAdd button {
-	width: 100%;
-}
-
-.fixed-bottom-right {
-	position: fixed;
-	bottom: 30px;
-	right: 30px;
-	transform: scale(1.5);
-	z-index: 100;
-}
-
-.bg-image {
-	background-image: url("/images/fondo.jpg");
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
-	background-attachment: fixed;
-	height: 100vh;
-}
-
-.btnCredentials {
-	width: 100%;
-	height: auto;
-}
-
-.contenedorTituloPrincipal {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	top: 0;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	background-color: rgba(0, 0, 0, 0.45);
-}
-
-.logo {
-	width: 200px;
-	margin-bottom: 20px;
-}
-
-.tituloPrincipal {
-	color: #fff;
-	text-transform: uppercase;
-	font-family: "Oswald", sans-serif;
-	font-weight: bold;
-	letter-spacing: 3;
-	font-size: 2.5rem;
-	border-top: 1px solid #fff;
-	border-bottom: 1px solid #fff;
-	padding: 0.5rem;
-	text-align: center;
-}
-
-.modal-footer {
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.modal-footer button {
-	width: 48%;
-}
-
-.footerInfo {
-	font-family: "Oswald", sans-serif;
-}
-
-.footerInfo h5 {
-	font-size: 1.5rem;
-}

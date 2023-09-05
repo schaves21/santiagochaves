@@ -1,6 +1,6 @@
 import express from 'express';
 import { productController } from '../controllers/products.controller.js';
-import { checkAdmin } from '../middlewares/auth.js';
+import { checkAdmin, checkAdminOrPremium } from '../middlewares/auth.js';
 
 export const productsRouter = express.Router();
 
@@ -19,9 +19,9 @@ productsRouter.delete('/:id', productController.deleteOne);
 productsRouter.get('/mockingproducts', checkAdmin, productController.mockingProducts);
 productsRouter.get('/', checkAdmin, productController.getAllProducts);
 productsRouter.get('/:pid', checkAdmin, productController.getProductById);
-productsRouter.post('/', checkAdmin, productController.create);
+productsRouter.post('/', checkAdminOrPremium, productController.create);
 productsRouter.put('/:id', checkAdmin, productController.updateOne);
-productsRouter.delete('/:id', checkAdmin, productController.deleteOne);
+productsRouter.delete('/:id', checkAdminOrPremium, productController.deleteOne);
 
 /* --------------- Filesystem ------------------------
 import productManager from "../dao/productmanager.js";

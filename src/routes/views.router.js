@@ -6,6 +6,7 @@ export const viewsRouter = express.Router();
 
 viewsRouter.get('/', viewController.getHome);
 viewsRouter.get('/login', viewController.getLogin);
+viewsRouter.get('/menu', viewController.getMenu);
 viewsRouter.get('/logout', viewController.getLogout);
 viewsRouter.get('/register', viewController.getRegister);
 viewsRouter.get('/profile', checkUser, viewController.getProfile);
@@ -14,6 +15,9 @@ viewsRouter.get('/products', viewController.getProducts);
 viewsRouter.get('/products/:pid', viewController.viewProductById);
 viewsRouter.get('/carts/:cid', viewController.viewCartById);
 viewsRouter.get('/realtimeproducts', viewController.getRealTimeProducts);
+viewsRouter.get('/chat', checkUser, viewController.getChats);
+viewsRouter.get('/crud-products', checkAdmin, viewController.getAllProducts);
+viewsRouter.get('/purchase/', viewController.viewPurchaseById);
 
 /* CODIGO PARA FILESYSTEM
 //import productManager from "../dao/productmanager.js";

@@ -1,10 +1,11 @@
 import { cartService } from '../services/carts.service.js';
+import { productService } from '../services/products.service.js';
 import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
 import { logger } from '../utils/logger.js';
 
 class CartController {
-  async getAllCarts(req, res, next) {
+  async getAllCarts(_, res, next) {
     try {
       const cart = await cartService.getAllCarts();
       if (!cart) {
@@ -36,7 +37,7 @@ class CartController {
     }
   }
 
-  async create(req, res, next) {
+  async create(_, res, next) {
     try {
       const newCart = await cartService.create();
       if (!newCart) {
@@ -52,6 +53,14 @@ class CartController {
   async addProductCart(req, res, next) {
     try {
       const { cid, pid } = req.params;
+      const userEmail = req.session.user.email;
+
+      const product = await productService.getProductById(pid);
+
+      if (product.owner === userEmail) {
+        throw new CustomError(EErrors.PRODUCT_OWNER.code, EErrors.PRODUCT_OWNER.name, EErrors.PRODUCT_OWNER.cause, EErrors.PRODUCT_OWNER.message);
+      }
+
       const cart = await cartService.addProductCart(cid, pid);
 
       if (!cart) {

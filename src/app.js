@@ -9,19 +9,20 @@ import { iniPassport } from './config/passport.config.js';
 import path from 'path';
 import { __dirname } from './config.js';
 import { authRouter } from './routes/auth.router.js';
+import { usersRouter } from './routes/users.router.js';
 import { cartsRouter } from './routes/carts.router.js';
 import { productsRouter } from './routes/products.router.js';
 import { ticketRouter } from './routes/tickets.router.js';
 import { viewsRouter } from './routes/views.router.js';
-import { chatsRouter } from './routes/chats.router.js';
 import { loggerRouter } from './routes/logger.router.js';
-import { mailRouter } from './routes/mail.router.js';
+import { recoverRouter } from './routes/recover.router.js';
 import { twilioRouter } from './routes/twilio.router.js';
 import { connectWebSockets } from './utils/websockets.js';
 import { CustomError } from './utils/errors/custom-error.js';
 import { EErrors } from './utils/errors/dictionary-error.js';
 import { errorHandler } from './middlewares/error.js';
 import { logger } from './utils/logger.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 app.use(compression({ brotli: { enabled: true, zlib: {} } }));
@@ -31,11 +32,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.engine('handlebars', handlebars.engine());
+app.set('views', __dirname + '/views');
+app.set('view engine', 'handlebars');
+
 const httpServer = app.listen(PORT, () => {
   logger.info(`App runing on ${__dirname} - server http://localhost:${PORT}`);
 });
 
 connectWebSockets(httpServer);
+
+app.use(cookieParser());
 
 app.use(
   session({
@@ -55,20 +62,16 @@ iniPassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.engine('handlebars', handlebars.engine());
-app.set('views', __dirname + '/views');
-app.set('view engine', 'handlebars');
-
 app.use('/api/sessions', authRouter);
+app.use('/api/users', usersRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/api/tickets', ticketRouter);
 app.use('/api/loggerTest', loggerRouter);
-app.use('/api/mail', mailRouter);
 app.use('/api/sms', twilioRouter);
 
 app.use('/', viewsRouter);
-app.use('/chat', chatsRouter);
+app.use('/', recoverRouter);
 
 app.get('/api/sessions/github', passport.authenticate('github', { scope: ['user:email'] }));
 app.get('/api/sessions/githubcallback', passport.authenticate('github', { failureRedirect: '/error' }), (req, res) => {

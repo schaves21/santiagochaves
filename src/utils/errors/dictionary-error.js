@@ -35,6 +35,18 @@ export const EErrors = {
     cause: 'Product not found',
     message: 'Please check the product code',
   },
+  PRODUCT_OWNER: {
+    code: 403,
+    name: 'Product error',
+    cause: 'Product owner',
+    message: 'You can`t add products to your cart that you own',
+  },
+  PRODUCT_OWNER_DELETE: {
+    code: 403,
+    name: 'Product error',
+    cause: 'Product not owner',
+    message: 'The product you want to remove does not belong to you',
+  },
   CART_NOT_FOUND: {
     code: 400,
     name: 'Cart error',
@@ -46,5 +58,11 @@ export const EErrors = {
     name: 'Ticket error',
     cause: 'Ticket not found',
     message: 'Please check the ticket code',
+  },
+  TOKEN_NOT_FOUND: {
+    code: 400,
+    name: 'Token error',
+    cause: 'Token not found',
+    message: 'Please check the token code',
   },
 };

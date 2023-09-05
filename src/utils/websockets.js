@@ -22,8 +22,8 @@ export const connectWebSockets = (httpServer) => {
       try {
         await productModel.addProduct(product);
         emitProductList();
-      } catch (e) {
-        logger.error(e);
+      } catch (err) {
+        logger.error(err);
       }
     });
 
@@ -35,15 +35,15 @@ export const connectWebSockets = (httpServer) => {
     socket.on('msg_chat_front_to_back', async (msg) => {
       try {
         await MsgMongoose.create(msg);
-      } catch (e) {
-        logger.error(e);
+      } catch (err) {
+        logger.error(err);
       }
 
       try {
         const msgs = await MsgMongoose.find({});
         socket.emit('listado_de_msgs', msgs);
-      } catch (e) {
-        logger.error(e);
+      } catch (err) {
+        logger.error(err);
       }
     });
 

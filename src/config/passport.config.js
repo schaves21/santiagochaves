@@ -78,8 +78,8 @@ export function iniPassport() {
           const userCreated = await authService.create(newUser);
 
           return done(null, userCreated);
-        } catch (e) {
-          return done(e);
+        } catch (err) {
+          return done(err);
         }
       }
     )
@@ -134,9 +134,9 @@ export function iniPassport() {
             logger.error('User already exists');
             return done(null, user);
           }
-        } catch (e) {
+        } catch (err) {
           logger.error('Error in auth github');
-          return done(e);
+          return done(err);
         }
       }
     )

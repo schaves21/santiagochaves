@@ -4,7 +4,7 @@ import { EErrors } from '../utils/errors/dictionary-error.js';
 import { logger } from '../utils/logger.js';
 
 class ViewController {
-  getHome(req, res, next) {
+  getHome(_, res, next) {
     try {
       res.render('home');
     } catch (err) {
@@ -12,10 +12,24 @@ class ViewController {
     }
   }
 
-  getLogin(req, res, next) {
+  getLogin(_, res, next) {
     try {
       const title = 'Mega-Friday® - Login';
       return res.status(200).render('login', { title });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  getMenu(req, res, next) {
+    try {
+      if (!req.user) {
+        logger.info('No user found in the request object');
+        throw new CustomError(EErrors.INVALID_EMAIL_PASSWORD.code, EErrors.INVALID_EMAIL_PASSWORD.name, EErrors.INVALID_EMAIL_PASSWORD.cause, EErrors.INVALID_EMAIL_PASSWORD.message);
+      }
+      const title = 'Mega-Friday® - Menu';
+      const { firstName, lastName, rol } = req.session.user;
+      return res.render('menu', { title, firstName, lastName, rol });
     } catch (err) {
       next(err);
     }
@@ -34,7 +48,7 @@ class ViewController {
     }
   }
 
-  getRegister(req, res, next) {
+  getRegister(_, res, next) {
     try {
       const title = 'Mega-Friday® - Register';
       return res.status(200).render('register', { title });
@@ -52,17 +66,48 @@ class ViewController {
     }
   }
 
-  getAdmin(req, res, next) {
+  getAdmin(_, res, next) {
     try {
-      res.send('admin');
+      res.render('admin');
     } catch (err) {
       next(err);
     }
   }
 
-  async getRealTimeProducts(req, res, next) {
+  getRealTimeProducts(_, res, next) {
     try {
       res.render('realtimeproducts');
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  getChats(_, res, next) {
+    try {
+      res.render('chat');
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getAllProducts(_, res, next) {
+    try {
+      const allProducts = await viewService.getAllProducts();
+
+      const productsViews = allProducts.map((product) => ({
+        _id: product._id.toString(),
+        title: product.title,
+        description: product.description,
+        code: product.code,
+        price: product.price,
+        status: product.status,
+        stock: product.stock,
+        category: product.category,
+        thumbnail: product.thumbnail,
+        owner: product.owner,
+      }));
+
+      res.render('crud-products', { products: productsViews });
     } catch (err) {
       next(err);
     }
@@ -71,13 +116,6 @@ class ViewController {
   async getProducts(req, res, next) {
     try {
       const user = req.session.user;
-
-      req.session.user = {
-        firstName: req.user.firstName,
-        lastName: req.user.lastName,
-        email: req.user.email,
-        rol: req.user.rol,
-      };
 
       const { limit = 10, page = 1, sort, query } = req.query;
       const queryParams = { limit, page, sort, query };
@@ -161,6 +199,27 @@ class ViewController {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
       res.render('cart', { cart });
+    } catch (err) {
+      logger.error(err.message);
+      next(err);
+    }
+  }
+
+  async viewPurchaseById(req, res, next) {
+    try {
+      /*
+      const { tid } = req.params;
+
+      logger.debug(`Ticket id received by parameter: ${tid}`);
+
+      const ticket = await viewService.viewPurchaseById(tid);
+
+      if (!ticket) {
+        throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
+      }
+      */
+
+      res.render('purchases');
     } catch (err) {
       logger.error(err.message);
       next(err);

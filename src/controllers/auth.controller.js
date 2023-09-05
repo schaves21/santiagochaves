@@ -12,15 +12,16 @@ class AuthController {
       }
 
       req.session.user = {
-        _id: req.user._id.toString(),
+        _id: req.user._id,
         email: req.user.email,
         firstName: req.user.firstName,
         lastName: req.user.lastName,
         age: req.user.age,
+        cartID: req.user.cartID,
         rol: req.user.rol,
       };
 
-      return res.redirect('/products');
+      return res.redirect('/menu');
     } catch (err) {
       logger.error(err.message);
       next(err);
@@ -34,9 +35,12 @@ class AuthController {
         throw new CustomError(EErrors.INVALID_EMAIL_PASSWORD.code, EErrors.INVALID_EMAIL_PASSWORD.name, EErrors.INVALID_EMAIL_PASSWORD.cause, EErrors.INVALID_EMAIL_PASSWORD.message);
       }
       req.session.user = {
-        _id: req.user._id.toString(),
+        _id: req.user._id,
         email: req.user.email,
         firstName: req.user.firstName,
+        lastName: req.user.lastName,
+        age: req.user.age,
+        cartID: req.user.cartID,
         rol: req.user.rol,
       };
       return res.redirect('/products');

@@ -23,9 +23,9 @@ function putIntoCart(_id) {
       logger.debug(res);
       alert('Product added');
     })
-    .catch((error) => {
-      logger.error('Error:', error);
-      alert(JSON.stringify(error));
+    .catch((err) => {
+      logger.error('Error:', err);
+      alert(JSON.stringify(err));
     });
 }
 
@@ -49,8 +49,8 @@ if (!cartId) {
       logger.debug('Response:', data);
       const cartId2 = localStorage.setItem('cart-id', data._id);
     })
-    .catch((error) => {
-      logger.error('Error:', error);
-      alert(JSON.stringify(error));
+    .catch((err) => {
+      logger.error('Error:', err);
+      alert(JSON.stringify(err));
     });
 }

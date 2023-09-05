@@ -1,0 +1,79 @@
+    <div class="container crudProducts mt-5">
+    <h1 class="mb-4">CRUD Products</h1>
+    
+    <!-- Input para buscar por Id de Producto -->
+    <!--
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Buscar por Id de Producto">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="button">Search</button>
+        </div>
+    </div>
+    -->
+    
+    <!-- Tabla con listado de productos -->
+    <table class="table text-white">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Title</th>
+          <th>Code</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Category</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each products}}
+        <tr>
+          <td>{{_id}}</td>
+          <td>{{title}}</td>
+          <td>{{code}}</td>
+          <td>{{price}}</td>
+          <td>{{stock}}</td>
+          <td>{{category}}</td>
+          <td>
+  
+            <button class="btn btn-success bi bi-plus" data-toggle="modal" data-target="#crearProductoModal"></button>
+            <button class="btn btn-info bi bi-pencil" data-toggle="modal" data-target="#editarProductoModal"></button>
+            <button class="btn btn-danger bi bi-trash" data-toggle="modal" data-target="#eliminarProductoModal"></button>
+          
+
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    
+    <!-- Botón para crear un nuevo producto -->
+    
+</div>
+
+<!-- Ventana modal para crear producto -->
+<div class="modal fade" id="crearProductoModal" tabindex="-1" role="dialog" aria-labelledby="crearProductoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- Contenido del formulario para crear producto -->
+        </div>
+    </div>
+</div>
+
+<!-- Ventana modal para editar producto -->
+<div class="modal fade" id="editarProductoModal" tabindex="-1" role="dialog" aria-labelledby="editarProductoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- Contenido del formulario para editar producto -->
+        </div>
+    </div>
+</div>
+
+<!-- Ventana modal para eliminar producto -->
+<div class="modal fade" id="eliminarProductoModal" tabindex="-1" role="dialog" aria-labelledby="eliminarProductoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!-- Contenido del formulario para eliminar producto -->
+        </div>
+    </div>
+</div>
