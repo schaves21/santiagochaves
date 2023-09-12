@@ -1,0 +1,351 @@
+paths:
+  /api/carts:
+    get:
+      summary: Get all carts (you need to be an user)
+      tags:
+        - Carts
+      responses:
+        '200':
+          description: Carts were returned successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Cart'
+        '500':
+          description: Server error. Usually generating the query or the connection to the DB fails
+    post:
+      summary: Create a new cart (you need to be an user)
+      tags:
+        - Carts
+      responses:
+        '201':
+          description: The cart was created successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/EmptyCart'
+        '500':
+          description: Server error. Usually generating the query or the connection to the DB fails
+  /api/carts/{cid}/products/{pid}:
+    post:
+      summary: Add product to cart (you need to be an user)
+      tags:
+        - Carts
+      parameters:
+        - name: cid, pid
+          in: path
+          required: true
+          description: Cart id and product id to be added
+          schema:
+            $type: String
+      responses:
+        '201':
+          description: Product successfully added to cart
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+        '500':
+          description: Server error. Usually generating the query or the connection to the DB fails
+    put:
+      summary: Update product quantity to cart (you need to be an user)
+      tags:
+        - Carts
+      parameters:
+        - name: cid, pid
+          in: path
+          required: true
+          description: Cart id and product id to update the quantity
+          schema:
+            $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/UpdateProductQuantity'
+      responses:
+        '200':
+          description: Product quantity successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+        '500':
+          description: Server error. Usually generating the query or the connection to the DB fails
+    delete:
+      summary: Removed product from cart (you need to be an user)
+      tags:
+        - Carts
+      parameters:
+        - name: cid, pid
+          in: path
+          required: true
+          description: Cart id and product id to delete the cart
+          schema:
+            $type: String
+      responses:
+        '200':
+          description: Product remove successfully from cart
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Success'
+        '500':
+          description: Server error. Usually generating the query or the connection to the DB fails
+  /api/carts/{cid}:
+    get:
+      summary: Get a cart by id (you need to be an user)
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id of the cart being searched
+          schema:
+            $type: String
+      responses:
+        '200':
+          description: Cart found correctly
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/PopulateProduct'
+        '500':
+          description: Server error. Usually generating the query or the connection to the DB fails
+    put:
+      summary: Update a cart by id (you need to be an user)
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Cart id to update
+          schema:
+            $type: String
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/UpdateProduct'
+      responses:
+        '200':
+          description: Cart was updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Cart'
+        '500':
+          description: Server error. Usually generating the query or the connection to the DB fails
+    delete:
+      summary: Delete a cart by id (you need to be an user)
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Cart id to delete
+          schema:
+            $type: String
+      responses:
+        '200':
+          description: Cart was deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/EmptyCart'
+        '500':
+          description: Server error. Usually generating the query or the connection to the DB fails
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Complete the purchase (you need to be an user)
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Purchase cart id
+          schema:
+            $type: String
+      responses:
+        '201':
+          description: Purchase completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Purchase'
+        '500':
+          description: Server error. Usually generating the query or the connection to the DB fails
+components:
+  schemas:
+    Success:
+      type: object
+      properties:
+        status:
+          type: String
+          description: success or error
+        message:
+          type: String
+          description: Response based on user action
+      example:
+        status: success
+        message: Depending on the user action, cart created, cart updated or cart deleted
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Cart Id autogenerated by MongoDB
+        products:
+          type: Array
+          description: List of products in the cart
+          items:
+            type: object
+            properties:
+              product:
+                type: ObjectId
+                description: Product ID in cart
+              quantity:
+                type: Number
+                description: Product quantity in cart
+      example:
+        _id: 64fdeb95498ab3db794e5518
+        products:
+          product: 64f9fef6c8406b0d8335f790
+          quantity: 1
+    EmptyCart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Cart Id autogenerated by MongoDB
+        products:
+          type: Array
+          description: List of products in the cart
+      example:
+        _id: 64fba2581777fb54129ee478
+        products: []
+    PopulateProduct:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Cart Id autogenerated by MongoDB
+        products:
+          type: Array
+          description: List of products in the cart
+          items:
+            type: object
+            properties:
+              product:
+                type: ObjectId
+                description: Product Id in cart
+              quantity:
+                type: Number
+                description: Product quantity in cart
+      example:
+        _id: 64fdeb95498ab3db794e5518
+        products:
+          product:
+            _id: 64f9fef6c8406b0d8335f790,
+            title: Producto1,
+            description: Producto1,
+            code: abc123,
+            price: 230,
+            status: true,
+            stock: 44,
+            category: Celulares,
+            owner: adminCoder@coder.com,
+            thumbnails: ['Producto1']
+          quantity: 3
+    Purchase:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Ticket Id autogenerated by MongoDB
+        code:
+          type: String
+          description: Ticket code
+        purchase_datetime:
+          type: Date
+          description: Ticket date
+        amount:
+          type: Number
+          description: Ticket amount
+        purchaser:
+          type: String
+          description: Ticket user email
+        products:
+          type: Array
+          description: List of products in the purchase
+          items:
+            type: object
+            properties:
+              productId:
+                type: ObjectId
+                description: Product ID in cart
+              quantity:
+                type: Number
+                description: Product quantity in cart
+      example:
+        _id: 64fdfeab55e4b50d4bf55594
+        code: pme8RBQB2Zn2lhmJ1QgZF
+        purchase_datetime: 2023-09-10T17:36:43.983+00:00
+        amount: 2688
+        purchaser: usuario1@usuario.com
+        products:
+          productId: 64f9ff6dc8406b0d8335f79b
+          quantity: 2
+  requestBodies:
+    UpdateProductQuantity:
+      type: object
+      properties:
+        quantity:
+          type: Number
+          description: Product quantity in cart
+      example:
+        quantity: 5
+    UpdateProduct:
+      type: object
+      properties:
+        title:
+          type: String
+          description: Product name
+        description:
+          type: String
+          description: Product description
+        code:
+          type: String
+          description: Product code
+        price:
+          type: Number
+          description: Product price
+        stock:
+          type: Number
+          description: Product stock
+        category:
+          type: String
+          description: Product category
+        thumbnail:
+          type: Array
+          items:
+            type: String
+            description: Image links
+      example:
+        title: HONOR Magic5 Lite 6.67 5G
+        description: El Honor Magic5 Lite con una pantalla AMOLED de 6.67" FHD+ y una tasa de refresco de 120Hz, te brinda una experiencia visual fluida y vibrante. Además, está potenciado por un procesador Snapdragon 695 de última generación, 8GB+5GB de RAM y 256GB de almacenamiento interno.
+        code: abc124
+        price: 600
+        stock: 45
+        category: Celulares
+        thumbnail: ['https://laoferta.com.uy/html-uy/smartphones/honor/magic5-lite-128gb/img/img-principal.jpg']

@@ -79,6 +79,22 @@ class ProductService {
       }
     }
   }
+
+  async deleteProductView(pid) {
+    try {
+      const productDeleted = await productModel.deleteProductView(pid);
+
+      if (!productDeleted) {
+        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
+      }
+
+      return productDeleted;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
+      }
+    }
+  }
 }
 
 export const productService = new ProductService();

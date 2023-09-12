@@ -6,9 +6,9 @@ import { logger } from '../utils/logger.js';
 const viewModel = new ViewModel();
 
 class ViewService {
-  async getAllProducts() {
+  async getProductsView() {
     try {
-      const allProducts = await viewModel.getAllProducts();
+      const allProducts = await viewModel.getProductsView();
 
       if (!allProducts) {
         throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
@@ -66,7 +66,7 @@ class ViewService {
     try {
       const product = await viewModel.viewProductById(productId);
 
-      logger.debug(`Product found in BD: ${product}`);
+      //logger.debug(`Product found in BD: ${product}`);
 
       if (!product) {
         throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
@@ -95,16 +95,16 @@ class ViewService {
       }
     }
   }
-  async viewPurchaseById(tid) {
+  async viewPurchaseByEmail(email) {
     try {
-      const ticket = await viewModel.viewPurchaseById(tid);
+      const ticketUser = await viewModel.viewPurchaseByEmail(email);
 
-      logger.debug(`Ticket found in BD: ${ticket}`);
+      //logger.debug(`Ticket found in BD: ${ticketUser}`);
 
-      if (!ticket) {
+      if (!ticketUser) {
         throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
       }
-      return ticket;
+      return ticketUser;
     } catch (err) {
       if (err instanceof CustomError) {
         throw err;

@@ -1,79 +1,197 @@
-    <div class="container crudProducts mt-5">
-    <h1 class="mb-4">CRUD Products</h1>
-    
-    <!-- Input para buscar por Id de Producto -->
-    <!--
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Buscar por Id de Producto">
-        <div class="input-group-append">
-            <button class="btn btn-primary" type="button">Search</button>
-        </div>
+<nav class="navbar navbar-expand-lg bg-body-tertiary mt-2">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a class="navbar-brand text-white" href="#">Mega-Friday</a>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a href="/api/sessions/current" class="btn btn-outline-light ms-3 me-3"><i class="bi bi-person-circle"></i></a>
+        </li>
+        <li class="nav-item">
+          <a href="/logout" class="btn btn-success ms-1 me-4"><i class="bi bi-box-arrow-left me-2"></i>Logout</a>
+        </li>
+      </ul>
     </div>
-    -->
-    
-    <!-- Tabla con listado de productos -->
-    <table class="table text-white">
+  </div>
+</nav>
+
+<div class="container crudProducts mt-4">
+  <h1>CRUD Products</h1>
+  <div class="d-flex flex-row-reverse mt-1 mb-1">
+    <button class="btn btn-success bi bi-plus" data-toggle="modal" data-target="#crearModal">Add Product</button>
+  </div>
+  <table class="table text-white">
       <thead>
-        <tr>
-          <th>Id</th>
-          <th>Title</th>
-          <th>Code</th>
-          <th>Price</th>
-          <th>Stock</th>
-          <th>Category</th>
-          <th>Acciones</th>
-        </tr>
+          <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Code</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Category</th>
+            <th>Acciones</th>
+          </tr>
       </thead>
       <tbody>
-        {{#each products}}
-        <tr>
-          <td>{{_id}}</td>
-          <td>{{title}}</td>
-          <td>{{code}}</td>
-          <td>{{price}}</td>
-          <td>{{stock}}</td>
-          <td>{{category}}</td>
-          <td>
-  
-            <button class="btn btn-success bi bi-plus" data-toggle="modal" data-target="#crearProductoModal"></button>
-            <button class="btn btn-info bi bi-pencil" data-toggle="modal" data-target="#editarProductoModal"></button>
-            <button class="btn btn-danger bi bi-trash" data-toggle="modal" data-target="#eliminarProductoModal"></button>
-          
-
-          </td>
-        </tr>
-        {{/each}}
+          {{#each products}}
+          <tr>
+              <td>{{this._id}}</td>
+              <td>{{this.title}}</td>
+              <td>{{this.code}}</td>
+              <td>${{this.price}}</td>
+              <td>{{this.stock}}</td>
+              <td>{{this.category}}</td>
+              <td>
+                <button class="btn btn-info bi bi-pencil" data-toggle="modal" data-target="#editarModal{{this._id}}"></button>
+                <button class="btn btn-danger bi bi-trash" data-toggle="modal" data-target="#eliminarModal{{this._id}}"></button>
+              </td>
+          </tr>
+          {{/each}}
       </tbody>
-    </table>
+  </table>
+
+</div>
+
+<!-- Modal para crear producto -->
+<div class="modal fade" id="crearModal" tabindex="-1" role="dialog" aria-labelledby="crearModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="crearModalLabel">Add Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="/crud-products" method="POST">
+                    <div class="form-group">
+                      <label for="title">Title</label>
+                      <input type="text" class="form-control" id="title" name="title" value="{{this.title}}">
+                    </div>
+                    <div class="form-group">
+                      <label for="description">Description</label>
+                      <textarea class="form-control" id="description" name="description">{{this.description}}</textarea>
+                    </div>
+                    <div class="form-group">
+                      <label for="code">Code</label>
+                      <input type="text" class="form-control" id="code" name="code" value="{{this.code}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" class="form-control" id="price" name="price" value="{{this.price}}">
+                    </div>
+                    <div class="form-group">
+                      <label for="stock">Stock</label>
+                      <input type="number" class="form-control" id="stock" name="stock" value="{{this.stock}}">
+                    </div>
+                    <div class="form-group">
+                      <label for="category">Category</label>
+                      <input type="text" class="form-control" id="category" name="category" value="{{this.category}}">
+                    </div>
+                    <div class="form-group">
+                      <label for="thumbnail">Thumbnail</label>
+                      <input type="text" class="form-control" id="thumbnail" name="thumbnail" value="{{this.thumbnail}}">
+                    </div>
+                  <button type="submit" class="btn btn-success">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal para editar producto (uno por cada producto en la lista) -->
+{{#each products}}
+  <div class="modal fade" id="editarModal{{this._id}}" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel{{this._id}}" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="editarModalLabel{{this._id}}">Product edit</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <form action="/crud-products/{{this._id}}" method="POST">
+                      <div class="form-group">
+                        <label for="productId">Id</label>
+                        <input type="text" class="form-control" id="productId" name="productId" value="{{this._id}}" disabled>
+                      </div>
+                      <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{this.title}}">
+                      </div>
+                      <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea class="form-control" id="description" name="description">{{this.description}}</textarea>
+                      </div>
+                      <div class="form-group">
+                        <label for="code">Code</label>
+                        <input type="text" class="form-control" id="code" name="code" value="{{this.code}}">
+                      </div>
+                      <div class="form-group">
+                          <label for="price">Price</label>
+                          <input type="number" class="form-control" id="price" name="price" value="{{this.price}}">
+                      </div>
+                      <div class="form-group">
+                        <label for="status">Status</label>
+                        <input type="boolean" class="form-control" id="status" name="status" value="{{this.status}}" disabled>
+                      </div>
+                      <div class="form-group">
+                        <label for="stock">Stock</label>
+                        <input type="number" class="form-control" id="stock" name="stock" value="{{this.stock}}">
+                      </div>
+                      <div class="form-group">
+                        <label for="category">Category</label>
+                        <input type="text" class="form-control" id="category" name="category" value="{{this.category}}">
+                      </div>
+                      <div class="form-group">
+                        <label for="thumbnail">Thumbnail</label>
+                        <input type="text" class="form-control" id="thumbnail" name="thumbnail" value="{{this.thumbnail}}">
+                      </div>
+                      <div class="form-group">
+                        <label for="owner">Owner</label>
+                        <input type="text" class="form-control" id="owner" name="owner" value="{{this.owner}}" disabled>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Edit</button>
+                  </form>
+              </div>
+          </div> 
+      </div>
+  </div>
+{{/each}}
+
+
+<!-- Modal de confirmación de eliminación -->
+{{#each products}}
+<div class="modal fade" id="eliminarModal{{this._id}}" tabindex="-1" role="dialog" aria-labelledby="eliminarModalLabel{{this._id}}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eliminarModalLabel{{this._id}}">Delete Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Are you sure you want to delete the product "{{this.title}}"?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form action="/crud-products/delete/{{this._id}}?_method=DELETE" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{{/each}}
+
 
     
-    <!-- Botón para crear un nuevo producto -->
     
-</div>
-
-<!-- Ventana modal para crear producto -->
-<div class="modal fade" id="crearProductoModal" tabindex="-1" role="dialog" aria-labelledby="crearProductoModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <!-- Contenido del formulario para crear producto -->
-        </div>
-    </div>
-</div>
-
-<!-- Ventana modal para editar producto -->
-<div class="modal fade" id="editarProductoModal" tabindex="-1" role="dialog" aria-labelledby="editarProductoModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <!-- Contenido del formulario para editar producto -->
-        </div>
-    </div>
-</div>
-
-<!-- Ventana modal para eliminar producto -->
-<div class="modal fade" id="eliminarProductoModal" tabindex="-1" role="dialog" aria-labelledby="eliminarProductoModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <!-- Contenido del formulario para eliminar producto -->
-        </div>
-    </div>
-</div>
+    

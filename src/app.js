@@ -4,10 +4,13 @@ import compression from 'express-compression';
 import handlebars from 'express-handlebars';
 import session from 'express-session';
 import passport from 'passport';
+import methodOverride from 'method-override';
 import env from './config/enviroment.config.js';
 import { iniPassport } from './config/passport.config.js';
 import path from 'path';
+import cookieParser from 'cookie-parser';
 import { __dirname } from './config.js';
+import { docsRouter } from './routes/docs.router.js';
 import { authRouter } from './routes/auth.router.js';
 import { usersRouter } from './routes/users.router.js';
 import { cartsRouter } from './routes/carts.router.js';
@@ -22,7 +25,6 @@ import { CustomError } from './utils/errors/custom-error.js';
 import { EErrors } from './utils/errors/dictionary-error.js';
 import { errorHandler } from './middlewares/error.js';
 import { logger } from './utils/logger.js';
-import cookieParser from 'cookie-parser';
 
 const app = express();
 app.use(compression({ brotli: { enabled: true, zlib: {} } }));
@@ -35,12 +37,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
-
-const httpServer = app.listen(PORT, () => {
-  logger.info(`App runing on ${__dirname} - server http://localhost:${PORT}`);
-});
-
-connectWebSockets(httpServer);
 
 app.use(cookieParser());
 
@@ -62,6 +58,9 @@ iniPassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(methodOverride('_method'));
+
+app.use('/', docsRouter);
 app.use('/api/sessions', authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/products', productsRouter);
@@ -97,5 +96,11 @@ app.get('*', (req, res, next) => {
     next(err);
   }
 });
+
+const httpServer = app.listen(PORT, () => {
+  logger.info(`App runing on ${__dirname} - server http://localhost:${PORT}`);
+});
+
+connectWebSockets(httpServer);
 
 app.use(errorHandler.handleMiddleware);

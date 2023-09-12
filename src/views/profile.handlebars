@@ -1,29 +1,46 @@
-<div class="profile">
+<nav class="navbar navbar-expand-lg bg-body-tertiary mt-2">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a class="navbar-brand text-white" href="#">Mega-Friday</a>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a href="/logout" class="btn btn-success ms-1 me-4"><i class="bi bi-box-arrow-left me-2"></i>Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-    <h1>Profile</h1>
 
-    <p>
-        First Name:
-        {{user.firstName}} 
-    </p>
-    <p>
-        Last Name:
-        {{user.lastName}}
-    </p>
-    <p>
-        Email:
-        {{user.email}}
-    </p>
-    <p>
-        Age:
-        {{user.age}}
-    </p>
-    <p>
-        Rol:
-        {{user.rol}}
-    </p>
+<div class="container profile mt-4">
+  <h1>Profile</h1>
 
-    <br/>
+  <table class="table text-white">
+      <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Age</th>
+            <th>Role</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+            <td>{{user.firstName}}</td>
+            <td>{{user.lastName}}</td>
+            <td>{{user.email}}</td>
+            <td>{{user.age}}</td>
+            <td>{{user.rol}}</td>
+          </tr>
+      </tbody>
+  </table>
 
-    <a href='/logout'>Log out</a>
 </div>
+
+
+
+

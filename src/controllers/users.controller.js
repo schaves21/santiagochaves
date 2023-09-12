@@ -70,7 +70,7 @@ class UserController {
         const userCreated = await userService.create(newUser);
 
         if (userCreated) {
-          return res.status(200).json({
+          return res.status(201).json({
             status: 'success',
             msg: 'User created',
             data: {},
@@ -133,9 +133,11 @@ class UserController {
   async updateRole(req, res, next) {
     try {
       const userId = req.params.uid;
+
+      logger.debug(`User id received by parameter: ${userId}`);
+
       const user = await userService.updateRole(userId);
       if (user) {
-        //req.session.user.rol = user.rol;
         return res.status(200).json({
           status: 'success',
           msg: 'Role updated',

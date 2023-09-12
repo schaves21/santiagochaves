@@ -16,8 +16,14 @@ viewsRouter.get('/products/:pid', viewController.viewProductById);
 viewsRouter.get('/carts/:cid', viewController.viewCartById);
 viewsRouter.get('/realtimeproducts', viewController.getRealTimeProducts);
 viewsRouter.get('/chat', checkUser, viewController.getChats);
-viewsRouter.get('/crud-products', checkAdmin, viewController.getAllProducts);
-viewsRouter.get('/purchase/', viewController.viewPurchaseById);
+viewsRouter.get('/purchase/', viewController.viewPurchaseByEmail);
+
+// CRUD Products Administrator
+viewsRouter.get('/crud-products', checkAdmin, viewController.readProductsView);
+viewsRouter.post('/crud-products', checkAdmin, viewController.createProductView);
+viewsRouter.get('/crud-products/:pid', checkAdmin, viewController.productByIdView);
+viewsRouter.post('/crud-products/:pid', checkAdmin, viewController.updateProductView);
+viewsRouter.delete('/crud-products/delete/:pid', checkAdmin, viewController.deleteProductView);
 
 /* CODIGO PARA FILESYSTEM
 //import productManager from "../dao/productmanager.js";
@@ -33,54 +39,4 @@ viewsRouter.get("/", async (req, res) => {
   });
 });
 
-* HASTA ACÁ FILESYSTEM/ 
-
-/* NO SE SI ES ASI PERO, COMENTO ESTA RUTA PARA RESOLVER EL DESAFIO "IMPLEMENTACION DE LOGIN" 
-QUE PIDE QUE LA RUTA "/" MUESTRE LA VISTA DEL LOGIN
-viewsRouter.get("/", async (req, res) => {
-  try {
-    const { limit = 10, page = 1, sort, query } = req.query;
-    const queryParams = { limit, page, sort, query };
-    const {
-      payload: products,
-      totalPages,
-      prevPage,
-      nextPage,
-      page: currentPage,
-      hasPrevPage,
-      hasNextPage,
-      prevLink,
-      nextLink,
-    } = await productService.get(queryParams);
-    let productsViews = products.map((item) => {
-      return {
-        _id: item._id.toString(),
-        title: item.title,
-        description: item.description,
-        code: item.code,
-        price: item.price,
-        status: item.status,
-        stock: item.stock,
-        category: item.category,
-        thumbnail: item.thumbnail,
-      };
-    });
-    return res.render("home", {
-      status: "success",
-      products: productsViews,
-      totalPages,
-      prevPage,
-      nextPage,
-      currentPage,
-      hasPrevPage,
-      hasNextPage,
-      prevLink: prevLink?.substring(4) || "",
-      nextLink: nextLink?.substring(4) || "",
-    });
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ status: "error", message: "Error in server" });
-  }
-});
 */

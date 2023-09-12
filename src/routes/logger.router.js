@@ -1,10 +1,11 @@
 import express from 'express';
 import { readFile } from 'fs/promises';
 import { logger } from '../utils/logger.js';
+import { checkAdmin } from '../middlewares/auth.js';
 
 export const loggerRouter = express.Router();
 
-loggerRouter.get('/', async (req, res) => {
+loggerRouter.get('/', checkAdmin, async (req, res) => {
   try {
     const logPath = './errors.log';
     const content = await readFile(logPath, 'utf8');

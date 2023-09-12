@@ -35,7 +35,7 @@ class TicketController {
     }
   }
 
-  async createTicket(req, res) {
+  async createTicket(req, res, next) {
     try {
       const { cid } = req.params;
 
@@ -72,7 +72,7 @@ class TicketController {
 
       await ticketService.removeProcessedProducts(cid);
 
-      return res.status(200).json({
+      return res.status(201).json({
         status: 'success',
         msg: 'Thanks for your purchase',
         ticket: ticket._id,

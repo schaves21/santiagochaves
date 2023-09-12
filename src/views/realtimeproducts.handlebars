@@ -1,46 +1,70 @@
-<div class="productListSocket">
+<nav class="navbar navbar-expand-lg bg-body-tertiary mt-2 mb-2">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a class="navbar-brand text-white" href="#">Mega-Friday</a>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a href="/logout" class="btn btn-success ms-1 me-4"><i class="bi bi-box-arrow-left me-2"></i>Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
+<div class="container mx-auto col-md-5 mt-2 text-white">
   <h1>Product List</h1>
   <ul id="productList"></ul>
   <hr />
-
 </div>
 
-<form class="row g-3" id="newProductForm">
-  <div class="col-md-6">
-    <input class="form-control" name="title" type="text" placeholder="Title" aria-label="default input example">
-  </div>
-  <div class="col-md-6">
-    <input class="form-control" name="description" type="text" placeholder="Description" aria-label="default input example">
-  </div>
-  <div class="col-md-6">
-    <input class="form-control" name="code" type="text" placeholder="Code" aria-label="default input example">
-  </div>
-  <div class="col-md-6">
-    <input class="form-control" name="price" type="number" placeholder="Price" aria-label="default input example">
-  </div>
-  <div class="col-md-6">
-    <input class="form-control" name="stock" type="number" placeholder="Stock" aria-label="default input example"> 
-  </div>
-  <div class="col-md-6">
-    <input class="form-control" name="category" type="text" placeholder="Category" aria-label="default input example"> 
-  </div>
-  <div class="col-md-6">
-    <input class="form-control" type="file" name="thumbnail" id="formFile"> 
-  </div>
-  <div class="col-12">
-    <button type="submit" class="btn btn-primary btn-addProductSocket">Add Product</button>
-  </div>
-</form>
+<div class="container mx-auto col-md-5 mt-2 text-white">
+  <h2 class="mb-4">Add Product</h2>
+  <form id="newProductForm">
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" class="form-control" id="title" name="title">
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="code" class="form-label">Code</label>
+      <input type="text" class="form-control" id="code" name="code">
+    </div>
+    <div class="mb-3">
+      <label for="price" class="form-label">Price</label>
+      <input type="number" class="form-control" id="price" name="price">
+    </div>
+    <div class="mb-3">
+      <label for="stock" class="form-label">Stock</label>
+      <input type="number" class="form-control" id="stock" name="stock">
+    </div>
+    <div class="mb-3">
+      <label for="category" class="form-label">Category</label>
+      <input type="text" class="form-control" id="category" name="category">
+    </div>
+    <div class="mb-3">
+      <label for="thumbnail" class="form-label">Thumbnail</label>
+      <textarea class="form-control" id="thumbnail" name="thumbnail" rows="3"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+  </form>
+</div>
 
-<form class="row g-3" id="deleteProductForm">
-  <div class="col-auto">
-    <input type="text" name="productId" class="form-control" id="productId" placeholder="Product Id">
-  </div>
-  <div class="col-auto">
-    <button type="submit" class="btn btn-primary mb-3">Delete Product</button>
-  </div>
-</form>   
+<div class="container mx-auto col-md-5 mt-3 mb-3 text-white">
+  <h2 class="mb-4">Delete Product</h2>
+  <form id="deleteProductForm">
+    <div class="form-group mb-3 d-flex flex-column align-items-start">
+      <label for="productId" class="form-label">Product Id</label>
+      <input type="text" class="form-control" id="productId" name="productId">
+    </div>
+    <button type="submit" class="btn btn-danger">Delete</button>
+  </form>
+</div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="js/main.js"></script>

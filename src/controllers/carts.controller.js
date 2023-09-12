@@ -66,7 +66,7 @@ class CartController {
       if (!cart) {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
-      res.status(200).json(cart);
+      res.status(201).json(cart);
     } catch (err) {
       logger.error(err.message);
       next(err);

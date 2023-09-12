@@ -72,7 +72,7 @@ class ProductController {
 
   async updateOne(req, res, next) {
     try {
-      const { id } = req.params;
+      const { pid } = req.params;
       const { title, description, code, price, stock, category, thumbnail } = req.body;
 
       if (!title || !description || !code || !price || !stock || !category || !thumbnail) {
@@ -80,7 +80,7 @@ class ProductController {
       }
 
       let product = new ProductDTO({ title, description, code, price, stock, category, thumbnail });
-      const productUpdated = await productService.updateOne(id, product);
+      const productUpdated = await productService.updateOne(pid, product);
 
       return res.status(200).json({
         status: 'success',
@@ -95,18 +95,18 @@ class ProductController {
 
   async deleteOne(req, res, next) {
     try {
-      const { id } = req.params;
-      logger.debug(`Product id received by parameter: ${id}`);
+      const { pid } = req.params;
+      logger.debug(`Product id received by parameter: ${pid}`);
 
       const { user } = req.user;
 
-      const productFound = await this.getProductById(id);
+      const productFound = await this.getProductById(pid);
 
       if (productFound.rol === 'premium' && productFound.owner != user.email) {
         throw new CustomError(EErrors.PRODUCT_OWNER_DELETE.code, EErrors.PRODUCT_OWNER_DELETE.name, EErrors.PRODUCT_OWNER_DELETE.cause, EErrors.PRODUCT_OWNER_DELETE.message);
       }
 
-      const productDeleted = await productService.deleteOne(id);
+      const productDeleted = await productService.deleteOne(pid);
       return res.status(200).json({
         status: 'success',
         msg: 'Product deleted',

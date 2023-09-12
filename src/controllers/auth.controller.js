@@ -43,7 +43,7 @@ class AuthController {
         cartID: req.user.cartID,
         rol: req.user.rol,
       };
-      return res.redirect('/products');
+      return res.redirect('/menu');
     } catch (err) {
       logger.error(err.message);
       next(err);

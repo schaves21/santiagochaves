@@ -10,7 +10,7 @@ const productModel = new ProductModel();
 class TicketService {
   async getAllTickets() {
     try {
-      const ticket = await ticketModel.getAll({});
+      const ticket = await ticketModel.getAllTickets();
       if (!ticket) {
         throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
       }

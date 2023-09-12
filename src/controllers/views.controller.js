@@ -1,4 +1,6 @@
 import { viewService } from '../services/views.service.js';
+import { productService } from '../services/products.service.js';
+import ProductDTO from './DTO/products.dto.js';
 import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
 import { logger } from '../utils/logger.js';
@@ -90,29 +92,6 @@ class ViewController {
     }
   }
 
-  async getAllProducts(_, res, next) {
-    try {
-      const allProducts = await viewService.getAllProducts();
-
-      const productsViews = allProducts.map((product) => ({
-        _id: product._id.toString(),
-        title: product.title,
-        description: product.description,
-        code: product.code,
-        price: product.price,
-        status: product.status,
-        stock: product.stock,
-        category: product.category,
-        thumbnail: product.thumbnail,
-        owner: product.owner,
-      }));
-
-      res.render('crud-products', { products: productsViews });
-    } catch (err) {
-      next(err);
-    }
-  }
-
   async getProducts(req, res, next) {
     try {
       const user = req.session.user;
@@ -162,7 +141,7 @@ class ViewController {
     try {
       const { pid } = req.params;
 
-      logger.debug(`Product id received by parameter: ${pid}`);
+      //logger.debug(`Product id received by parameter: ${pid}`);
 
       const product = await viewService.viewProductById(pid);
 
@@ -205,21 +184,140 @@ class ViewController {
     }
   }
 
-  async viewPurchaseById(req, res, next) {
+  async viewPurchaseByEmail(req, res, next) {
     try {
-      /*
-      const { tid } = req.params;
+      const email = req.session.user.email;
 
-      logger.debug(`Ticket id received by parameter: ${tid}`);
+      const ticketUser = await viewService.viewPurchaseByEmail(email);
 
-      const ticket = await viewService.viewPurchaseById(tid);
-
-      if (!ticket) {
-        throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
+      if (ticketUser) {
+        res.render('purchases', {
+          _id: ticketUser._id.toString(),
+          code: ticketUser.code,
+          purchase_datetime: ticketUser.purchase_datetime,
+          amount: ticketUser.amount,
+          purchaser: ticketUser.purchaser,
+          products: ticketUser.products.map((product) => ({
+            productId: product.productId.toString(),
+            quantity: product.quantity,
+          })),
+        });
       }
-      */
+    } catch (err) {
+      logger.error(err.message);
+      next(err);
+    }
+  }
 
-      res.render('purchases');
+  // **************** CRUD PRODUCT ADMINISTRATOR **************** //
+  async readProductsView(_, res, next) {
+    try {
+      const allProducts = await viewService.getProductsView();
+
+      const productsViews = allProducts.map((product) => ({
+        _id: product._id.toString(),
+        title: product.title,
+        description: product.description,
+        code: product.code,
+        price: product.price,
+        status: product.status,
+        stock: product.stock,
+        category: product.category,
+        thumbnail: product.thumbnail,
+        owner: product.owner,
+      }));
+
+      res.render('crud-products', { products: productsViews });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async productByIdView(req, res, next) {
+    try {
+      const { pid } = req.params;
+
+      logger.debug(`Product id received by parameter: ${pid}`);
+
+      const product = await viewService.viewProductById(pid);
+
+      if (!product) {
+        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
+      }
+
+      const productsViews = {
+        _id: product._id.toString(),
+        title: product.title,
+        description: product.description,
+        code: product.code,
+        price: product.price,
+        status: product.status,
+        stock: product.stock,
+        category: product.category,
+        thumbnail: product.thumbnail,
+      };
+      res.render('crud-products', { products: productsViews });
+    } catch (err) {
+      logger.error(err.message);
+      next(err);
+    }
+  }
+
+  async createProductView(req, res, next) {
+    try {
+      const { title, description, code, price, stock, category, thumbnail } = req.body;
+
+      const owner = req.session.user.email;
+
+      if (!title || !description || !code || !price || !stock || !category || !thumbnail) {
+        throw new CustomError(EErrors.INVALID_INPUT_ERROR.code, EErrors.INVALID_INPUT_ERROR.name, EErrors.INVALID_INPUT_ERROR.cause, EErrors.INVALID_INPUT_ERROR.message);
+      }
+
+      let product = new ProductDTO({ title, description, code, price, stock, category, thumbnail, owner });
+      const productCreated = await productService.create(product);
+
+      if (productCreated) {
+        res.redirect('/crud-products');
+      }
+    } catch (err) {
+      logger.error(err.message);
+      next(err);
+    }
+  }
+
+  async updateProductView(req, res, next) {
+    try {
+      const { pid } = req.params;
+
+      const { title, description, code, price, status, stock, category, thumbnail, owner } = req.body;
+
+      if (!title || !description || !code || !price || !stock || !category || !thumbnail) {
+        throw new CustomError(EErrors.INVALID_INPUT_ERROR.code, EErrors.INVALID_INPUT_ERROR.name, EErrors.INVALID_INPUT_ERROR.cause, EErrors.INVALID_INPUT_ERROR.message);
+      }
+
+      let product = new ProductDTO({ title, description, code, price, status, stock, category, thumbnail, owner });
+      const productUpdated = await productService.updateOne(pid, product);
+
+      if (productUpdated) {
+        res.redirect('/crud-products');
+      }
+    } catch (err) {
+      logger.error(err.message);
+      next(err);
+    }
+  }
+
+  async deleteProductView(req, res, next) {
+    try {
+      const { pid } = req.params;
+
+      logger.debug(`Product id received by parameter: ${pid}`);
+
+      const productDeleted = await productService.deleteProductView(pid);
+
+      if (productDeleted) {
+        res.redirect('/crud-products');
+      }
     } catch (err) {
       logger.error(err.message);
       next(err);

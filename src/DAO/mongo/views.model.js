@@ -7,9 +7,9 @@ import { EErrors } from '../../utils/errors/dictionary-error.js';
 export default class ViewModel {
   constructor() {}
 
-  async getAllProducts() {
+  async getProductsView() {
     try {
-      const allProducts = await productMongoose.find({}).limit(10);
+      const allProducts = await productMongoose.find({});
       if (!allProducts) {
         throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
       }
@@ -69,23 +69,12 @@ export default class ViewModel {
     }
   }
 
-  async viewPurchaseById(tid) {
+  async viewPurchaseByEmail(email) {
     try {
-      const ticket = await ticketMongoose.findById(tid).populate('products.product');
-      if (!ticket) {
-        throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
-      }
-      /*
-      const ticketView = ticket.products.map((item) => ({
-        id: item.productId,
-        quantity: item.quantity,
-      }));
-      */
-      return ticket;
+      const ticketUser = await ticketMongoose.findOne({ purchaser: email });
+      return ticketUser || false;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      throw err;
     }
   }
 }

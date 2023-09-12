@@ -21,7 +21,7 @@ newProductForm.addEventListener('submit', (event) => {
   const price = newProductForm.elements.price.value;
   const stock = newProductForm.elements.stock.value;
   const category = newProductForm.elements.category.value;
-  const thumbnail = newProductForm.elements.thumbnail.files[0];
+  const thumbnail = newProductForm.elements.thumbnail.value;
 
   const boolString = 'true';
   const boolStatus = boolString === 'true';

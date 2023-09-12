@@ -4,8 +4,8 @@ import { checkAdmin } from '../middlewares/auth.js';
 
 export const usersRouter = express.Router();
 
-usersRouter.get('/', userController.getAllUsers);
-usersRouter.get('/:uid', userController.getUserById);
+usersRouter.get('/', checkAdmin, userController.getAllUsers);
+usersRouter.get('/:uid', checkAdmin, userController.getUserById);
 usersRouter.post('/', checkAdmin, userController.create);
 usersRouter.put('/:uid', checkAdmin, userController.updateOne);
 usersRouter.delete('/:uid', checkAdmin, userController.deleteOne);
