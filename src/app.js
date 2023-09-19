@@ -104,3 +104,5 @@ const httpServer = app.listen(PORT, () => {
 connectWebSockets(httpServer);
 
 app.use(errorHandler.handleMiddleware);
+
+export default app;

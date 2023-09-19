@@ -1,5 +1,6 @@
 import { cartService } from '../services/carts.service.js';
 import { productService } from '../services/products.service.js';
+import { userService } from '../services/users.service.js';
 import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
 import { logger } from '../utils/logger.js';
@@ -11,7 +12,14 @@ class CartController {
       if (!cart) {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
-      res.status(200).json(cart);
+
+      return res.status(200).json({
+        status: 'success',
+        msg: 'Carts list',
+        data: cart,
+      });
+
+      //res.status(200).json(cart);
     } catch (err) {
       logger.error(err.message);
       next(err);
@@ -30,7 +38,13 @@ class CartController {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
 
-      res.status(200).json(cart);
+      return res.status(200).json({
+        status: 'success',
+        msg: 'Cart',
+        data: cart,
+      });
+
+      //res.status(200).json(cart);
     } catch (err) {
       logger.error(err.message);
       next(err);
@@ -43,7 +57,14 @@ class CartController {
       if (!newCart) {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
-      res.status(201).json(newCart);
+
+      return res.status(201).json({
+        status: 'success',
+        msg: 'Cart created',
+        data: newCart,
+      });
+
+      //res.status(201).json(newCart);
     } catch (err) {
       logger.error(err.message);
       next(err);
@@ -53,11 +74,12 @@ class CartController {
   async addProductCart(req, res, next) {
     try {
       const { cid, pid } = req.params;
-      const userEmail = req.session.user.email;
 
       const product = await productService.getProductById(pid);
 
-      if (product.owner === userEmail) {
+      const userFound = await userService.getUserByCartID(cid);
+
+      if (product.owner === userFound.email) {
         throw new CustomError(EErrors.PRODUCT_OWNER.code, EErrors.PRODUCT_OWNER.name, EErrors.PRODUCT_OWNER.cause, EErrors.PRODUCT_OWNER.message);
       }
 
@@ -66,7 +88,14 @@ class CartController {
       if (!cart) {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
-      res.status(201).json(cart);
+
+      return res.status(201).json({
+        status: 'success',
+        msg: 'Product add to cart',
+        data: cart,
+      });
+
+      //res.status(201).json(cart);
     } catch (err) {
       logger.error(err.message);
       next(err);

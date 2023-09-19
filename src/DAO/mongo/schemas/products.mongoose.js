@@ -11,7 +11,7 @@ const schema = new Schema(
     stock: { type: Number, required: true },
     category: { type: String, required: true, max: 30 },
     thumbnail: { type: Array, required: true },
-    owner: { type: String, required: true, default: 'admin' },
+    owner: { type: String, required: true, default: 'adminCoder@coder.com' },
   },
   { versionKey: false }
 );

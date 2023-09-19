@@ -187,10 +187,9 @@ class ViewController {
   async viewPurchaseByEmail(req, res, next) {
     try {
       const email = req.session.user.email;
-
       const ticketUser = await viewService.viewPurchaseByEmail(email);
 
-      if (ticketUser) {
+      if (ticketUser && ticketUser.purchaser) {
         res.render('purchases', {
           _id: ticketUser._id.toString(),
           code: ticketUser.code,
@@ -201,6 +200,11 @@ class ViewController {
             productId: product.productId.toString(),
             quantity: product.quantity,
           })),
+        });
+      } else {
+        const message = 'User without purchases';
+        res.render('purchases', {
+          message,
         });
       }
     } catch (err) {

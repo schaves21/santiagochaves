@@ -98,17 +98,9 @@ class ViewService {
   async viewPurchaseByEmail(email) {
     try {
       const ticketUser = await viewModel.viewPurchaseByEmail(email);
-
-      //logger.debug(`Ticket found in BD: ${ticketUser}`);
-
-      if (!ticketUser) {
-        throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
-      }
       return ticketUser;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      throw err;
     }
   }
 }

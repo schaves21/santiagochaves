@@ -35,6 +35,38 @@ class UserService {
     }
   }
 
+  async getUserByEmail(email) {
+    try {
+      const user = await userModel.getUserByEmail(email);
+
+      if (!user) {
+        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
+      }
+
+      return user;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
+      }
+    }
+  }
+
+  async getUserByCartID(cid) {
+    try {
+      const user = await userModel.getUserByCartID(cid);
+
+      if (!user) {
+        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
+      }
+
+      return user;
+    } catch (err) {
+      if (err instanceof CustomError) {
+        throw err;
+      }
+    }
+  }
+
   async create(newUser) {
     try {
       const userCreated = await userModel.create(newUser);

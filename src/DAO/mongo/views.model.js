@@ -72,7 +72,7 @@ export default class ViewModel {
   async viewPurchaseByEmail(email) {
     try {
       const ticketUser = await ticketMongoose.findOne({ purchaser: email });
-      return ticketUser || false;
+      return ticketUser || null;
     } catch (err) {
       throw err;
     }

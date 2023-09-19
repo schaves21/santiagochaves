@@ -7,8 +7,8 @@ export const cartsRouter = express.Router();
 
 // ----------- MongoDB -------------------------------
 
-// **** para postman / thunder client quitar el middleware checkUser ***
-/*
+// **** Para TESTING sin el middleware checkUser / checkCart ***
+
 cartsRouter.get('/', cartController.getAllCarts);
 cartsRouter.get('/:cid', cartController.getCartById);
 cartsRouter.post('/', cartController.create);
@@ -18,8 +18,9 @@ cartsRouter.put('/:cid/products/:pid', cartController.updateProductQuantity);
 cartsRouter.delete('/:cid/products/:pid', cartController.removeProduct);
 cartsRouter.delete('/:cid', cartController.clearCart);
 cartsRouter.post('/:cid/purchase', ticketController.createTicket);
-*/
 
+// **** PARA DEV con el middleware checkUser / checkCart ***
+/*
 cartsRouter.get('/', checkUser, cartController.getAllCarts);
 cartsRouter.get('/:cid', checkUser, cartController.getCartById);
 cartsRouter.post('/', checkUser, cartController.create);
@@ -29,6 +30,7 @@ cartsRouter.put('/:cid/products/:pid', checkUser, cartController.updateProductQu
 cartsRouter.delete('/:cid/products/:pid', checkUser, cartController.removeProduct);
 cartsRouter.delete('/:cid', checkUser, cartController.clearCart);
 cartsRouter.post('/:cid/purchase', checkUser, ticketController.createTicket);
+*/
 
 /* ------------- FileSystem -----------------------------------
 

@@ -32,6 +32,24 @@ export default class UserModel {
     }
   }
 
+  async getUserByEmail(email) {
+    try {
+      const user = await UserMongoose.findOne({ email });
+      return user || null;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getUserByCartID(cartID) {
+    try {
+      const user = await UserMongoose.findOne({ cartID });
+      return user || null;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async create() {
     try {
       const userCreated = await UserMongoose.create({});

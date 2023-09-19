@@ -6,22 +6,24 @@ export const productsRouter = express.Router();
 
 // ------------- MongoDB -------------------------------
 
-// **** para postman / thunder client quitar el middleware checkAdmin ***
-/*
+// **** PARA TESTING sin el middleware checkAdmin / checkAdminOrPremium ***
+
 productsRouter.get('/mockingproducts', productController.mockingProducts);
 productsRouter.get('/', productController.getAllProducts);
 productsRouter.get('/:pid', productController.getProductById);
 productsRouter.post('/', productController.create);
-productsRouter.put('/:id', productController.updateOne);
-productsRouter.delete('/:id', productController.deleteOne);
-*/
+productsRouter.put('/:pid', productController.updateOne);
+productsRouter.delete('/:pid', productController.deleteOne);
 
+// **** PARA DEV con el middleware checkAdmin / checkAdminOrPremium ***
+/*
 productsRouter.get('/mockingproducts', checkAdmin, productController.mockingProducts);
 productsRouter.get('/', checkAdmin, productController.getAllProducts);
 productsRouter.get('/:pid', checkAdmin, productController.getProductById);
 productsRouter.post('/', checkAdminOrPremium, productController.create);
 productsRouter.put('/:pid', checkAdminOrPremium, productController.updateOne);
 productsRouter.delete('/:pid', checkAdminOrPremium, productController.deleteOne);
+*/
 
 /* --------------- Filesystem ------------------------
 import productManager from "../dao/productmanager.js";
