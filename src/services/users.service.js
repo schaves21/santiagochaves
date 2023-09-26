@@ -24,14 +24,9 @@ class UserService {
     try {
       const user = await userModel.getUserById(uid);
       logger.debug(`User Id found in BD: ${uid}`);
-      if (!user) {
-        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
-      }
       return user;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      throw err;
     }
   }
 
@@ -110,26 +105,60 @@ class UserService {
     }
   }
 
+  async requiredDocuments(user) {
+    try {
+      const requiredDocs = ['Identificación', 'Comprobante de domicilio', 'Comprobante de estado de cuenta'];
+      const userDocuments = user.documents.map((doc) => doc.name);
+
+      logger.info(`Documents: ${userDocuments}`);
+
+      for (const doc of requiredDocs) {
+        if (!userDocuments.includes(doc)) {
+          return false;
+        }
+      }
+      return true;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async updateRole(userId) {
     try {
-      const userFound = await this.getUserById(userId);
+      const user = await this.getUserById(userId);
 
-      if (userFound.rol === 'premium') {
-        userFound.rol = 'user';
-      } else if (userFound.rol === 'user') {
-        userFound.rol = 'premium';
-      } else {
+      if (!user) {
         throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
+      } else {
+        if (user.rol === 'user') {
+          // solo si el usuario es igual a user comprobar documentos requeridos
+          const requiredDocs = await this.requiredDocuments(user);
+          if (requiredDocs) {
+            user.rol = 'premium';
+          } else {
+            throw new CustomError(EErrors.INCOMPLETE_USER_DOCUMENT.code, EErrors.INCOMPLETE_USER_DOCUMENT.name, EErrors.INCOMPLETE_USER_DOCUMENT.cause, EErrors.INCOMPLETE_USER_DOCUMENT.message);
+          }
+        } else if (user.rol === 'premium') {
+          user.rol = 'user';
+        }
       }
 
-      logger.debug(`Role: ${userFound.rol}`);
+      logger.debug(`Role: ${user.rol}`);
 
-      const updatedRole = await userFound.save();
+      const updatedRole = await user.save();
       return updatedRole;
     } catch (err) {
       if (err instanceof CustomError) {
         throw err;
       }
+    }
+  }
+
+  async uploadDocuments(uid, name, documentURL) {
+    try {
+      await userModel.uploadDocuments(uid, name, documentURL);
+    } catch (err) {
+      throw err;
     }
   }
 }

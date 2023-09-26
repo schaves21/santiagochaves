@@ -1,4 +1,5 @@
 import AuthDTO from './DTO/auth.dto.js';
+import { authService } from '../services/auth.service.js';
 import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
 import { logger } from '../utils/logger.js';
@@ -11,6 +12,8 @@ class AuthController {
         throw new CustomError(EErrors.INVALID_EMAIL_PASSWORD.code, EErrors.INVALID_EMAIL_PASSWORD.name, EErrors.INVALID_EMAIL_PASSWORD.cause, EErrors.INVALID_EMAIL_PASSWORD.message);
       }
 
+      await authService.updateLastConnection(req.user._id);
+
       req.session.user = {
         _id: req.user._id,
         email: req.user.email,
@@ -19,6 +22,8 @@ class AuthController {
         age: req.user.age,
         cartID: req.user.cartID,
         rol: req.user.rol,
+        documents: req.user.documents,
+        lastConnection: new Date(),
       };
 
       return res.redirect('/menu');
@@ -34,6 +39,8 @@ class AuthController {
         logger.info('No user found in the request object');
         throw new CustomError(EErrors.INVALID_EMAIL_PASSWORD.code, EErrors.INVALID_EMAIL_PASSWORD.name, EErrors.INVALID_EMAIL_PASSWORD.cause, EErrors.INVALID_EMAIL_PASSWORD.message);
       }
+      await authService.updateLastConnection(req.user._id);
+
       req.session.user = {
         _id: req.user._id,
         email: req.user.email,
@@ -42,6 +49,8 @@ class AuthController {
         age: req.user.age,
         cartID: req.user.cartID,
         rol: req.user.rol,
+        documents: req.user.documents,
+        lastConnection: new Date(),
       };
       return res.redirect('/menu');
     } catch (err) {

@@ -9,6 +9,14 @@ const schema = new Schema(
     password: { type: String, required: false, max: 100 },
     cartID: { type: String, required: true, unique: true },
     rol: { type: String, default: 'user', required: true },
+    last_connection: { type: Date },
+    documents: [
+      {
+        name: { type: String },
+        reference: { type: String },
+        status: { type: String },
+      },
+    ],
   },
   { versionKey: false }
 );

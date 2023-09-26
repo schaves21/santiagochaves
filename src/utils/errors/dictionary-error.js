@@ -3,13 +3,13 @@ export const EErrors = {
     code: 404,
     name: 'Route error',
     cause: 'Could not find route',
-    message: 'Please, enter the correct address',
+    message: 'Please enter the correct address',
   },
   INVALID_INPUT_ERROR: {
     code: 400,
     name: 'Input type error',
     cause: 'One or more properties were incomplete or not valid',
-    message: 'Please, enter the fields correctly',
+    message: 'Please enter the fields correctly',
   },
   USER_NOT_FOUND: {
     code: 400,
@@ -64,5 +64,23 @@ export const EErrors = {
     name: 'Token error',
     cause: 'Token not found',
     message: 'Please check the token code',
+  },
+  DOCUMENT_NOT_UPLOADED: {
+    code: 400,
+    name: 'Upload file error',
+    cause: 'No documents have been uploaded',
+    message: 'Please select a file',
+  },
+  INVALID_FILE_FORMAT: {
+    code: 400,
+    name: 'File format error',
+    cause: 'File type not allowed',
+    message: 'Please upload jpg, jpeg, png, pdf, txt, doc, docx, bmp, or gif files',
+  },
+  INCOMPLETE_USER_DOCUMENT: {
+    code: 400,
+    name: 'User documents error',
+    cause: 'One or more document were incomplete',
+    message: 'The user has not finished processing their documentation',
   },
 };

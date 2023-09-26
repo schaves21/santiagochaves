@@ -1,6 +1,7 @@
 import { UserMongoose } from '../mongo/schemas/users.mongoose.js';
 import { CustomError } from '../../utils/errors/custom-error.js';
 import { EErrors } from '../../utils/errors/dictionary-error.js';
+import mongoose from 'mongoose';
 
 export default class UserModel {
   constructor() {}
@@ -20,15 +21,13 @@ export default class UserModel {
 
   async getUserById(uid) {
     try {
-      const user = await UserMongoose.findById({ _id: uid });
-      if (!user) {
-        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
+      if (!mongoose.Types.ObjectId.isValid(uid)) {
+        return null;
       }
+      const user = await UserMongoose.findById(uid);
       return user;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      throw err;
     }
   }
 
@@ -90,6 +89,25 @@ export default class UserModel {
       if (err instanceof CustomError) {
         throw err;
       }
+    }
+  }
+
+  async uploadDocuments(uid, name, documentURL) {
+    try {
+      await UserMongoose.updateOne(
+        { _id: uid },
+        {
+          $push: {
+            documents: {
+              name: name,
+              reference: documentURL,
+              status: 'Uploaded',
+            },
+          },
+        }
+      );
+    } catch (err) {
+      throw err;
     }
   }
 }

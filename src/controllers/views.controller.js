@@ -1,4 +1,5 @@
 import { viewService } from '../services/views.service.js';
+import { authService } from '../services/auth.service.js';
 import { productService } from '../services/products.service.js';
 import ProductDTO from './DTO/products.dto.js';
 import { CustomError } from '../utils/errors/custom-error.js';
@@ -37,8 +38,10 @@ class ViewController {
     }
   }
 
-  getLogout(req, res, next) {
+  async getLogout(req, res, next) {
     try {
+      await authService.updateLastConnection(req.session.user._id);
+
       req.session.destroy((err) => {
         if (err) {
           return res.render('error', { error: 'could not close the session' });

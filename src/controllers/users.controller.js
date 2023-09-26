@@ -1,6 +1,7 @@
 import { userService } from '../services/users.service.js';
 import { cartService } from '../services/carts.service.js';
 import AuthDTO from './DTO/auth.dto.js';
+import path from 'path';
 import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
 import { logger } from '../utils/logger.js';
@@ -133,19 +134,57 @@ class UserController {
   async updateRole(req, res, next) {
     try {
       const userId = req.params.uid;
-
       logger.debug(`User id received by parameter: ${userId}`);
 
-      const user = await userService.updateRole(userId);
-      if (user) {
+      const updatedRole = await userService.updateRole(userId);
+
+      if (updatedRole) {
         return res.status(200).json({
           status: 'success',
           msg: 'Role updated',
           data: {},
         });
-      } else {
+      }
+    } catch (err) {
+      logger.error(err.message);
+      next(err);
+    }
+  }
+
+  async uploadDocuments(req, res, next) {
+    try {
+      const { uid } = req.params;
+      const files = req.files;
+      const name = req.body.name;
+
+      const user = await userService.getUserById(uid);
+
+      if (!user) {
         throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
       }
+
+      if (!files || files.length === 0) {
+        throw new CustomError(EErrors.DOCUMENT_NOT_UPLOADED.code, EErrors.DOCUMENT_NOT_UPLOADED.name, EErrors.DOCUMENT_NOT_UPLOADED.cause, EErrors.DOCUMENT_NOT_UPLOADED.message);
+      }
+
+      for (const file of files) {
+        const allowedFileTypes = /\.(jpg|jpeg|png|pdf|txt|doc|docx|bmp|gif)$/i;
+        const extname = path.extname(file.originalname).toLowerCase();
+        const isAllowed = allowedFileTypes.test(extname);
+
+        if (!isAllowed) {
+          throw new CustomError(EErrors.INVALID_FILE_FORMAT.code, EErrors.INVALID_FILE_FORMAT.name, EErrors.INVALID_FILE_FORMAT.cause, `Invalid file format: ${extname}`);
+        }
+
+        const documentURL = `/uploads/documents/${file.filename}`;
+        await userService.uploadDocuments(uid, name, documentURL);
+      }
+
+      return res.status(200).json({
+        status: 'success',
+        msg: 'Documents uploaded successfully',
+        data: {},
+      });
     } catch (err) {
       logger.error(err.message);
       next(err);

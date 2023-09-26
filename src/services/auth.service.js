@@ -42,5 +42,17 @@ class AuthService {
       logger.error(err.message);
     }
   }
+
+  async updateLastConnection(id) {
+    try {
+      const user = await this.findById(id);
+      if (user) {
+        user.last_connection = new Date();
+        await user.save();
+      }
+    } catch (err) {
+      logger.error(err.message);
+    }
+  }
 }
 export const authService = new AuthService();
