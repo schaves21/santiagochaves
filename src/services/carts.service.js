@@ -1,6 +1,4 @@
 import { CartModel } from '../DAO/factory.js';
-import { CustomError } from '../utils/errors/custom-error.js';
-import { EErrors } from '../utils/errors/dictionary-error.js';
 import { logger } from '../utils/logger.js';
 
 const cartModel = new CartModel();
@@ -9,99 +7,64 @@ class CartService {
   async getAllCarts() {
     try {
       const cart = await cartModel.getAllCarts({});
-      if (!cart) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
       return cart;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
-  async getCartById(cartId) {
+  async getCartById(cid) {
     try {
-      const cart = await cartModel.getCartById(cartId);
-      logger.debug(`Cart Id found in BD: ${cartId}`);
-      if (!cart) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
+      const cart = await cartModel.getCartById(cid);
+      logger.debug(`Cart Id found in BD: ${cid}`);
       return cart;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
   async create() {
     try {
       const cartCreated = await cartModel.create();
-      if (!cartCreated) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
       return cartCreated;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
-  async addProductCart(cartId, productId) {
+  async addProductCart(cid, pid) {
     try {
-      const addProductCart = await cartModel.addProductCart(cartId, productId);
-      if (!addProductCart) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
+      const addProductCart = await cartModel.addProductCart(cid, pid);
       return addProductCart;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
   async updateCart(cartId, products) {
     try {
       const cart = await cartModel.updateCart(cartId, products);
-      if (!cart) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
       return cart;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
   async updateProductQuantity(cartId, productId, quantity) {
     try {
       const cart = await cartModel.updateProductQuantity(cartId, productId, quantity);
-      if (!cart) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
       return cart;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
   async removeProduct(cartId, productId) {
     try {
       const cart = await cartModel.removeProduct(cartId, productId);
-      if (!cart) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
       return cart;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
@@ -109,14 +72,9 @@ class CartService {
     try {
       const cart = await cartModel.clearCart(cartId);
       logger.debug(`Cart Id found in BD: ${cartId}`);
-      if (!cart) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
       return cart;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 }

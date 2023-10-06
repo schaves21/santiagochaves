@@ -12,9 +12,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#components/schemas/Cart'
+                  $ref: '#components/schemas/AllCarts'
         '500':
-          description: Server error. Usually generating the query or the connection to the DB fails
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
       summary: Create a new cart (you need to be an user)
       tags:
@@ -27,41 +31,61 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#components/schemas/EmptyCart'
+                  $ref: '#components/schemas/CreateCart'
         '500':
-          description: Server error. Usually generating the query or the connection to the DB fails
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/carts/{cid}/products/{pid}:
     post:
-      summary: Add product to cart (you need to be an user)
+      summary: Add product to cart (you need to be a user)
       tags:
         - Carts
       parameters:
-        - name: cid, pid
+        - name: cid
           in: path
           required: true
-          description: Cart id and product id to be added
+          description: Cart id
           schema:
-            $type: String
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: Product id
+          schema:
+            type: string
       responses:
         '201':
           description: Product successfully added to cart
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/Cart'
+                $ref: '#/components/schemas/Cart'
         '500':
-          description: Server error. Usually generating the query or the connection to the DB fails
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     put:
       summary: Update product quantity to cart (you need to be an user)
       tags:
         - Carts
       parameters:
-        - name: cid, pid
+        - name: cid
           in: path
           required: true
-          description: Cart id and product id to update the quantity
+          description: Cart id
           schema:
-            $type: String
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: Product id
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -74,29 +98,43 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/Cart'
+                $ref: '#/components/schemas/UpdateProductCartQuantity'
         '500':
-          description: Server error. Usually generating the query or the connection to the DB fails
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
       summary: Removed product from cart (you need to be an user)
       tags:
         - Carts
       parameters:
-        - name: cid, pid
+        - name: cid
           in: path
           required: true
-          description: Cart id and product id to delete the cart
+          description: Cart id
           schema:
-            $type: String
+            type: string
+        - name: pid
+          in: path
+          required: true
+          description: Product id
+          schema:
+            type: string
       responses:
         '200':
           description: Product remove successfully from cart
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/Success'
+                $ref: '#/components/schemas/RemoveCart'
         '500':
-          description: Server error. Usually generating the query or the connection to the DB fails
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/carts/{cid}:
     get:
       summary: Get a cart by id (you need to be an user)
@@ -117,7 +155,11 @@ paths:
               schema:
                 $ref: '#components/schemas/PopulateProduct'
         '500':
-          description: Server error. Usually generating the query or the connection to the DB fails
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     put:
       summary: Update a cart by id (you need to be an user)
       tags:
@@ -134,16 +176,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#components/requestBodies/UpdateProduct'
+              $ref: '#components/requestBodies/BodyUpdateProductCart'
       responses:
         '200':
           description: Cart was updated successfully
           content:
             application/json:
               schema:
-                $ref: '#components/schemas/Cart'
+                $ref: '#components/schemas/UpdateCart'
         '500':
-          description: Server error. Usually generating the query or the connection to the DB fails
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     delete:
       summary: Delete a cart by id (you need to be an user)
       tags:
@@ -163,7 +209,11 @@ paths:
               schema:
                 $ref: '#components/schemas/EmptyCart'
         '500':
-          description: Server error. Usually generating the query or the connection to the DB fails
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /api/carts/{cid}/purchase:
     post:
       summary: Complete the purchase (you need to be an user)
@@ -184,22 +234,20 @@ paths:
               schema:
                 $ref: '#components/schemas/Purchase'
         '500':
-          description: Server error. Usually generating the query or the connection to the DB fails
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
-    Success:
+    Error:
       type: object
       properties:
-        status:
-          type: String
-          description: success or error
-        message:
-          type: String
-          description: Response based on user action
-      example:
-        status: success
-        message: Depending on the user action, cart created, cart updated or cart deleted
-    Cart:
+        error:
+          type: string
+      example: { code: 500, name: 'Internal Server Error', cause: 'Something unexpected happened...', message: 'Error server. Usually generating the query or the connection to the DB fails' }
+    AllCarts:
       type: object
       properties:
         _id:
@@ -218,10 +266,137 @@ components:
                 type: Number
                 description: Product quantity in cart
       example:
-        _id: 64fdeb95498ab3db794e5518
+        status: success
+        msg: Carts list
+        payload:
+          - _id: 65122f9cc8a3c46a9e174d62
+            products:
+              - product: 6508cc7156a024d698a8db17
+                quantity: 1
+                _id: 6514c3f55f5d147f29d7d82a
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Cart Id autogenerated by MongoDB
         products:
-          product: 64f9fef6c8406b0d8335f790
-          quantity: 1
+          type: array
+          description: List of products in the cart
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                description: Product ID in cart
+              quantity:
+                type: integer
+                description: Product quantity in cart
+      example:
+        status: success
+        msg: Product add to cart
+        payload:
+          _id: 651230d3c8a3c46a9e174d79
+          products:
+            - product: 6508cd6756a024d698a8db1c
+              quantity: 1
+              _id: 6519790f989548593938db5c
+    CreateCart:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Cart Id autogenerated by MongoDB
+        products:
+          type: Array
+          description: List of products in the cart
+      example:
+        status: success
+        msg: Cart created
+        payload:
+          _id: 6517566a90086141183e59a0
+          products: []
+    UpdateCart:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Cart Id autogenerated by MongoDB
+        products:
+          type: array
+          description: List of products in the cart
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                description: Product ID in cart
+              quantity:
+                type: integer
+                description: Product quantity in cart
+      example:
+        status: success
+        msg: Cart updated successfully
+        payload:
+          _id: 65122f9cc8a3c46a9e174d62
+          products:
+            - product: 6508ce2d56a024d698a8db20
+              quantity: 8
+              _id: 6519beccd295471d0436a34d
+    UpdateProductCartQuantity:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Cart Id autogenerated by MongoDB
+        products:
+          type: array
+          description: List of products in the cart
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                description: Product ID in cart
+              quantity:
+                type: integer
+                description: Product quantity in cart
+      example:
+        status: success
+        msg: Product quantity updated
+        payload:
+          _id: '651230d3c8a3c46a9e174d79'
+          products:
+            - product: '6508cd6756a024d698a8db1c'
+              quantity: 5
+              _id: '6519790f989548593938db5c'
+    RemoveCart:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Cart Id autogenerated by MongoDB
+        products:
+          type: array
+          description: List of products in the cart
+          items:
+            type: object
+            properties:
+              product:
+                type: string
+                description: Product ID in cart
+              quantity:
+                type: integer
+                description: Product quantity in cart
+      example:
+        status: success
+        msg: Product removed from cart
+        payload:
+          _id: 651230d3c8a3c46a9e174d79
+          products:
+            - product: 6508cd6756a024d698a8db1c
+              quantity: 1
+              _id: 6519790f989548593938db5c
     EmptyCart:
       type: object
       properties:
@@ -232,8 +407,11 @@ components:
           type: Array
           description: List of products in the cart
       example:
-        _id: 64fba2581777fb54129ee478
-        products: []
+        status: success
+        msg: Cart cleared successfully
+        payload:
+          _id: 6517566a90086141183e59a0
+          products: []
     PopulateProduct:
       type: object
       properties:
@@ -247,65 +425,87 @@ components:
             type: object
             properties:
               product:
-                type: ObjectId
+                type: Array
                 description: Product Id in cart
               quantity:
                 type: Number
                 description: Product quantity in cart
       example:
-        _id: 64fdeb95498ab3db794e5518
-        products:
-          product:
-            _id: 64f9fef6c8406b0d8335f790,
-            title: Producto1,
-            description: Producto1,
-            code: abc123,
-            price: 230,
-            status: true,
-            stock: 44,
-            category: Celulares,
-            owner: adminCoder@coder.com,
-            thumbnails: ['Producto1']
-          quantity: 3
+        status: success
+        msg: Cart
+        payload:
+          _id: 65122f9cc8a3c46a9e174d62
+          products:
+            - product:
+                _id: 6508cc7156a024d698a8db17
+                title: Inteligente Acero Salchichas
+                description: The Football Is Good For Training And Recreational Purposes
+                code: pi5tkvspcl
+                price: 1159
+                status: true
+                stock: 30
+                category: banyan
+                thumbnail: ['https://loremflickr.com/640/480']
+                owner: adminCoder@coder.com
+              quantity: 1
+              _id: 6514c3f55f5d147f29d7d82a
     Purchase:
       type: object
       properties:
-        _id:
-          type: ObjectId
-          description: Ticket Id autogenerated by MongoDB
-        code:
-          type: String
-          description: Ticket code
-        purchase_datetime:
-          type: Date
-          description: Ticket date
-        amount:
-          type: Number
-          description: Ticket amount
-        purchaser:
-          type: String
-          description: Ticket user email
-        products:
+        status:
+          type: string
+        msg:
+          type: string
+        ticket:
+          type: string
+        productProcessed:
           type: Array
-          description: List of products in the purchase
+          description: List of products procesed in the cart
           items:
             type: object
             properties:
               productId:
                 type: ObjectId
-                description: Product ID in cart
+                description: Product Id in cart
               quantity:
                 type: Number
                 description: Product quantity in cart
+              status:
+                type: Boolean
+                description: Product status in cart
+        productsNotProcessed:
+          type: Array
+          description: List of products not procesed in the cart
+          items:
+            type: object
+            properties:
+              productId:
+                type: ObjectId
+                description: Product Id in cart
+              quantity:
+                type: Number
+                description: Product quantity in cart
+              status:
+                type: Boolean
+                description: Product status in cart
       example:
-        _id: 64fdfeab55e4b50d4bf55594
-        code: pme8RBQB2Zn2lhmJ1QgZF
-        purchase_datetime: 2023-09-10T17:36:43.983+00:00
-        amount: 2688
-        purchaser: usuario1@usuario.com
-        products:
-          productId: 64f9ff6dc8406b0d8335f79b
-          quantity: 2
+        status: success
+        msg: Thanks for your purchase
+        ticket: 651b55ca9a0a9663d22dab3e
+        productProcessed:
+          - productId: 6508cd6756a024d698a8db1c
+            quantity: 1
+            status: true
+          - productId: 6508cc7156a024d698a8db17
+            quantity: 5
+            status: true
+          - productId: 6508cdd156a024d698a8db1e
+            quantity: 3
+            status: true
+        productsNotProcessed:
+          - productId: 651b4bfa3a1913f4e287b44e
+            quantity: 1
+            status: false
   requestBodies:
     UpdateProductQuantity:
       type: object
@@ -315,37 +515,20 @@ components:
           description: Product quantity in cart
       example:
         quantity: 5
-    UpdateProduct:
+    BodyUpdateProductCart:
       type: object
       properties:
-        title:
-          type: String
-          description: Product name
-        description:
-          type: String
-          description: Product description
-        code:
-          type: String
-          description: Product code
-        price:
-          type: Number
-          description: Product price
-        stock:
-          type: Number
-          description: Product stock
-        category:
-          type: String
-          description: Product category
-        thumbnail:
+        products:
           type: Array
+          description: List of products in the cart
           items:
-            type: String
-            description: Image links
+            type: object
+            properties:
+              product:
+                type: ObjectId
+                description: Product Id in cart
+              quantity:
+                type: Number
+                description: Product quantity in cart
       example:
-        title: HONOR Magic5 Lite 6.67 5G
-        description: El Honor Magic5 Lite con una pantalla AMOLED de 6.67" FHD+ y una tasa de refresco de 120Hz, te brinda una experiencia visual fluida y vibrante. Además, está potenciado por un procesador Snapdragon 695 de última generación, 8GB+5GB de RAM y 256GB de almacenamiento interno.
-        code: abc124
-        price: 600
-        stock: 45
-        category: Celulares
-        thumbnail: ['https://laoferta.com.uy/html-uy/smartphones/honor/magic5-lite-128gb/img/img-principal.jpg']
+        products: [{ product: '6508ce2d56a024d698a8db20', quantity: 9 }]

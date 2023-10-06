@@ -26,7 +26,7 @@ class UserService {
       logger.debug(`User Id found in BD: ${uid}`);
       return user;
     } catch (err) {
-      throw err;
+      logger.error(err);
     }
   }
 
@@ -49,16 +49,9 @@ class UserService {
   async getUserByCartID(cid) {
     try {
       const user = await userModel.getUserByCartID(cid);
-
-      if (!user) {
-        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
-      }
-
       return user;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 

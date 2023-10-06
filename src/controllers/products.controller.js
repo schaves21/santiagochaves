@@ -7,24 +7,22 @@ import { generateProduct } from '../utils/facker.js';
 import { logger } from '../utils/logger.js';
 
 class ProductController {
-  async getAllProducts(_, res, next) {
+  async getAllProducts(_, res) {
     try {
       const product = await productService.getAllProducts();
-      if (!product) {
-        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
-      }
+
       return res.status(200).json({
         status: 'success',
         msg: 'Products list',
-        data: product,
+        payload: product,
       });
     } catch (err) {
-      logger.error(err.message);
-      next(err);
+      logger.error(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 
-  async getProductById(req, res, next) {
+  async getProductById(req, res) {
     try {
       const { pid } = req.params;
 
@@ -39,15 +37,15 @@ class ProductController {
       return res.status(200).json({
         status: 'success',
         msg: 'Product',
-        data: product,
+        payload: product,
       });
     } catch (err) {
-      logger.error(err.message);
-      next(err);
+      logger.error(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 
-  async create(req, res, next) {
+  async create(req, res) {
     try {
       const { title, description, code, price, stock, category, thumbnail } = req.body;
 
@@ -60,6 +58,12 @@ class ProductController {
 
       if (!title || !description || !code || !price || !stock || !category || !thumbnail) {
         throw new CustomError(EErrors.INVALID_INPUT_ERROR.code, EErrors.INVALID_INPUT_ERROR.name, EErrors.INVALID_INPUT_ERROR.cause, EErrors.INVALID_INPUT_ERROR.message);
+      }
+
+      const codeFound = await productService.getProductByCode(code);
+
+      if (codeFound) {
+        throw new CustomError(EErrors.PRODUCT_CODE_EXIST.code, EErrors.PRODUCT_CODE_EXIST.name, EErrors.PRODUCT_CODE_EXIST.cause, EErrors.PRODUCT_CODE_EXIST.message);
       }
 
       let product = new ProductDTO({ title, description, code, price, stock, category, thumbnail, owner });
@@ -68,56 +72,40 @@ class ProductController {
       return res.status(201).json({
         status: 'success',
         msg: 'Product created',
-        data: productCreated,
+        payload: productCreated,
       });
     } catch (err) {
-      logger.error(err.message);
-      next(err);
+      logger.error(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 
-  async updateOne(req, res, next) {
+  async updateOne(req, res) {
     try {
       const { pid } = req.params;
 
-      console.log(pid);
-
       const { title, description, code, price, stock, category, thumbnail } = req.body;
-      let status;
-      let owner;
 
       if (!title || !description || !code || !price || !stock || !category || !thumbnail) {
         throw new CustomError(EErrors.INVALID_INPUT_ERROR.code, EErrors.INVALID_INPUT_ERROR.name, EErrors.INVALID_INPUT_ERROR.cause, EErrors.INVALID_INPUT_ERROR.message);
       }
 
-      if (stock > 0) {
-        status = true;
-      } else {
-        status = false;
-      }
-
-      if (req.session?.user?.email) {
-        owner = req.session.user.email;
-      } else {
-        owner = 'adminCoder@coder.com';
-      }
-
-      let product = new ProductDTO({ title, description, code, price, status, stock, category, thumbnail, owner });
+      let product = new ProductDTO({ title, description, code, price, stock, category, thumbnail });
 
       const productUpdated = await productService.updateOne(pid, product);
 
       return res.status(200).json({
         status: 'success',
         msg: 'Product updated',
-        data: productUpdated,
+        payload: productUpdated,
       });
     } catch (err) {
-      logger.error(err.message);
-      next(err);
+      logger.error(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 
-  async deleteOne(req, res, next) {
+  async deleteOne(req, res) {
     try {
       const { pid } = req.params;
 
@@ -132,23 +120,28 @@ class ProductController {
         return res.status(200).json({
           status: 'success',
           msg: 'Product deleted',
-          data: productDeleted,
+          payload: productDeleted,
         });
       } else {
         throw new CustomError(EErrors.PRODUCT_OWNER_DELETE.code, EErrors.PRODUCT_OWNER_DELETE.name, EErrors.PRODUCT_OWNER_DELETE.cause, EErrors.PRODUCT_OWNER_DELETE.message);
       }
     } catch (err) {
-      logger.error(err.message);
-      next(err);
+      logger.error(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 
   async mockingProducts(_, res) {
-    const products = [];
-    for (let i = 0; i < 100; i++) {
-      products.push(generateProduct());
+    try {
+      const products = [];
+      for (let i = 0; i < 100; i++) {
+        products.push(generateProduct());
+      }
+      res.send({ status: 'success', msg: 'Test products list', payload: products });
+    } catch (err) {
+      logger.error(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
-    res.send({ status: 'success', msg: 'Test products list', data: products });
   }
 }
 

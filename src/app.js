@@ -25,6 +25,7 @@ import { CustomError } from './utils/errors/custom-error.js';
 import { EErrors } from './utils/errors/dictionary-error.js';
 import { errorHandler } from './middlewares/error.js';
 import { logger } from './utils/logger.js';
+import 'express-async-errors';
 
 const app = express();
 app.use(compression({ brotli: { enabled: true, zlib: {} } }));

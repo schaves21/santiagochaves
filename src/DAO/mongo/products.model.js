@@ -1,63 +1,56 @@
 import { productMongoose } from '../mongo/schemas/products.mongoose.js';
 import { CustomError } from '../../utils/errors/custom-error.js';
 import { EErrors } from '../../utils/errors/dictionary-error.js';
+import { logger } from '../../utils/logger.js';
+import mongoose from 'mongoose';
 
 export default class ProductModel {
   constructor() {}
   async getAllProducts() {
     try {
       const product = await productMongoose.find({});
-      if (!product) {
-        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
-      }
       return product;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
   async getProductById(productId) {
     try {
-      const product = await productMongoose.findById({ _id: productId });
-
-      if (!product) {
-        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
+      if (!mongoose.Types.ObjectId.isValid(productId)) {
+        return null;
       }
+      const product = await productMongoose.findById({ _id: productId });
       return product;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
+    }
+  }
+
+  async getProductByCode(code) {
+    try {
+      const codeFound = await productMongoose.findOne({ code });
+      return codeFound || null;
+    } catch (err) {
+      logger.error(err);
     }
   }
 
   async create(product) {
     try {
       const productCreated = await productMongoose.create(product);
-      if (!productCreated) {
-        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
-      }
       return productCreated;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
   async updateOne(_id, product) {
     try {
       const productUptaded = await productMongoose.findByIdAndUpdate(_id, product, { new: true });
-      if (!productUptaded) {
-        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
-      }
       return productUptaded;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
@@ -71,7 +64,7 @@ export default class ProductModel {
       }
     } catch (err) {
       if (err instanceof CustomError) {
-        throw err;
+        logger.error(err);
       }
     }
   }
@@ -79,16 +72,9 @@ export default class ProductModel {
   async deleteProductView(pid) {
     try {
       const productDeleted = await productMongoose.findByIdAndRemove(pid);
-
-      if (!productDeleted) {
-        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
-      }
-
       return productDeleted;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 }

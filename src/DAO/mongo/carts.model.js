@@ -2,98 +2,69 @@ import { cartMongoose } from '../mongo/schemas/carts.mongoose.js';
 import { productMongoose } from '../mongo/schemas/products.mongoose.js';
 import { CustomError } from '../../utils/errors/custom-error.js';
 import { EErrors } from '../../utils/errors/dictionary-error.js';
+import { logger } from '../../utils/logger.js';
+import mongoose from 'mongoose';
 
 export default class CartModel {
   constructor() {}
   async getAllCarts() {
     try {
       const cart = await cartMongoose.find({});
-      if (!cart) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
       return cart;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
   async viewCartById(cid) {
     try {
       const cart = await cartMongoose.findById(cid);
-      if (!cart) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
       return cart;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
-  async getCartById(cartId) {
+  async getCartById(cid) {
     try {
-      const cart = await cartMongoose.findById(cartId).populate('products.product').lean().exec();
-      if (!cart) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
+      if (!mongoose.Types.ObjectId.isValid(cid)) {
+        return null;
       }
+      const cart = await cartMongoose.findById(cid).populate('products.product').lean().exec();
       return cart;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
   async create() {
     try {
       const cartCreated = await cartMongoose.create({});
-      if (!cartCreated) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
       return cartCreated;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
-  async addProductCart(cartId, productId) {
+  async addProductCart(cid, pid) {
     try {
-      const cart = await cartMongoose.findById(cartId);
-      if (!cart) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
-      const product = await productMongoose.findById(productId);
-
-      if (!product) {
-        throw new CustomError(EErrors.PRODUCT_NOT_FOUND.code, EErrors.PRODUCT_NOT_FOUND.name, EErrors.PRODUCT_NOT_FOUND.cause, EErrors.PRODUCT_NOT_FOUND.message);
-      }
+      const cart = await cartMongoose.findById(cid);
+      const product = await productMongoose.findById(pid);
 
       cart.products.push({ product: product._id, quantity: 1 });
       await cart.save();
       return cart;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
   async updateCart(cartId, products) {
     try {
       const cart = await cartMongoose.findByIdAndUpdate(cartId, { products }, { new: true });
-      if (!cart) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
       return cart;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
@@ -112,7 +83,7 @@ export default class CartModel {
       return cart;
     } catch (err) {
       if (err instanceof CustomError) {
-        throw err;
+        logger.error(err);
       }
     }
   }
@@ -132,7 +103,7 @@ export default class CartModel {
       return cart;
     } catch (err) {
       if (err instanceof CustomError) {
-        throw err;
+        logger.error(err);
       }
     }
   }
@@ -140,16 +111,12 @@ export default class CartModel {
   async clearCart(cartId) {
     try {
       const cart = await cartMongoose.findById(cartId);
-      if (!cart) {
-        throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
-      }
+
       cart.products = [];
       await cart.save();
       return cart;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 }

@@ -12,7 +12,7 @@ export const EErrors = {
     message: 'Please enter the fields correctly',
   },
   USER_NOT_FOUND: {
-    code: 400,
+    code: 500,
     name: 'User error',
     cause: 'User not found',
     message: 'Please check the user code',
@@ -30,10 +30,46 @@ export const EErrors = {
     message: 'Register another user',
   },
   PRODUCT_NOT_FOUND: {
-    code: 400,
+    code: 500,
     name: 'Product error',
     cause: 'Product not found',
     message: 'Please check the product code',
+  },
+  PRODUCT_IN_CART: {
+    code: 500,
+    name: 'Add Product cart error',
+    cause: 'Product in cart not found',
+    message: 'Please check the product code in the cart',
+  },
+  PRODUCT_QUANTITY_IN_CART: {
+    code: 500,
+    name: 'Update Product quantity error',
+    cause: 'Product quantity in the cart not found',
+    message: 'Please check the product code in the cart',
+  },
+  PRODUCT_CART_UPDATED: {
+    code: 500,
+    name: 'Update Product cart error',
+    cause: 'Something unexpected happened...',
+    message: 'Please check the product details in the cart',
+  },
+  REMOVE_PRODUCT_CART: {
+    code: 500,
+    name: 'Remove Product cart error',
+    cause: 'Something unexpected happened...',
+    message: 'Please check data in the cart',
+  },
+  PRODUCT_CODE_EXIST: {
+    code: 500,
+    name: 'Product create error',
+    cause: 'The product code already exists',
+    message: 'Please enter a valid code',
+  },
+  CLEAR_CART: {
+    code: 500,
+    name: 'Clear cart error',
+    cause: 'Something unexpected happened...',
+    message: 'Please check data in the cart',
   },
   PRODUCT_OWNER: {
     code: 403,
@@ -48,19 +84,19 @@ export const EErrors = {
     message: 'The product you want to remove does not belong to you',
   },
   CART_NOT_FOUND: {
-    code: 400,
+    code: 500,
     name: 'Cart error',
     cause: 'Cart not found',
     message: 'Please check the cart code',
   },
   TICKET_NOT_FOUND: {
-    code: 400,
+    code: 500,
     name: 'Ticket error',
     cause: 'Ticket not found',
     message: 'Please check the ticket code',
   },
   TOKEN_NOT_FOUND: {
-    code: 400,
+    code: 500,
     name: 'Token error',
     cause: 'Token not found',
     message: 'Please check the token code',
@@ -82,5 +118,11 @@ export const EErrors = {
     name: 'User documents error',
     cause: 'One or more document were incomplete',
     message: 'The user has not finished processing their documentation',
+  },
+  UNEXPECTED_ERROR: {
+    code: 500,
+    name: 'Internal Server Error',
+    cause: 'Something unexpected happened...',
+    message: 'Error server. Usually generating the query or the connection to the DB fails',
   },
 };

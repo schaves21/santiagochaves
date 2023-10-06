@@ -2,6 +2,7 @@ import { UserMongoose } from '../mongo/schemas/users.mongoose.js';
 import { CustomError } from '../../utils/errors/custom-error.js';
 import { EErrors } from '../../utils/errors/dictionary-error.js';
 import mongoose from 'mongoose';
+import { logger } from '../../utils/logger.js';
 
 export default class UserModel {
   constructor() {}
@@ -24,6 +25,7 @@ export default class UserModel {
       if (!mongoose.Types.ObjectId.isValid(uid)) {
         return null;
       }
+
       const user = await UserMongoose.findById(uid);
       return user;
     } catch (err) {
@@ -45,7 +47,7 @@ export default class UserModel {
       const user = await UserMongoose.findOne({ cartID });
       return user || null;
     } catch (err) {
-      throw err;
+      logger.error(err);
     }
   }
 

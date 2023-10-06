@@ -1,7 +1,5 @@
 import { TicketModel, ProductModel } from '../DAO/factory.js';
 import { cartService } from './carts.service.js';
-import { CustomError } from '../utils/errors/custom-error.js';
-import { EErrors } from '../utils/errors/dictionary-error.js';
 import { logger } from '../utils/logger.js';
 
 const ticketModel = new TicketModel();
@@ -11,31 +9,19 @@ class TicketService {
   async getAllTickets() {
     try {
       const ticket = await ticketModel.getAllTickets();
-      if (!ticket) {
-        throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
-      }
       return ticket;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
   async getTicketById(ticketId) {
     try {
       const ticket = await ticketModel.getTicketById(ticketId);
-
       logger.debug(`Ticket found in BD: ${ticket}`);
-
-      if (!ticket) {
-        throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
-      }
       return ticket;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
@@ -59,7 +45,7 @@ class TicketService {
       const productsPurchase = [...productsProcessed, ...productsNotProcessed];
       return productsPurchase;
     } catch (err) {
-      throw err;
+      logger.error(err);
     }
   }
 
@@ -76,7 +62,7 @@ class TicketService {
       }
       return amount;
     } catch (err) {
-      throw err;
+      logger.error(err);
     }
   }
 
@@ -92,15 +78,9 @@ class TicketService {
 
       const newTicket = await ticketModel.createTicket(ticket);
 
-      if (!newTicket) {
-        throw new CustomError(EErrors.TICKET_NOT_FOUND.code, EErrors.TICKET_NOT_FOUND.name, EErrors.TICKET_NOT_FOUND.cause, EErrors.TICKET_NOT_FOUND.message);
-      }
-
       return newTicket;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
@@ -113,7 +93,7 @@ class TicketService {
         const removeProductToCart = await cartService.removeProduct(cid, pid);
       }
     } catch (err) {
-      throw err;
+      logger.error(err);
     }
   }
 }
