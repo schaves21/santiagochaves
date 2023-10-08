@@ -21,22 +21,10 @@ viewsRouter.get('/purchase/', viewController.viewPurchaseByEmail);
 // CRUD Products Administrator
 viewsRouter.get('/crud-products', checkAdmin, viewController.readProductsView);
 viewsRouter.post('/crud-products', checkAdmin, viewController.createProductView);
-viewsRouter.get('/crud-products/:pid', checkAdmin, viewController.productByIdView);
 viewsRouter.post('/crud-products/:pid', checkAdmin, viewController.updateProductView);
 viewsRouter.delete('/crud-products/delete/:pid', checkAdmin, viewController.deleteProductView);
 
-/* CODIGO PARA FILESYSTEM
-//import productManager from "../dao/productmanager.js";
-//const products = new productManager();
-
-
-viewsRouter.get("/", async (req, res) => {
-  let myProducts = await products.getProducts();
-  const title = "Lista de Productos";
-  return res.status(200).render("home", {
-    title,
-    products: myProducts,
-  });
-});
-
-*/
+// Read Update Delete Users Administrator
+viewsRouter.get('/crud-users', checkAdmin, viewController.readUsersView);
+viewsRouter.post('/crud-users/:uid', checkAdmin, viewController.updateUserRoleView);
+viewsRouter.delete('/crud-users/delete/:uid', checkAdmin, viewController.deleteUserView);

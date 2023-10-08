@@ -6,17 +6,32 @@ import { logger } from '../../utils/logger.js';
 
 export default class UserModel {
   constructor() {}
+
   async getAllUsers() {
     try {
       const user = await UserMongoose.find({});
-      if (!user) {
-        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
-      }
       return user;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
+    }
+  }
+
+  async getBasicDataUsers() {
+    try {
+      const user = await UserMongoose.find(
+        {},
+        {
+          _id: false,
+          firstName: true,
+          lastName: true,
+          email: true,
+          rol: true,
+        }
+      );
+
+      return user;
+    } catch (err) {
+      logger.error(err);
     }
   }
 
@@ -25,11 +40,10 @@ export default class UserModel {
       if (!mongoose.Types.ObjectId.isValid(uid)) {
         return null;
       }
-
       const user = await UserMongoose.findById(uid);
       return user;
     } catch (err) {
-      throw err;
+      logger.error(err);
     }
   }
 
@@ -38,7 +52,7 @@ export default class UserModel {
       const user = await UserMongoose.findOne({ email });
       return user || null;
     } catch (err) {
-      throw err;
+      logger.error(err);
     }
   }
 
@@ -54,43 +68,27 @@ export default class UserModel {
   async create() {
     try {
       const userCreated = await UserMongoose.create({});
-      if (!userCreated) {
-        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
-      }
       return userCreated;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
   async updateOne(uid, user) {
     try {
       const userUpdated = await UserMongoose.findByIdAndUpdate(uid, { user }, { new: true });
-      if (!userUpdated) {
-        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
-      }
       return userUpdated;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
   async deleteOne(uid) {
     try {
-      const userDeleted = await UserMongoose.deleteOne({ uid });
-      if (userDeleted.deletedCount === 1) {
-        return true;
-      } else {
-        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
-      }
+      const userDeleted = await UserMongoose.findOneAndDelete({ _id: uid });
+      return userDeleted;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
@@ -109,7 +107,7 @@ export default class UserModel {
         }
       );
     } catch (err) {
-      throw err;
+      logger.error(err);
     }
   }
 }

@@ -9,14 +9,18 @@ class UserService {
   async getAllUsers() {
     try {
       const user = await userModel.getAllUsers();
-      if (!user) {
-        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
-      }
       return user;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
+    }
+  }
+
+  async getBasicDataUsers() {
+    try {
+      const user = await userModel.getBasicDataUsers();
+      return user;
+    } catch (err) {
+      logger.error(err);
     }
   }
 
@@ -33,16 +37,9 @@ class UserService {
   async getUserByEmail(email) {
     try {
       const user = await userModel.getUserByEmail(email);
-
-      if (!user) {
-        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
-      }
-
       return user;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
@@ -58,28 +55,18 @@ class UserService {
   async create(newUser) {
     try {
       const userCreated = await userModel.create(newUser);
-      if (!userCreated) {
-        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
-      }
       return userCreated;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
   async updateOne(uid, user) {
     try {
       const userUpdated = await userModel.updateOne(uid, user);
-      if (!userUpdated) {
-        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
-      }
       return userUpdated;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
@@ -87,14 +74,9 @@ class UserService {
     try {
       const user = await userModel.deleteOne(uid);
       logger.debug(`User Id found in BD: ${uid}`);
-      if (!user) {
-        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
-      }
       return user;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
@@ -112,7 +94,7 @@ class UserService {
       }
       return true;
     } catch (err) {
-      throw err;
+      logger.error(err);
     }
   }
 
@@ -141,9 +123,7 @@ class UserService {
       const updatedRole = await user.save();
       return updatedRole;
     } catch (err) {
-      if (err instanceof CustomError) {
-        throw err;
-      }
+      logger.error(err);
     }
   }
 
@@ -151,7 +131,7 @@ class UserService {
     try {
       await userModel.uploadDocuments(uid, name, documentURL);
     } catch (err) {
-      throw err;
+      logger.error(err);
     }
   }
 }

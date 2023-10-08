@@ -8,25 +8,38 @@ import { logger } from '../utils/logger.js';
 import { createHash } from '../config.js';
 
 class UserController {
-  async getAllUsers(_, res, next) {
+  async getAllUsers(_, res) {
     try {
       const user = await userService.getAllUsers();
-      if (user) {
-        return res.status(200).json({
-          status: 'success',
-          msg: 'User list',
-          data: user,
-        });
-      } else {
-        throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
-      }
+
+      //payload: user,
+      return res.status(200).json({
+        status: 'success',
+        msg: 'Users list',
+        users: user,
+      });
     } catch (err) {
-      logger.error(err.message);
-      next(err);
+      logger.error(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 
-  async getUserById(req, res, next) {
+  async getBasicDataUsers(_, res) {
+    try {
+      const user = await userService.getBasicDataUsers();
+
+      return res.status(200).json({
+        status: 'success',
+        msg: 'List of users with basic data',
+        payload: user,
+      });
+    } catch (err) {
+      logger.error(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
+    }
+  }
+
+  async getUserById(req, res) {
     try {
       const { uid } = req.params;
 
@@ -38,18 +51,18 @@ class UserController {
         return res.status(200).json({
           status: 'success',
           msg: 'User',
-          data: user,
+          payload: user,
         });
       } else {
         throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
       }
     } catch (err) {
       logger.error(err.message);
-      next(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 
-  async create(req, res, next) {
+  async create(req, res) {
     try {
       const { firstName, lastName, email, age, password } = req.body;
 
@@ -74,7 +87,7 @@ class UserController {
           return res.status(201).json({
             status: 'success',
             msg: 'User created',
-            data: {},
+            payload: userCreated,
           });
         } else {
           throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
@@ -82,7 +95,7 @@ class UserController {
       }
     } catch (err) {
       logger.error(err.message);
-      next(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 
@@ -98,18 +111,18 @@ class UserController {
         return res.status(200).json({
           status: 'success',
           msg: 'User uptaded',
-          data: {},
+          payload: userUpdated,
         });
       } else {
         throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
       }
     } catch (err) {
       logger.error(err.message);
-      next(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 
-  async deleteOne(req, res, next) {
+  async deleteOne(req, res) {
     try {
       const { uid } = req.params;
 
@@ -120,18 +133,18 @@ class UserController {
         return res.status(200).json({
           status: 'success',
           msg: 'User deleted',
-          data: userDeleted,
+          payload: userDeleted,
         });
       } else {
         throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
       }
     } catch (err) {
       logger.error(err.message);
-      next(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 
-  async updateRole(req, res, next) {
+  async updateRole(req, res) {
     try {
       const userId = req.params.uid;
       logger.debug(`User id received by parameter: ${userId}`);
@@ -142,16 +155,16 @@ class UserController {
         return res.status(200).json({
           status: 'success',
           msg: 'Role updated',
-          data: {},
+          payload: {},
         });
       }
     } catch (err) {
       logger.error(err.message);
-      next(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 
-  async uploadDocuments(req, res, next) {
+  async uploadDocuments(req, res) {
     try {
       const { uid } = req.params;
       const files = req.files;
@@ -183,11 +196,11 @@ class UserController {
       return res.status(200).json({
         status: 'success',
         msg: 'Documents uploaded successfully',
-        data: {},
+        payload: {},
       });
     } catch (err) {
       logger.error(err.message);
-      next(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 }
