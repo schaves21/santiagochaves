@@ -6,17 +6,18 @@ import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
 import { logger } from '../utils/logger.js';
 import { createHash } from '../config.js';
+import env from '../config/enviroment.config.js';
+import { transport } from '../utils/nodemailer.js';
 
 class UserController {
   async getAllUsers(_, res) {
     try {
       const user = await userService.getAllUsers();
 
-      //payload: user,
       return res.status(200).json({
         status: 'success',
         msg: 'Users list',
-        users: user,
+        payload: user,
       });
     } catch (err) {
       logger.error(err);
@@ -57,7 +58,7 @@ class UserController {
         throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
       }
     } catch (err) {
-      logger.error(err.message);
+      logger.error(err);
       throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
@@ -94,7 +95,7 @@ class UserController {
         }
       }
     } catch (err) {
-      logger.error(err.message);
+      logger.error(err);
       throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
@@ -117,7 +118,7 @@ class UserController {
         throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
       }
     } catch (err) {
-      logger.error(err.message);
+      logger.error(err);
       throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
@@ -139,7 +140,40 @@ class UserController {
         throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);
       }
     } catch (err) {
-      logger.error(err.message);
+      logger.error(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
+    }
+  }
+
+  async deleteInactiveUsers(_, res) {
+    try {
+      const inactiveUsers = await userService.deleteInactiveUsers(2);
+
+      for (const user of inactiveUsers) {
+        const to = user.email;
+        const subject = 'Account deleted due to inactivity';
+        const htmlContent = `
+        <div>
+          <h2>Dear ${user.firstName},</h2>
+          <p>Your account has been deleted due to inactivity for the last 2 days.</p>
+        </div>
+      `;
+
+        await transport.sendMail({
+          from: env.googleMail,
+          to: to,
+          subject: subject,
+          html: htmlContent,
+        });
+      }
+
+      return res.status(200).json({
+        status: 'success',
+        msg: 'Inactive users removed and notified by email',
+        payload: inactiveUsers,
+      });
+    } catch (err) {
+      logger.error(err);
       throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
@@ -159,7 +193,7 @@ class UserController {
         });
       }
     } catch (err) {
-      logger.error(err.message);
+      logger.error(err);
       throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
@@ -199,7 +233,7 @@ class UserController {
         payload: {},
       });
     } catch (err) {
-      logger.error(err.message);
+      logger.error(err);
       throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }

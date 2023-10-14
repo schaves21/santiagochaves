@@ -1,0 +1,203 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary mt-2">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a class="navbar-brand text-white" href="#">Mega-Friday</a>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a href="/purchase" class="btn btn-outline-light ms-3"><i class="bi bi-bag-check me-2"></i>My Purchases</a>
+        </li>
+        <li class="nav-item">
+          <a href="/profile" class="btn btn-outline-light ms-3 me-3"><i class="bi bi-person-circle"></i></a>
+        </li>
+          <li class="nav-item">
+          <a href="/logout" class="btn btn-success ms-1 me-4"><i class="bi bi-box-arrow-left me-2"></i>Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!--
+<div class="d-flex flex-column align-items-center justify-content-center">
+-->
+<!--
+</div>
+-->
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <form class="cartsForm mt-3 text-white w-100 h-100">
+        <a href="/api/carts" class="btn btn-outline-light btn-lg my-5 w-100">API ALL CARTS</a>
+      </form>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <form method="GET" id="cartForm" class="cartsForm mt-3 text-white w-100 h-100" title="Cart By Id">
+        <h4 class="mt-2 mb-4 text-center">API Cart By ID</h4>
+        <input type="text" id="cid" placeholder="Cart Id" class="form-control form-control-lg">
+        <div class="text-center mt-3"> 
+          <button class="btn btn-success btn-lg mb-3" type="submit">List</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <form id="cartForm" class="cartsForm mt-3 text-white w-100 h-100" action="/api/carts" method="POST">
+        <h4 class="mt-2 mb-4 text-center">API New Cart</h4> 
+        <div class="text-center">
+          <button type="submit" class="btn btn-success btn-lg my-5 mb-3 mx-auto">Create</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <form method="POST" action="/api/carts/:cid/products/:pid" id="addProductCartForm" class="cartsForm mt-3 text-white w-100 h-100">     
+        <h4 class="mt-2 mb-4 text-center">API Add Product to Cart</h4> 
+        <div class="form-group mb-3">
+          <input type="text" id="c_id" name="c_id" placeholder="Cart Id" class="form-control form-control-lg">
+        </div>
+        <div class="form-group mb-3">
+          <input type="text" id="p_id" name="p_id" placeholder="Product Id" class="form-control form-control-lg">
+        </div>
+        <div class="text-center">
+          <button type="submit" class="btn btn-success btn-lg mb-3 mx-auto" onclick="submitAddProductCartForm()">Add Product Cart</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <form method="POST" id="updateProductCartForm" class="cartsForm mt-3 text-white w-100 h-100">
+        <input type="hidden" name="_method" value="PUT">
+        <h4 class="mt-2 mb-4 text-center">API Update Product to Cart</h4>
+        <div class="form-group mb-3">
+          <input type="text" id="cartId" name="cartId" placeholder="Cart Id" class="form-control form-control-lg">
+        </div>
+        <div class="form-group mb-4">
+          <input type="text" id="productId" name="productId" placeholder="Product Id" class="form-control form-control-lg">
+        </div>
+        <div class="text-center">
+          <button type="button" onclick="submitUpdateProductCartForm()" class="btn btn-success btn-lg mb-3 mx-auto">Update Product Cart</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <form method="POST" id="updateProductQuantityCartForm" class="cartsForm mt-3 text-white w-100 h-100">
+        <input type="hidden" name="_method" value="PUT">
+        <h4 class="mt-2 mb-4 text-center">API Update Product Quantity in Cart</h4>
+        <div class="form-group mb-3">
+          <input type="text" id="cart_Id" name="cart_Id" placeholder="Cart Id" class="form-control form-control-lg">
+        </div>
+        <div class="form-group mb-3">
+          <input type="text" id="product_Id" name="product_Id" placeholder="Product Id" class="form-control form-control-lg">
+        </div>
+        <div class="form-group mb-4">
+          <input type="number" id="quantity" name="quantity" placeholder="Quantity" class="form-control form-control-lg">
+        </div>
+        <div class="text-center">
+          <button type="button" onclick="submitUpdateProductQuantityCartForm()" class="btn btn-success btn-lg mb-3 mx-auto">Update Product Quantity Cart</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <form method="POST" id="deleteProductCartForm" class="cartsForm mt-3 text-white w-100 h-100">
+        <input type="hidden" name="_method" value="DELETE">
+        <h4 class="mt-2 mb-4 text-center">API Remove Products from Cart</h4>
+        <div class="form-group mb-3">
+          <input type="text" id="id_cart" name="id_cart" placeholder="Cart Id" class="form-control form-control-lg">
+        </div>
+        <div class="form-group mb-4">
+          <input type="text" id="id_product" name="id_product" placeholder="Product Id" class="form-control form-control-lg">
+        </div>
+        <div class="text-center">
+          <button type="button" onclick="submitDeleteProductCartForm()" class="btn btn-success btn-lg mb-3 mx-auto">Remove Product Cart</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <form method="POST" id="emptyProductCartForm" class="cartsForm mt-3 text-white w-100 h-100">
+        <input type="hidden" name="_method" value="DELETE">
+        <h4 class="mt-2 mb-3 text-center">API Empty Products from Cart</h4>
+        <div class="form-group mb-4">
+          <input type="text" id="_id" name="_id" placeholder="Cart Id" class="form-control form-control-lg">
+        </div>
+        <div class="text-center">
+          <button type="button" onclick="submitEmptyProductCartForm()" class="btn btn-success btn-lg mb-3 mx-auto">Empty Cart</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  
+  document.getElementById('cartForm').addEventListener('submit', function (e) {
+    e.preventDefault(); 
+    const cid = document.getElementById('cid').value;
+    const url = `/api/carts/${cid}`;
+    window.location.href = url;
+  });
+  
+  function submitAddProductCartForm() {
+    let cid = document.getElementById('c_id').value;
+    let pid = document.getElementById('p_id').value;
+    document.getElementById('addProductCartForm').action = `/api/carts/${cid}/products/${pid}`;
+  }
+
+  function submitUpdateProductCartForm() {
+    let cid = document.getElementById('cartId').value;
+    const form = document.getElementById('updateProductCartForm');
+
+    const action = `/api/carts/${cid}?_method=PUT`;
+    
+    form.action = action;
+
+    form.submit();
+  }
+
+  function submitUpdateProductQuantityCartForm() {
+    let cid = document.getElementById('cart_Id').value;
+    let pid = document.getElementById('product_Id').value;
+    const form = document.getElementById('updateProductQuantityCartForm');
+
+    const action = `/api/carts/${cid}/products/${pid}?_method=PUT`;
+    
+    form.action = action;
+
+    form.submit();
+  }
+
+  function submitDeleteProductCartForm() {
+    let cid = document.getElementById('id_cart').value;
+    let pid = document.getElementById('id_product').value;
+    const form = document.getElementById('deleteProductCartForm');
+
+    const action = `/api/carts/${cid}/products/${pid}?_method=DELETE`;
+    
+    form.action = action;
+
+    form.submit();
+  }
+
+  function submitEmptyProductCartForm() {
+    let cid = document.getElementById('_id').value;
+    const form = document.getElementById('emptyProductCartForm');
+
+    const action = `/api/carts/${cid}?_method=DELETE`;
+    
+    form.action = action;
+
+    form.submit();
+  }
+
+</script>
+
+
+

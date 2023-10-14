@@ -92,6 +92,30 @@ export default class UserModel {
     }
   }
 
+  async findInactiveUsers(days) {
+    try {
+      const currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() - days); // Resta los días para determinar la fecha límite de inactividad
+
+      const inactiveUsers = await UserMongoose.find({ last_connection: { $lt: currentDate } });
+
+      return inactiveUsers;
+    } catch (err) {
+      logger.error(err);
+    }
+  }
+
+  async deleteInactiveUsers(inactiveUsers) {
+    try {
+      // Elimina los usuarios inactivos encontrados
+      await UserMongoose.deleteMany({
+        _id: { $in: inactiveUsers.map((user) => user._id) },
+      });
+    } catch (err) {
+      logger.error(err);
+    }
+  }
+
   async uploadDocuments(uid, name, documentURL) {
     try {
       await UserMongoose.updateOne(

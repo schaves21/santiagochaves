@@ -8,16 +8,15 @@ import { transport } from '../utils/nodemailer.js';
 import { randomBytes } from 'crypto';
 
 class RecoverController {
-  async getRecoverMail(_, res, next) {
+  async getRecoverMail(_, res) {
     try {
       res.render('recover-mail');
     } catch (err) {
-      logger.error(err.message);
-      next(err);
+      logger.error(err);
     }
   }
 
-  async createRecoverMail(req, res, next) {
+  async createRecoverMail(req, res) {
     try {
       const { email } = req.body;
 
@@ -52,12 +51,12 @@ class RecoverController {
         res.render('error', { error: 'Check your email' });
       }
     } catch (err) {
-      logger.error(err.message);
-      next(err);
+      logger.error(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 
-  async getRecoverPassword(req, res, next) {
+  async getRecoverPassword(req, res) {
     try {
       const { token, email } = req.query;
       const foundToken = await recoverService.getRecoverPassword(token, email);
@@ -65,16 +64,15 @@ class RecoverController {
       if (foundToken) {
         res.render('recover-pass', { token, email });
       } else {
-        //res.render('error', { error: 'Token expired or invalid token' });
-        res.render('error', { error: 'Token expired or invalid token' }, `<a href="${env.apiUrl}/recover-mail">Make a new request to recover your password</a>`);
+        res.render('error', { error: 'Token expired or invalid token' });
       }
     } catch (err) {
-      logger.error(err.message);
-      next(err);
+      logger.error(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 
-  async updateRecoverPassword(req, res, next) {
+  async updateRecoverPassword(req, res) {
     try {
       let { token, email, password } = req.body;
 
@@ -86,8 +84,8 @@ class RecoverController {
         res.render('error', { error: 'Token expired or invalid token' });
       }
     } catch (err) {
-      logger.error(err.message);
-      next(err);
+      logger.error(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
 }

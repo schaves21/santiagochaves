@@ -59,9 +59,9 @@ export default class CartModel {
     }
   }
 
-  async updateCart(cartId, products) {
+  async updateCart(cartId, updatedProduct) {
     try {
-      const cart = await cartMongoose.findByIdAndUpdate(cartId, { products }, { new: true });
+      const cart = await cartMongoose.findByIdAndUpdate(cartId, { products: updatedProduct.products }, { new: true });
       return cart;
     } catch (err) {
       logger.error(err);

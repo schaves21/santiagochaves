@@ -80,6 +80,18 @@ class UserService {
     }
   }
 
+  async deleteInactiveUsers(days) {
+    try {
+      const inactiveUsers = await userModel.findInactiveUsers(days);
+
+      await userModel.deleteInactiveUsers(inactiveUsers);
+
+      return inactiveUsers;
+    } catch (err) {
+      logger.error(err);
+    }
+  }
+
   async requiredDocuments(user) {
     try {
       const requiredDocs = ['Identificación', 'Comprobante de domicilio', 'Comprobante de estado de cuenta'];

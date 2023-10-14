@@ -1,0 +1,47 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary mt-2">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a class="navbar-brand text-white" href="#">Mega-Friday</a>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a href="/logout" class="btn btn-success ms-1 me-4"><i class="bi bi-box-arrow-left me-2"></i>Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container text-white mt-4">
+  <div class="row">
+    <div class="col d-flex flex-column align-items-center justify-content-center">
+      <h1 class="mb-4">Product By Id</h1>
+
+      <form method="GET" id="productForm">
+        <input type="text" id="pid" placeholder="Product Id" class="form-control form-control-lg">
+        <div class="text-center mt-3"> 
+          <button class="btn btn-success btn-lg" type="submit">List</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+  document.getElementById('productForm').addEventListener('submit', function (e) {
+    e.preventDefault(); 
+    const pid = document.getElementById('pid').value;
+    const url = `/api/products/${pid}`;
+    window.location.href = url;
+  });
+</script>
+
+
+
+
+
+

@@ -23,10 +23,9 @@ export function checkAdminOrPremium(req, res, next) {
 export function checkCart(req, res, next) {
   const cartUser = req.session.user.cartID;
   const cartId = req.params.cid;
-  if (cartUser == cartId) {
+  if (cartUser === cartId) {
     return next();
   } else {
-    const errorCart = 'The cart you want to access does not correspond to your user';
-    return res.status(500).render('error', { errorCart });
+    return res.status(500).render('error', { error: 'The cart you want to access does not correspond to your user' });
   }
 }

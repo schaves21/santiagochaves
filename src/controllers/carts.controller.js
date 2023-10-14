@@ -95,7 +95,16 @@ class CartController {
   async updateCart(req, res) {
     try {
       const { cid } = req.params;
-      const { products } = req.body;
+      const { productId } = req.body;
+
+      const updatedProductCart = {
+        products: [
+          {
+            product: productId,
+            quantity: 1,
+          },
+        ],
+      };
 
       const cart = await cartService.getCartById(cid);
 
@@ -103,7 +112,7 @@ class CartController {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
 
-      const updateCart = await cartService.updateCart(cid, products);
+      const updateCart = await cartService.updateCart(cid, updatedProductCart);
 
       if (!updateCart) {
         throw new CustomError(EErrors.PRODUCT_CART_UPDATED.code, EErrors.PRODUCT_CART_UPDATED.name, EErrors.PRODUCT_CART_UPDATED.cause, EErrors.PRODUCT_CART_UPDATED.message);

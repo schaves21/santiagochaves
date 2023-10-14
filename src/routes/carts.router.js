@@ -5,22 +5,6 @@ import { ticketController } from '../controllers/tickets.controller.js';
 
 export const cartsRouter = express.Router();
 
-// ----------- MongoDB -------------------------------
-
-// **** Para TESTING sin el middleware checkUser / checkCart ***
-
-cartsRouter.get('/', cartController.getAllCarts);
-cartsRouter.get('/:cid', cartController.getCartById);
-cartsRouter.post('/', cartController.create);
-cartsRouter.post('/:cid/products/:pid', cartController.addProductCart);
-cartsRouter.put('/:cid', cartController.updateCart);
-cartsRouter.put('/:cid/products/:pid', cartController.updateProductQuantity);
-cartsRouter.delete('/:cid/products/:pid', cartController.removeProduct);
-cartsRouter.delete('/:cid', cartController.clearCart);
-cartsRouter.post('/:cid/purchase', ticketController.createTicket);
-
-// **** PARA DEV con el middleware checkUser / checkCart ***
-/*
 cartsRouter.get('/', checkUser, cartController.getAllCarts);
 cartsRouter.get('/:cid', checkUser, cartController.getCartById);
 cartsRouter.post('/', checkUser, cartController.create);
@@ -30,31 +14,3 @@ cartsRouter.put('/:cid/products/:pid', checkUser, cartController.updateProductQu
 cartsRouter.delete('/:cid/products/:pid', checkUser, cartController.removeProduct);
 cartsRouter.delete('/:cid', checkUser, cartController.clearCart);
 cartsRouter.post('/:cid/purchase', checkUser, ticketController.createTicket);
-*/
-
-/* ------------- FileSystem -----------------------------------
-
-import cart from "../dao/cart.js";
-
-const oneCart = new cart();
-
-cartsRouter.get("/", async (req, res) => {
-  res.send(await oneCart.readCarts());
-});
-
-cartsRouter.post("/", async (req, res) => {
-  res.send(await oneCart.addCart());
-});
-
-cartsRouter.get("/:cid", async (req, res) => {
-  res.send(await oneCart.getCartById(req.params.cid));
-});
-
-cartsRouter.post("/:cid/products/:pid", async (req, res) => {
-  let cartId = req.params.cid;
-  let productId = req.params.pid;
-
-  res.send(await oneCart.addProductCart(cartId, productId));
-});
-
-*/

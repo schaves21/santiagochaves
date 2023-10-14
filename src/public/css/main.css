@@ -12,13 +12,6 @@ body {
   font-size: 1.5rem;
 }
 
-.buttonMenu{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
 .form-floating {
   margin-bottom: 15px; 
 }
@@ -45,6 +38,12 @@ body {
 
 .crudProducts{
   color: white;
+}
+
+.cartsForm {
+  border: 2px solid white; 
+  padding: 10px;
+  border-radius: 10px;
 }
 
 

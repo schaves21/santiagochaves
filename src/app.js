@@ -35,6 +35,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(methodOverride('_method'));
+
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
@@ -59,8 +61,6 @@ iniPassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(methodOverride('_method'));
-
 app.use('/', docsRouter);
 app.use('/api/sessions', authRouter);
 app.use('/api/users', usersRouter);
@@ -70,8 +70,8 @@ app.use('/api/tickets', ticketRouter);
 app.use('/api/loggerTest', loggerRouter);
 app.use('/api/sms', twilioRouter);
 
-app.use('/', viewsRouter);
 app.use('/', recoverRouter);
+app.use('/', viewsRouter);
 
 app.get('/api/sessions/github', passport.authenticate('github', { scope: ['user:email'] }));
 app.get('/api/sessions/githubcallback', passport.authenticate('github', { failureRedirect: '/error' }), (req, res) => {

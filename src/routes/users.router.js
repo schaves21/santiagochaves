@@ -12,6 +12,7 @@ usersRouter.get('/:uid', userController.getUserById);
 usersRouter.post('/', userController.create);
 usersRouter.put('/:uid', userController.updateOne);
 usersRouter.delete('/:uid', userController.deleteOne);
+usersRouter.delete('/', userController.deleteInactiveUsers); /* ---ELIMINAR USUARIOS INACTIVOS EN LOS ULTIMOS 2 DIAS --- */
 usersRouter.put('/premium/:uid', userController.updateRole);
 usersRouter.post('/:uid/documents', upload.array('documents', 5), userController.uploadDocuments);
 

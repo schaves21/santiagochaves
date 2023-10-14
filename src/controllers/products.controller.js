@@ -5,6 +5,8 @@ import { userService } from '../services/users.service.js';
 import ProductDTO from './DTO/products.dto.js';
 import { generateProduct } from '../utils/facker.js';
 import { logger } from '../utils/logger.js';
+import env from '../config/enviroment.config.js';
+import { transport } from '../utils/nodemailer.js';
 
 class ProductController {
   async getAllProducts(_, res) {
@@ -23,6 +25,7 @@ class ProductController {
   }
 
   async getProductById(req, res) {
+    console.log('sdfsdfsd');
     try {
       const { pid } = req.params;
 
@@ -108,14 +111,31 @@ class ProductController {
   async deleteOne(req, res) {
     try {
       const { pid } = req.params;
+      const email = req.session?.user?.email;
 
       const productFound = await productService.getProductById(pid);
       const owner = productFound.owner;
 
       const user = await userService.getUserByEmail(owner);
 
-      if (productFound.owner === 'adminCoder@coder.com' || (user.rol === 'premium' && productFound.owner === user.email)) {
+      if (email === 'adminCoder@coder.com' || (user.rol === 'premium' && productFound.owner === user.email)) {
         const productDeleted = await productService.deleteOne(pid);
+
+        const to = productFound.owner;
+        const subject = 'Product deleted';
+        const htmlContent = `
+        <div>
+          <h2>Dear ${user.firstName},</h2>
+          <p>The product ${productFound.title} has been removed from your premium account</p>
+        </div>
+      `;
+
+        await transport.sendMail({
+          from: env.googleMail,
+          to: to,
+          subject: subject,
+          html: htmlContent,
+        });
 
         return res.status(200).json({
           status: 'success',

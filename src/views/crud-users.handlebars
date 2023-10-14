@@ -18,7 +18,16 @@
 </nav>
 
 <div class="container crudProducts mt-4">
-  <h1>CRUD Users</h1>
+  <div class="d-flex flex-row-reverse mt-1 mb-1">
+    <form action="/crud-users/inactive-users?_method=DELETE" method="POST">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="btn btn-danger">
+          <i class="bi bi-trash mr-2"></i> 
+          Delete Inactive User
+        </button>
+    </form>
+  </div>
+  <h1 class="mb-3">CRUD Users</h1>
   <table class="table text-white">
       <thead>
           <tr>
@@ -28,6 +37,7 @@
             <th>Email</th>
             <th>Age</th>
             <th>Role</th>
+            <th>Last Connection</th>
             <th>Acciones</th>
           </tr>
       </thead>
@@ -40,10 +50,11 @@
               <td>{{this.email}}</td>
               <td>{{this.age}}</td>
               <td>{{this.rol}}</td>
+              <td>{{this.last_connection}}</td>
               <td>
                 <form action="/crud-users/{{this._id}}" method="POST">
                   <input type="hidden" name="_method" value="POST">
-                  <button class="btn btn-info bi bi-pencil mb-2" type="submit"></button>
+                  <button class="btn btn-info bi bi-pencil mb-2" data-toggle="tooltip" title="Update Role" type="submit"></button>
                 </form>
                 <button class="btn btn-danger bi bi-trash mb-2" data-toggle="modal" data-target="#eliminarModal{{this._id}}"> </button>
               </td>
@@ -79,6 +90,8 @@
     </div>
 </div>
 {{/each}}
+
+
 
 
     

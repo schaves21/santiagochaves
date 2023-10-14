@@ -130,6 +130,10 @@ describe('TEST API', () => {
     it('Update cart product', async () => {
       let cid = '6508de67f0cf4e788ebfb5a5';
       const updatedCartProduct = {
+        productId: '6508cfb456a024d698a8db2a',
+      };
+      /*
+      const updatedCartProduct = {
         products: [
           {
             product: '6508cfb456a024d698a8db2a',
@@ -137,6 +141,7 @@ describe('TEST API', () => {
           },
         ],
       };
+      */
       const response = await requester.put(`/api/carts/${cid}`).send(updatedCartProduct);
       if (response.error) {
         throw new Error(response.error.message);

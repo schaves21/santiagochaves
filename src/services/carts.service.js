@@ -41,9 +41,9 @@ class CartService {
     }
   }
 
-  async updateCart(cartId, products) {
+  async updateCart(cartId, product) {
     try {
-      const cart = await cartModel.updateCart(cartId, products);
+      const cart = await cartModel.updateCart(cartId, product);
       return cart;
     } catch (err) {
       logger.error(err);
