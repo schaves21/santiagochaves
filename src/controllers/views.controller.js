@@ -175,13 +175,12 @@ class ViewController {
     try {
       const { cid } = req.params;
 
-      logger.debug(`Cart id received by parameter: ${cid}`);
-
       const cart = await viewService.viewCartById(cid);
       if (!cart) {
         throw new CustomError(EErrors.CART_NOT_FOUND.code, EErrors.CART_NOT_FOUND.name, EErrors.CART_NOT_FOUND.cause, EErrors.CART_NOT_FOUND.message);
       }
-      res.render('cart', { cart });
+
+      res.render('cart', { cart: cart.cartView });
     } catch (err) {
       logger.error(err);
       throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
@@ -193,23 +192,22 @@ class ViewController {
       const email = req.session.user.email;
       const ticketUser = await viewService.viewPurchaseByEmail(email);
 
-      if (ticketUser && ticketUser.purchaser) {
-        res.render('purchases', {
-          _id: ticketUser._id.toString(),
-          code: ticketUser.code,
-          purchase_datetime: ticketUser.purchase_datetime,
-          amount: ticketUser.amount,
-          purchaser: ticketUser.purchaser,
-          products: ticketUser.products.map((product) => ({
+      if (ticketUser && ticketUser.length > 0) {
+        const purchases = ticketUser.map((purchase) => ({
+          _id: purchase._id.toString(),
+          code: purchase.code,
+          purchase_datetime: purchase.purchase_datetime,
+          amount: purchase.amount,
+          purchaser: purchase.purchaser,
+          products: purchase.products.map((product) => ({
             productId: product.productId.toString(),
             quantity: product.quantity,
           })),
-        });
+        }));
+        res.render('purchases', { purchases });
       } else {
         const message = 'User without purchases';
-        res.render('purchases', {
-          message,
-        });
+        res.render('purchases', { message });
       }
     } catch (err) {
       logger.error(err);
@@ -261,6 +259,14 @@ class ViewController {
   viewApiCartsMenu(_, res) {
     try {
       res.render('crud-api-carts');
+    } catch (err) {
+      logger.error(err);
+    }
+  }
+
+  viewApiTicketsMenu(_, res) {
+    try {
+      res.render('api-tickets');
     } catch (err) {
       logger.error(err);
     }

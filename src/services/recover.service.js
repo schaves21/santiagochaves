@@ -2,7 +2,6 @@ import { RecoverModel } from '../DAO/factory.js';
 import { createHash } from '../config.js';
 import { CustomError } from '../utils/errors/custom-error.js';
 import { EErrors } from '../utils/errors/dictionary-error.js';
-//import { logger } from '../utils/logger.js';
 
 const recoverModel = new RecoverModel();
 

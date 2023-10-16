@@ -14,27 +14,30 @@
   </div>
 </nav>
 
-<div class="container mx-auto col-md-5 mt-2 text-white"> 
+<div class="container text-white mt-4">
+  <h1 class="mb-3">Purchase tickets</h1>
+  <div class="row">
+    {{#if purchases.length}}
+      {{#each purchases}}
+        <div class="col me-3 mb-3 divPurchases">
+          <p>Code: {{code}}</p>
+          <p>Date of purchase: {{purchase_datetime}}</p>
+          <p>Buyer: {{purchaser}}</p>
+          <p>Total: $ {{amount}}</p>
 
-  {{#if products}}
-
-    <h1 class="mb-3">Purchase ticket</h1>
-    
-    <p>Code: {{code}}</p>
-    <p>Date of purchase: {{purchase_datetime}}</p>
-    <p>Buyer: {{purchaser}}</p>
-    <p>Total: $ {{amount}}</p>
-
-    <h2 class="mb-3">Products</h2>
-    <ul>
-      {{#each products}}
-        <li>Product Id: {{this.productId}}</li>
-        <li>Quantity: {{this.quantity}}</li>
+          <h2 class="mb-3">Products</h2>
+          <ul>
+            {{#each products}}
+              <li>Product Id: {{productId}}</li>
+              <li>Quantity: {{quantity}}</li>
+            {{/each}}
+          </ul>
+        </div>
       {{/each}}
-    </ul>
-  {{else}}
-    <h3>{{message}}</h3>
-  {{/if}}
+    {{else}}
+      <h3>{{message}}</h3>
+    {{/if}}
+  </div>
 </div>
 
 

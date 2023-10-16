@@ -20,7 +20,7 @@
 <div class="container crudProducts mt-4">
   <h1 class="mb-2">CRUD Products</h1>
   <div class="d-flex flex-row-reverse mt-1 mb-1">
-    <button class="btn btn-success bi bi-plus" data-toggle="modal" data-target="#crearModal">Add Product</button>
+    <button class="btn btn-success bi bi-plus" data-toggle="modal" data-target="#crearModal">Create Product</button>
   </div>
   <table class="table text-white">
       <thead>
@@ -59,7 +59,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="crearModalLabel">Add Product</h5>
+                <h5 class="modal-title" id="crearModalLabel">Create Product</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -90,11 +90,11 @@
                       <label for="category">Category</label>
                       <input type="text" class="form-control" id="category" name="category" value="{{this.category}}">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                       <label for="thumbnail">Thumbnail</label>
                       <input type="text" class="form-control" id="thumbnail" name="thumbnail" value="{{this.thumbnail}}">
                     </div>
-                  <button type="submit" class="btn btn-success">Add</button>
+                  <button type="submit" class="btn btn-success mb-3">Create</button>
                 </form>
             </div>
         </div>
@@ -108,7 +108,7 @@
       <div class="modal-dialog" role="document">
           <div class="modal-content">
               <div class="modal-header">
-                  <h5 class="modal-title" id="editarModalLabel{{this._id}}">Product edit</h5>
+                  <h5 class="modal-title" id="editarModalLabel{{this._id}}">Update Product</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                   </button>
@@ -151,11 +151,11 @@
                         <label for="thumbnail">Thumbnail</label>
                         <input type="text" class="form-control" id="thumbnail" name="thumbnail" value="{{this.thumbnail}}">
                       </div>
-                      <div class="form-group">
+                      <div class="form-group mb-3">
                         <label for="owner">Owner</label>
                         <input type="text" class="form-control" id="owner" name="owner" value="{{this.owner}}" disabled>
                       </div>
-                      <button type="submit" class="btn btn-primary">Edit</button>
+                      <button type="submit" class="btn btn-primary mb-3">Update</button>
                   </form>
               </div>
           </div> 

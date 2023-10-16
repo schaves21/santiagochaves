@@ -1,99 +1,141 @@
-<main class="allProducts">
-	{{#if user.firstName}}
-		<div class="flex-row text-end mt-3 ms-3" style="width: 99%;">
-			<div class="d-flex justify-content-end align-items-center">
-				<h5>Hola, {{user.firstName}}. Tu rol es {{user.rol}}</h5>
-				<a
-					href="/logout"
-					class="btn btn-danger btn-sm btnLogin ms-2 me-5 mb-1"
-				>
-					<i class="bi bi-box-arrow-left me-2"></i>Logout
-				</a>
-			</div>
-		</div>
-	{{/if}}
+<nav class="navbar navbar-expand-lg bg-body-tertiary mt-2">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a class="navbar-brand text-white" href="#">Mega-Friday</a>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a href="/cart/{{user.cartID}}" class="btn btn-outline-light ms-3"><i id="cart-icon" class="bi bi-cart me-2"></i><span id="cart-count"></span></a>
+        </li>
+        <li class="nav-item">
+          <a href="/purchases" class="btn btn-outline-light ms-3"><i class="bi bi-bag-check me-2"></i>My Purchases</a>
+        </li>
+        <li class="nav-item">
+          <a href="/profile" class="btn btn-outline-light ms-3 me-3"><i class="bi bi-person-circle"></i></a>
+        </li>
+          <li class="nav-item">
+          <a href="/logout" class="btn btn-success ms-1 me-4"><i class="bi bi-box-arrow-left me-2"></i>Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-  <div>
-    <h1>All Products</h1>
-    {{#each products}}
-      <div>
-        <h2>{{this.title}}</h2>
-        <p>
-          Description:
-          {{this.description}}
-        </p>
-        <p>
-          Code:
-          {{this.code}}
-        </p>
-        <p>
-          Price: 
-          {{this.price}}
-        </p>
-        <p>
-          Status:
-          {{this.status}}
-        </p>
-        <p>
-          Stock:
-          {{this.stock}}
-        </p>
-        <p>
-          Category:
-          {{this.category}}
-        </p>
-        <p>
-          Thumbnail:
-          {{this.thumbnail}}
-        </p>
-        <p>Availability: 
-          {{this.availability}}
-        </p>
-        
-        <a href="/products/{{this._id}}">Add id {{this._id}}</a>
-        <button onclick="putIntoCart('{{this._id}}')">Add to Cart
-          {{this._id}}</button>
-        <br />
+{{#if user.firstName}}
+  <div class="d-flex justify-content-center align-items-center user">
+    <h5 class="text-white mt-1">
+      Welcome,
+      {{user.firstName}}. Your role is
+      {{user.rol}}
+    </h5>
+  </div>
+{{/if}}
 
-        <a href="/products/{{this._id}}">Product Detail</a>
-
-        <br />
+<div class="container mt-4">
+  <h1 class="text-white mb-3">Product List</h1>
+  <div class="row">
+      {{#each products}}
+      <div class="col-md-4">
+          <div class="card mb-4">
+              <img src="{{this.thumbnail}}" class="card-img-top" alt="{{title}}">
+              <div class="card-body">
+                  <h5 class="card-title">{{this.title}}</h5>
+                  <p class="card-text">Price: ${{this.price}}</p>
+                  <a href="#" class="btn btn-success agregar-al-carrito" data-product-id="{{this._id}}">Add to Cart</a>
+              </div>
+          </div>
       </div>
-    {{/each}}
+      {{/each}}
   </div>
+</div>
 
+<div class="text-white">
+  <ul class="list-inline">
+    <li class="list-inline-item" style="margin-left: 10px;">totalPages: {{totalPages}}</li>
+    <li class="list-inline-item">prevPage: {{prevPage}}</li>
+    <li class="list-inline-item">nextPage: {{nextPage}}</li>
+    <li class="list-inline-item">currentPage: {{currentPage}}</li>
+    <li class="list-inline-item">hasPrevPage: {{hasPrevPage}}</li>
+    <li class="list-inline-item">hasNextPage: {{hasNextPage}}</li>
+    <li class="list-inline-item">prevLink: {{prevLink}}</li>
+    <li class="list-inline-item">nextLink: {{nextLink}}</li>
+  </ul>
 
-  Status:
-  {{status}}
-  totalPages:
-  {{totalPages}}
-  prevPage:
-  {{prevPage}}
-  nextPage:
-  {{nextPage}}
-  currentPage:
-  {{currentPage}}
-  hasPrevPage:
-  {{hasPrevPage}}
-  hasNextPage:
-  {{hasNextPage}}
-  prevLink:
-  {{prevLink}}
-  nextLink:
-  {{nextLink}}
+  {{#if prevLink}}
+    <a href="{{prevLink}}" class="ml-3" style="margin-left: 10px;">Previous</a>
+  {{/if}}
 
-  <div class="pagination">
-    {{#if prevLink}}
-      <a href="{{prevLink}}">Previous</a>
-    {{/if}}
+  {{#if nextLink}}
+    <a href="{{nextLink}}" class="ml-3" style="margin-left: 10px;">Next</a>
+  {{/if}}
+</div>
 
-    {{#if nextLink}}
-      <a href="{{nextLink}}">Next</a>
-    {{/if}}
-  </div>
+<script>
 
-</main>
+window.userCartID = "{{user.cartID}}";
 
-<script src="js/localstorage.js"></script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Intenta recuperar el contador del localStorage, o inicialízalo en 0
+  let cartData = JSON.parse(localStorage.getItem('cartData')) || [];
+  let cartCount = cartData.length;
 
+  // Obtiene el elemento span del contador
+  const cartCountElement = document.getElementById('cart-count');
+  // Actualiza el contenido del span con el valor inicial
+  cartCountElement.textContent = cartCount;
+
+  const agregarAlCarritoButtons = document.querySelectorAll('.agregar-al-carrito');
+
+  agregarAlCarritoButtons.forEach(button => {
+    button.addEventListener('click', async (event) => {
+      event.preventDefault();
+
+      const cid = window.userCartID;
+      const pid = button.getAttribute('data-product-id');
+
+      try {
+        const response = await fetch(`/cart/${cid}/products/${pid}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        });
+
+        if (response.ok) {
+          // Incrementa el contador y actualiza el contenido del span
+          cartCount++;
+          cartCountElement.textContent = cartCount;
+
+          // Agrega el producto al carrito en el localStorage
+          cartData.push(pid);
+          localStorage.setItem('cartData', JSON.stringify(cartData));
+
+          // Actualiza el contador en el localStorage
+          localStorage.setItem('cartCount', cartCount);
+
+          Toastify({
+            text: "Product added to Cart",
+            duration: 3000,
+            newWindow: true,
+            close: true,
+            gravity: "top",
+            position: "right",
+            stopOnFocus: true,
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+            },
+          }).showToast();
+        } else {
+          console.error('Error adding product to cart');
+        }
+      } catch (error) {
+        console.error('Server error:', error);
+      }
+    });
+  });
+});
+
+</script>
 

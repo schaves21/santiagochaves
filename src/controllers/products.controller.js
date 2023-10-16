@@ -25,7 +25,6 @@ class ProductController {
   }
 
   async getProductById(req, res) {
-    console.log('sdfsdfsd');
     try {
       const { pid } = req.params;
 

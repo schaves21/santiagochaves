@@ -28,10 +28,6 @@ body {
   color: white;
 }
 
-.error{
-  color: white;
-}
-
 .chat{
   color: white;
 }
@@ -41,6 +37,12 @@ body {
 }
 
 .cartsForm {
+  border: 2px solid white; 
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.divPurchases{
   border: 2px solid white; 
   padding: 10px;
   border-radius: 10px;

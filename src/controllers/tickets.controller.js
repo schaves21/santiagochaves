@@ -53,7 +53,6 @@ class TicketController {
       }
 
       const user = await userService.getUserByCartID(cid);
-      console.log(user);
 
       if (!user) {
         throw new CustomError(EErrors.USER_NOT_FOUND.code, EErrors.USER_NOT_FOUND.name, EErrors.USER_NOT_FOUND.cause, EErrors.USER_NOT_FOUND.message);

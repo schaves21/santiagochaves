@@ -1,6 +1,8 @@
 import express from 'express';
 import { viewController } from '../controllers/views.controller.js';
-import { checkUser, checkAdmin, checkAdminOrPremium } from '../middlewares/auth.js';
+import { checkUser, checkAdmin, checkAdminOrPremium, checkCart } from '../middlewares/auth.js';
+import { cartController } from '../controllers/carts.controller.js';
+import { ticketController } from '../controllers/tickets.controller.js';
 
 export const viewsRouter = express.Router();
 
@@ -11,12 +13,18 @@ viewsRouter.get('/logout', viewController.getLogout);
 viewsRouter.get('/register', viewController.getRegister);
 viewsRouter.get('/profile', checkUser, viewController.getProfile);
 viewsRouter.get('/admin', checkAdmin, viewController.getAdmin);
-viewsRouter.get('/products', viewController.getProducts);
-viewsRouter.get('/products/:pid', viewController.viewProductById);
-viewsRouter.get('/carts/:cid', viewController.viewCartById);
+viewsRouter.get('/products', checkUser, viewController.getProducts);
+viewsRouter.get('/products/:pid', checkUser, viewController.viewProductById);
 viewsRouter.get('/realtimeproducts', viewController.getRealTimeProducts);
 viewsRouter.get('/chat', checkUser, viewController.getChats);
-viewsRouter.get('/purchase/', viewController.viewPurchaseByEmail);
+
+// AGREGAR UN PRODUCTO AL CARRITO EN LA VISTA DE PRODUCTOS HANDLEBARS
+viewsRouter.post('/cart/:cid/products/:pid', checkUser, checkCart, cartController.addProductCart);
+
+// RUTAS PARA EL PROCESO DE COMPRA POR WEB
+viewsRouter.get('/cart/:cid', checkUser, viewController.viewCartById);
+viewsRouter.post('/cart/:cid/purchase', checkUser, checkCart, ticketController.createTicket);
+viewsRouter.get('/purchases', viewController.viewPurchaseByEmail);
 
 // CRUD API PRODUCTS USERS ADMIN / PREMIUM
 viewsRouter.get('/api-products-menu', checkAdminOrPremium, viewController.viewApiProductsMenu);
@@ -25,6 +33,9 @@ viewsRouter.get('/crud-api-products', checkAdminOrPremium, viewController.viewCr
 
 // CRUD API CARTS USERS USER
 viewsRouter.get('/crud-api-carts', checkUser, viewController.viewApiCartsMenu);
+
+// API TICKETS USERS USER
+viewsRouter.get('/api-tickets', checkUser, viewController.viewApiTicketsMenu);
 
 // CRUD PRODUCTS USERS ADMINISTRATOR
 viewsRouter.get('/crud-products', checkAdmin, viewController.readProductsView);
