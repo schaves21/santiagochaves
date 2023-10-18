@@ -1,15 +1,3 @@
-/*
-import { nanoid } from 'nanoid';
-import { promises as fs } from 'fs';
-import { productsMemory } from './products.memory.js';
-
-export default class CartModel {
-  constructor() {
-    this.data = [];
-  }
-}
-*/
-
 import { nanoid } from 'nanoid';
 import { promises as fs } from 'fs';
 import ProductModel from './products.memory.js';

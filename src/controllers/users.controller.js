@@ -80,6 +80,8 @@ class UserController {
           password: createHash(password),
           cartID,
           rol: 'user',
+          last_connection: new Date(),
+          documents: [],
         });
 
         const userCreated = await userService.create(newUser);
@@ -104,14 +106,19 @@ class UserController {
     try {
       const { uid } = req.params;
       const { firstName, lastName, email, age, password } = req.body;
-      let user = new AuthDTO({ firstName, lastName, email, age, password });
 
-      const userUpdated = await userService.updateOne(uid, user);
+      const userUpdated = await userService.updateOne(uid, {
+        firstName,
+        lastName,
+        email,
+        age,
+        password: createHash(password),
+      });
 
       if (userUpdated) {
         return res.status(200).json({
           status: 'success',
-          msg: 'User uptaded',
+          msg: 'User updated',
           payload: userUpdated,
         });
       } else {

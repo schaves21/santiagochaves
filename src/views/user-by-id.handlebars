@@ -14,22 +14,32 @@
   </div>
 </nav>
 
-<div class="container mt-4">
-  <h1 class="mb-4 text-white text-center">Product</h1>
-  <div class="row justify-content-center"> <!-- Añadimos 'justify-content-center' a la fila para centrar la columna -->
-    <div class="col-md-4 mb-3">
-      <div class="card">
-        <img src="{{product.thumbnail}}" class="card-img-top" alt="imagen">
-        <div class="card-body">
-          <h5 class="card-title">{{product.title}}</h5>
-          <p class="card-text">Description: {{product.description}}</p>
-          <p class="card-text">Price: ${{product.price}}</p>
-          <p class="card-text">Category: {{product.category}}</p>
+<div class="container text-white mt-4">
+  <div class="row">
+    <div class="col d-flex flex-column align-items-center justify-content-center">
+      <h1 class="mb-4">User By Id</h1>
+      <form method="GET" id="userForm" class="cartsForm">
+        <input type="text" id="uid" placeholder="User Id" class="form-control form-control-lg">
+        <div class="text-center mt-3"> 
+          <button class="btn btn-success btn-lg" type="submit">List</button>
         </div>
-      </div>
+      </form>
+
     </div>
   </div>
 </div>
+
+
+<script>
+  document.getElementById('userForm').addEventListener('submit', function (e) {
+    e.preventDefault(); 
+    const uid = document.getElementById('uid').value;
+    const url = `/api/users/${uid}`;
+    window.location.href = url;
+  });
+</script>
+
+
 
 
 

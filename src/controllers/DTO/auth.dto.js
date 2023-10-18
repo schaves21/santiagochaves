@@ -7,7 +7,7 @@ export default class AuthDTO {
     this.password = auth.password;
     this.cartID = auth.cartID;
     this.rol = auth.rol;
-    this.documents = auth.documents;
     this.last_connection = auth.last_connection;
+    this.documents = auth.documents;
   }
 }

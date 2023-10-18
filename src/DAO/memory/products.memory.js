@@ -1,14 +1,3 @@
-/*
-import { nanoid } from 'nanoid';
-import { promises as fs } from 'fs';
-
-export default class ProductModel {
-  constructor() {
-    this.data = [];
-  }
-}
-*/
-
 import { nanoid } from 'nanoid';
 import { promises as fs } from 'fs';
 

@@ -81,7 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let cartData = JSON.parse(localStorage.getItem('cartData')) || [];
   let cartCount = cartData.length;
 
-  // Obtiene el elemento span del contador
   const cartCountElement = document.getElementById('cart-count');
   // Actualiza el contenido del span con el valor inicial
   cartCountElement.textContent = cartCount;

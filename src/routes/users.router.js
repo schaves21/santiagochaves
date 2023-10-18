@@ -5,24 +5,14 @@ import { checkAdmin } from '../middlewares/auth.js';
 
 export const usersRouter = express.Router();
 
-// ********** POSTMAN SIN checkAdmin *********************************
-usersRouter.get('/', userController.getAllUsers);
-usersRouter.get('/basic-data', userController.getBasicDataUsers);
-usersRouter.get('/:uid', userController.getUserById);
-usersRouter.post('/', userController.create);
-usersRouter.put('/:uid', userController.updateOne);
-usersRouter.delete('/:uid', userController.deleteOne);
-usersRouter.delete('/', userController.deleteInactiveUsers); /* ---ELIMINAR USUARIOS INACTIVOS EN LOS ULTIMOS 2 DIAS --- */
-usersRouter.put('/premium/:uid', userController.updateRole);
-usersRouter.post('/:uid/documents', upload.array('documents', 5), userController.uploadDocuments);
-
-// ********* CON checkAdmin ********************************************
-/*
 usersRouter.get('/', checkAdmin, userController.getAllUsers);
+usersRouter.get('/basic-data', checkAdmin, userController.getBasicDataUsers);
 usersRouter.get('/:uid', checkAdmin, userController.getUserById);
 usersRouter.post('/', checkAdmin, userController.create);
 usersRouter.put('/:uid', checkAdmin, userController.updateOne);
 usersRouter.delete('/:uid', checkAdmin, userController.deleteOne);
-usersRouter.put('/premium/:uid', userController.updateRole);
+usersRouter.delete('/', checkAdmin, userController.deleteInactiveUsers); /* --- ELIMINAR USUARIOS INACTIVOS EN LOS ULTIMOS 2 DIAS --- */
+usersRouter.put('/premium/:uid', checkAdmin, userController.updateRole); /* --- ROLE = USER CONTROLAR DOCUMENTOS REQUERIDOS --------- */
+
+/* ------------- EL POST DEBE REALIZARSE CON POSTMAN ------------- */
 usersRouter.post('/:uid/documents', upload.array('documents', 5), userController.uploadDocuments);
-*/

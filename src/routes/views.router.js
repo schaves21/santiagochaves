@@ -26,25 +26,29 @@ viewsRouter.get('/cart/:cid', checkUser, viewController.viewCartById);
 viewsRouter.post('/cart/:cid/purchase', checkUser, checkCart, ticketController.createTicket);
 viewsRouter.get('/purchases', viewController.viewPurchaseByEmail);
 
-// CRUD API PRODUCTS USERS ADMIN / PREMIUM
+// CRUD API PRODUCTS ROLE ADMIN / PREMIUM
 viewsRouter.get('/api-products-menu', checkAdminOrPremium, viewController.viewApiProductsMenu);
 viewsRouter.get('/product-by-id', checkAdminOrPremium, viewController.viewApiProductById);
 viewsRouter.get('/crud-api-products', checkAdminOrPremium, viewController.viewCrudApiProducts);
 
-// CRUD API CARTS USERS USER
+// CRUD API CARTS ROLE USER
 viewsRouter.get('/crud-api-carts', checkUser, viewController.viewApiCartsMenu);
 
-// API TICKETS USERS USER
+// API TICKETS ROLE USER
 viewsRouter.get('/api-tickets', checkUser, viewController.viewApiTicketsMenu);
 
-// CRUD PRODUCTS USERS ADMINISTRATOR
+// CRUD PRODUCTS ROLE ADMIN
 viewsRouter.get('/crud-products', checkAdmin, viewController.readProductsView);
 viewsRouter.post('/crud-products', checkAdmin, viewController.createProductView);
 viewsRouter.post('/crud-products/:pid', checkAdmin, viewController.updateProductView);
 viewsRouter.delete('/crud-products/delete/:pid', checkAdmin, viewController.deleteProductView);
 
-// READ UPDATE DELETE USERS ADMINISTRATOR
-viewsRouter.get('/crud-users', checkAdmin, viewController.readUsersView);
-viewsRouter.post('/crud-users/:uid', checkAdmin, viewController.updateUserRoleView);
-viewsRouter.delete('/crud-users/delete/:uid', checkAdmin, viewController.deleteUserView);
-viewsRouter.delete('/crud-users/inactive-users', viewController.deleteInactiveUsersView);
+// READ - UPDATE ROLE - DELETE INACTIVE USER
+viewsRouter.get('/rud-users', checkAdmin, viewController.readUsersView);
+viewsRouter.post('/rud-users/:uid', checkAdmin, viewController.updateUserRoleView);
+viewsRouter.delete('/rud-users/inactive-users', checkAdmin, viewController.deleteInactiveUsersView);
+
+// CRUD API USERS ROLE ADMIN
+viewsRouter.get('/api-users-menu', checkAdmin, viewController.viewApiUsersMenu);
+viewsRouter.get('/user-by-id', checkAdmin, viewController.viewApiUserById);
+viewsRouter.get('/crud-api-users', checkAdmin, viewController.viewCrudApiUsers);

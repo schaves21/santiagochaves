@@ -73,6 +73,8 @@ export function iniPassport() {
             password: createHash(password),
             cartID,
             rol: 'user',
+            last_connection: new Date(),
+            documents: [],
           });
 
           const userCreated = await authService.create(newUser);
@@ -126,6 +128,8 @@ export function iniPassport() {
               age: 0,
               cartID,
               rol: 'user',
+              last_connection: new Date(),
+              documents: [],
             };
             let userCreated = await authService.create(newUser);
             logger.info('User Registration succesful');

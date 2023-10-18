@@ -1,6 +1,4 @@
 import { UserMongoose } from '../mongo/schemas/users.mongoose.js';
-import { CustomError } from '../../utils/errors/custom-error.js';
-import { EErrors } from '../../utils/errors/dictionary-error.js';
 import mongoose from 'mongoose';
 import { logger } from '../../utils/logger.js';
 
@@ -65,9 +63,9 @@ export default class UserModel {
     }
   }
 
-  async create() {
+  async create(newUser) {
     try {
-      const userCreated = await UserMongoose.create({});
+      const userCreated = await UserMongoose.create(newUser);
       return userCreated;
     } catch (err) {
       logger.error(err);
@@ -76,7 +74,7 @@ export default class UserModel {
 
   async updateOne(uid, user) {
     try {
-      const userUpdated = await UserMongoose.findByIdAndUpdate(uid, { user }, { new: true });
+      const userUpdated = await UserMongoose.findByIdAndUpdate(uid, user, { new: true });
       return userUpdated;
     } catch (err) {
       logger.error(err);

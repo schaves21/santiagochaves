@@ -231,6 +231,44 @@ class ViewController {
     }
   }
 
+  viewApiUsersMenu(_, res) {
+    try {
+      res.render('api-users-menu');
+    } catch (err) {
+      logger.error(err);
+    }
+  }
+
+  viewApiUserById(_, res) {
+    try {
+      res.render('user-by-id');
+    } catch (err) {
+      logger.error(err);
+    }
+  }
+
+  // **************** CRUD API USERS ROLE ADMIN **************** //
+  async viewCrudApiUsers(_, res) {
+    try {
+      const allUsers = await userService.getAllUsers();
+
+      const usersViews = allUsers.map((user) => ({
+        _id: user._id.toString(),
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        password: user.password,
+        age: user.age,
+        rol: user.rol,
+      }));
+
+      res.render('crud-api-users', { users: usersViews });
+    } catch (err) {
+      logger.error(err);
+      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
+    }
+  }
+
   // **************** CRUD API PRODUCTS ADMIN / PREMIUM **************** //
   async viewCrudApiProducts(_, res) {
     try {
@@ -358,7 +396,7 @@ class ViewController {
     }
   }
 
-  // **************** Read Update Delete USER ADMINISTRATOR **************** //
+  // **************** Read Update Role Delete Inactive User **************** //
   async readUsersView(_, res) {
     try {
       const allUsers = await userService.getAllUsers();
@@ -373,7 +411,7 @@ class ViewController {
         last_connection: user.last_connection,
       }));
 
-      res.render('crud-users', { users: usersViews });
+      res.render('rud-users', { users: usersViews });
     } catch (err) {
       logger.error(err);
       throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
@@ -388,27 +426,10 @@ class ViewController {
       const updatedRole = await userService.updateRole(userId);
 
       if (updatedRole) {
-        res.redirect('/crud-users');
+        res.redirect('/rud-users');
       }
     } catch (err) {
       logger.error(err.message);
-      throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
-    }
-  }
-
-  async deleteUserView(req, res) {
-    try {
-      const { uid } = req.params;
-
-      logger.debug(`Product id received by parameter: ${uid}`);
-
-      const userDeleted = await userService.deleteOne(uid);
-
-      if (userDeleted) {
-        res.redirect('/crud-users');
-      }
-    } catch (err) {
-      logger.error(err);
       throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);
     }
   }
@@ -434,7 +455,7 @@ class ViewController {
         });
       }
 
-      res.redirect('/crud-users');
+      res.redirect('/rud-users');
     } catch (err) {
       logger.error(err);
       throw new CustomError(EErrors.UNEXPECTED_ERROR.code, EErrors.UNEXPECTED_ERROR.name, EErrors.UNEXPECTED_ERROR.cause, EErrors.UNEXPECTED_ERROR.message);

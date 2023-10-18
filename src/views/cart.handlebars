@@ -43,52 +43,52 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const buyButtons = document.querySelectorAll(".buy-button");
-  const cid = document.querySelector(".cartId").textContent;
+  document.addEventListener("DOMContentLoaded", function () {
+    const buyButtons = document.querySelectorAll(".buy-button");
+    const cid = document.querySelector(".cartId").textContent;
 
-  buyButtons.forEach(function(button) {
-    button.addEventListener("click", function(event) {
-      buyNow(cid);
+    buyButtons.forEach(function(button) {
+      button.addEventListener("click", function(event) {
+        buyNow(cid);
+      });
     });
+
+    function buyNow(cid) {
+    
+      fetch(`/cart/${cid}/purchase`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          Toastify({
+            text: "Thanks for your purchase",
+            duration: 3000,
+            newWindow: true,
+            close: true,
+            gravity: "top",
+            position: "right",
+            stopOnFocus: true,
+            style: {
+              background: "linear-gradient(to right, #00b09b, #96c93d)",
+            },
+          }).showToast();
+          localStorage.removeItem('cartData');
+          localStorage.removeItem('cartCount');
+          setTimeout(() => {
+            window.location.href = "/purchases";
+          }, 3000);
+        } else {
+          console.error('Purchase error');
+        }
+      })
+      .catch(error => {
+        console.error('Server error:', error);
+      });
+    }
   });
-
-  function buyNow(cid) {
-  
-    fetch(`/cart/${cid}/purchase`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
-      if (response.ok) {
-        Toastify({
-          text: "Thanks for your purchase",
-          duration: 3000,
-          newWindow: true,
-          close: true,
-          gravity: "top",
-          position: "right",
-          stopOnFocus: true,
-          style: {
-            background: "linear-gradient(to right, #00b09b, #96c93d)",
-          },
-        }).showToast();
-        localStorage.removeItem('cartData');
-        localStorage.removeItem('cartCount');
-        setTimeout(() => {
-          window.location.href = "/purchases";
-        }, 3000);
-      } else {
-        console.error('Purchase error');
-      }
-    })
-    .catch(error => {
-      console.error('Server error:', error);
-    });
-  }
-});
 </script>
 
 

@@ -19,7 +19,7 @@
 
 <div class="container crudProducts mt-4">
   <div class="d-flex flex-row-reverse mt-1 mb-1">
-    <form action="/crud-users/inactive-users?_method=DELETE" method="POST">
+    <form action="/rud-users/inactive-users?_method=DELETE" method="POST">
         <input type="hidden" name="_method" value="DELETE">
         <button type="submit" class="btn btn-danger">
           <i class="bi bi-trash mr-2"></i> 
@@ -27,7 +27,7 @@
         </button>
     </form>
   </div>
-  <h1 class="mb-3">CRUD Users</h1>
+  <h1 class="mb-3">Role = user check required documents</h1>
   <table class="table text-white">
       <thead>
           <tr>
@@ -52,46 +52,16 @@
               <td>{{this.rol}}</td>
               <td>{{this.last_connection}}</td>
               <td>
-                <form action="/crud-users/{{this._id}}" method="POST">
+                <form action="/rud-users/{{this._id}}" method="POST">
                   <input type="hidden" name="_method" value="POST">
-                  <button class="btn btn-info bi bi-pencil mb-2" data-toggle="tooltip" title="Update Role" type="submit"></button>
+                  <button class="btn btn-info bi bi-pencil ms-3" data-toggle="tooltip" title="Update Role" type="submit"> Update Role</button>
                 </form>
-                <button class="btn btn-danger bi bi-trash mb-2" data-toggle="modal" data-target="#eliminarModal{{this._id}}"> </button>
               </td>
           </tr>
           {{/each}}
       </tbody>
   </table>
-
 </div>
-
-<!-- Modal de confirmación de eliminación -->
-{{#each users}}
-<div class="modal fade" id="eliminarModal{{this._id}}" tabindex="-1" role="dialog" aria-labelledby="eliminarModalLabel{{this._id}}" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="eliminarModalLabel{{this._id}}">Delete User</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>¿Are you sure you want to delete the User "{{this.firstName}}"?</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <form action="/crud-users/delete/{{this._id}}?_method=DELETE" method="POST">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-{{/each}}
-
-
 
 
     

@@ -61,6 +61,7 @@ iniPassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+// API ROUTES
 app.use('/', docsRouter);
 app.use('/api/sessions', authRouter);
 app.use('/api/users', usersRouter);
@@ -70,9 +71,11 @@ app.use('/api/tickets', ticketRouter);
 app.use('/api/loggerTest', loggerRouter);
 app.use('/api/sms', twilioRouter);
 
+// VIEWS
 app.use('/', recoverRouter);
 app.use('/', viewsRouter);
 
+// GITHUB
 app.get('/api/sessions/github', passport.authenticate('github', { scope: ['user:email'] }));
 app.get('/api/sessions/githubcallback', passport.authenticate('github', { failureRedirect: '/error' }), (req, res) => {
   req.session.user = {
@@ -81,9 +84,12 @@ app.get('/api/sessions/githubcallback', passport.authenticate('github', { failur
     lastName: req.user.lastName,
     email: req.user.email,
     age: req.user.age,
+    cartID: req.user.cartID,
     rol: req.user.rol,
+    documents: req.user.documents,
+    lastConnection: new Date(),
   };
-  res.redirect('/products');
+  res.redirect('/menu');
 });
 
 app.get('/error-auth', (req, res) => {
